@@ -1,0 +1,8 @@
+<nav>
+	<view name="flashtimeline" default="true" />
+	<collection label="Reports">
+		<collection label="Top Applications">
+			<saved source="all" match="Top Applications"/>
+		</collection>
+	</collection>
+</nav>

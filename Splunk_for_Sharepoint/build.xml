@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Splunk_for_Sharepoint" basedir=".">
+	 <property name="src.dir"   value="src"/>
+	 <property name="build.dir" value="build"/>
+	 <property name="bin.dir"   value="bin"/>
+
+	 <property name="dist.file" value="${build.dir}/dist/${ant.project.name}.tar.gz"/>
+
+	 <target name="clean">
+	  <delete dir="${build.dir}"/>
+	  <delete file="default/eventtypes.conf"/>
+	  <delete file="default/macros.conf"/>
+	  <delete file="default/props.conf"/>
+	  <delete file="default/transforms.conf"/>
+	  <delete file="default/savedsearches.conf"/>
+	 </target>
+		
+	 <target name="build">
+	  <concat destfile="default/eventtypes.conf">
+	   <fileset dir="default/eventtypes.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/eventtypes.conf</echo>
+	  <concat destfile="default/macros.conf">
+	   <fileset dir="default/macros.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/macros.conf</echo>
+	  <concat destfile="default/props.conf">
+	   <fileset dir="default/props.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/props.conf</echo>
+	  <concat destfile="default/transforms.conf">
+	   <fileset dir="default/transforms.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/transforms.conf</echo>
+	  <concat destfile="default/savedsearches.conf">
+	   <fileset dir="default/savedsearches.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/savedsearches.conf</echo>
+	 </target>
+		
+	 <target name="distribute" depends="build">
+	  <mkdir dir="${build.dir}/dist"/>
+	  <tar destfile="${dist.file}" longfile="gnu" compression="gzip">
+	   <tarfileset dir=".." filemode="755" username="splunk" group="splunk">
+	    <include name="${ant.project.name}/**"/>
+	    <exclude name="${ant.project.name}/**/.*"/>
+	    <exclude name="${ant.project.name}/${build.dir}/**"/>
+	    <exclude name="${ant.project.name}/${src.dir}/**"/>
+	    <exclude name="${ant.project.name}/build.xml"/>
+	    <exclude name="${ant.project.name}/local/**"/>
+	    <exclude name="${ant.project.name}/**/*-gist"/>
+	    <exclude name="${ant.project.name}/**/*.xcf"/>
+	    <exclude name="${ant.project.name}/**/*.d/**"/>
+	   </tarfileset>
+	  </tar>
+	 </target>
+	</project>
