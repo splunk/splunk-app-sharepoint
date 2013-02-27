@@ -3,7 +3,11 @@ Installing Splunk App for Sharepoint
 
 1) Prepare the Indexing Layer
 
-	* Install the TA-Sharepoint2010 and TA-Windows2008R2-IIS on the Indexer in etc/apps
+	* Install the following apps on the Indexers:
+			
+			TA-Sharepoint2010  (available from Splunk_for_Sharepoint/appserver/addons)
+			TA-Windows2008R2-IIS (available from Splunk_for_Sharepoint/appserver/addons)
+			
 	* Ensure all inputs in the inputs.conf for both of these apps are DISABLED
 	* Ensure the following indices are created:
 
@@ -13,6 +17,11 @@ Installing Splunk App for Sharepoint
 
 2) Prepare the Sharepoint Servers
 
+Install .NET Framework 4.5
+	* Download the .NET Framework 4.5 from http://www.microsoft.com/en-us/download/details.aspx?id=30653
+	* Run the Installer
+	* Reboot if necessary
+	
 Configure Audit Log Reporting:
 	* Open up SharePoint 2010 Central Administration (run as Farm Administrator)
 	* Select Site Actions->Site Settings
@@ -46,6 +55,7 @@ Install a Universal Forwarder on each Sharepoint Server.
 	* The following apps must be installed on the Universal Forwarder:
 	
 			Splunk_TA_windows (available from Splunkbase)
+			Splunk_TA_powershell (will be available from Splunkbase by launch)
 			TA-Sharepoint2010 (available in Splunk_for_Sharepoint\appserver\addons)
 			TA-Windows2008R2-IIS (available in Splunk_for_Sharepoint\appserver\addons)
 			
