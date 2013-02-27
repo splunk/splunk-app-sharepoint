@@ -1,38 +1,52 @@
-Installing the Splunk Universal Forwarder on Sharepoint
--------------------------------------------------------
-The Technology Addon for Sharepoint 2010 only works with Splunk Universal Forwarder 5.0 or later.
-The Splunk Universal Forwarder MUST RUN AS THE INSTALLATION FARM ADMINISTRATOR
+Installing Splunk App for Sharepoint
+------------------------------------
 
-Before usage, add the Sharepoint Farm Administrator to the ShellAdmin group:
+1) Prepare the Indexing Layer
 
-1) Log in as the Farm Administrator
-2) Open Powershell as Administrator
-3) Type
+	* Install the TA-Sharepoint2010 and TA-Windows2008R2-IIS on the Indexer in etc/apps
+	* Ensure all inputs in the inputs.conf for both of these apps are DISABLED
+	* Ensure the following indices are created:
 
-		Add-PSSnapin Microsoft.SharePoint.PowerShell
-		Add-SPShellAdmin -Username DOMAIN\ACCOUNT
-		
-	where DOMAIN\ACCOUNT is the name of your Farm Administrator.
+			mssharepoint
+			iis
+			perfmon
 
-4) Open up SharePoint 2010 Central Administration (run as Administrator)
-5) Select Site Actions->Site Settings
-6) Under Site Collection Administration, select Site collection audit settings
-7) Under Audit Log Trimming, select Yes and enter a number greater than 3 (example: 7) for the number of days of audit log data to retain.
-   Leave the location to store audit reports blank
-8) Under every other section, check the box necessary to turn on audit 
-9) Click on OK
+2) Prepare the Sharepoint Servers
 
-Installing the Technology-Addons on the Indexer
------------------------------------------------
-The line-breaker and index-time transforms must be enabled in order to decode certain
-Sharepoint logs.  Ensure you have installed the following
+Configure Audit Log Reporting:
+	* Open up SharePoint 2010 Central Administration (run as Farm Administrator)
+	* Select Site Actions->Site Settings
+	* Under Site Collection Administration, select Site collection audit settings
+	* Under Audit Log Trimming, select Yes and enter a number greater than 3 (example: 7) for the number of days of audit log data to retain.
+	* Leave the location to store audit reports blank
+	* Under every other section, check the box necessary to turn on audit 
+	* Click on OK
 
-     +-----------------------+-----------+---------+-------------+
-     | Splunk App            | Forwarder | Indexer | Search Head |
-     +-----------------------+-----------+---------+-------------+
-     | Splunk_for_Sharepoint |    No     |   No    |     Yes     |
-     | TA-Sharepoint2010     |   Yes     |  Yes    |      No     |
-     | TA-Windows2008R2-IIS  |   Yes     |  Yes    |      No     |
-     +-----------------------+-----------+---------+-------------+
+Install a Universal Forwarder on each Sharepoint Server.
+	
+	* If installing the UF for LOCAL SYSTEM DATA ONLY:
+		* Log on to Sharepoint Central Administration as a Farm Admin
+		* Go to Manage Farm Administrators
+		* Click on New -> Add Users
+		* Add "NT AUTHORITY\system" as a new farm administrator
+		* Start Sharepoint 2010 Management Shell
+		* Enter:
+				Add-SPShellAdmin -Username "NT AUTHORITY\system"
+			
+	* If installing the UF as a DOMAIN USER with the username DOMAIN\spl_sharepoint:
+		* Log on to Sharepoint Central Administration as a Farm Admin
+		* Go to Manage Farm Administrators
+		* Click on New -> Add Users
+		* Add "DOMAIN\spl_sharepoint" as a new farm administrator
+		* Start Sharepoint 2010 Management Shell
+		* Enter:
+				Add-SPShellAdmin -Username "DOMAIN\spl_sharepoint"
+			
 
-On the Indexers, disable the inputs inside of TA-Sharepoint2010 and TA-Windows2008R2-IIS.     
+	* The following apps must be installed on the Universal Forwarder:
+	
+			Splunk_TA_windows (available from Splunkbase)
+			TA-Sharepoint2010 (available in Splunk_for_Sharepoint\appserver\addons)
+			TA-Windows2008R2-IIS (available in Splunk_for_Sharepoint\appserver\addons)
+			
+3) Install Splunk for Sharepoint on the Search Head
