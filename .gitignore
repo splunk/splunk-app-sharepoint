@@ -15,6 +15,11 @@ Splunk_for_Sharepoint/default/savedsearches.conf
 #
 Splunk_for_Sharepoint/build/dist/*.gz
 #
+# Project Files
+#
+.project
+.pydevproject
+#
 # OS generated files
 #
 .DS_Store
