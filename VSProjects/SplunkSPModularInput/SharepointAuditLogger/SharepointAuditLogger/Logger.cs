@@ -3,6 +3,7 @@
 /// </summary>
 
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -17,75 +18,126 @@ namespace SharepointAuditLogger
 	{
 		static void Main(string[] args)
 		{
-			GetSharepointLogs();
-		}
+            if (args.Length > 0)
+            {
+                if (args[0].Equals("--scheme"))
+                {
+                    //Create an Introspection Scheme
+                    SharepointScheme scheme = new SharepointScheme();
+                    scheme.Title = "Microsoft Sharepoint 2010";
+                    scheme.UseExternalValidation = false;
+                    scheme.StreamingMode = StreamingMode.XML;
+                    Endpoint endpoint = new Endpoint();
+                    List<EndpointArgument> arguments = new List<EndpointArgument>();
+                    EndpointArgument arg = new EndpointArgument();
+                    arg.DataType = ArgumentDataType.NUMBER;
+                    arg.Name = "interval";
+                    arg.Description = "Timespan to execute the code";
+                    arg.RequiredOnEdit = true;
+                    arg.RequiredOnCreate = true;
+                    arguments.Add(arg);
+                    endpoint.Arguments = arguments;
+                    scheme.Endpoint = endpoint;
+                    Console.WriteLine(scheme.Serialize());
+                }
+                else if (args[0].Equals("--test"))
+                {
+                    Console.WriteLine("testing");
+                }
+            }
+            else
+            {
+                try
+                {
+                    Hashtable config = GetConfig();
+                    int timespan = Int32.Parse(config["Interval"].ToString()) * 60000;//converting the interval into milliseconds
+                MyLabel:
+                    GetSharepointLogs(config);
+                    Thread.Sleep(timespan);//suspends the exe for the specified timespan
+                    goto MyLabel;
+                }
+                catch (Exception ex)
+                {
+                    SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
+                }
+            }
+        }
 
+       
 		/// <summary>
 		/// This object is used to get the sharepoint logs. The list is send to STDOUT
 		/// </summary>
-		static void GetSharepointLogs()
+        /// 
+		static void GetSharepointLogs(Hashtable config)
 		{
-			try
-			{
-				SPSecurity.RunWithElevatedPrivileges(delegate()
-				{
-					Hashtable config = GetConfig();
-					using (SPSite siteColl = new SPSite(config["ServerURI"] + ":" + config["PortNumber"] + "/"))
-					{
-						SharepointLogger.SystemLogger(LogLevel.INFO, "Connecting to Site");
+            try
+            {
+                CheckPointer.GetCheckPoint(config["CheckDir"].ToString(),config["SchemeName"].ToString());
+                SPSecurity.RunWithElevatedPrivileges(delegate()
+                {
+                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connecting to Site");
+                    SPFarm farm = SPFarm.Local;
+                    SPWebService service = farm.Services.GetValue<SPWebService>("");
+                    StringBuilder dataColl = new StringBuilder();
+                    foreach(SPWebApplication webapp in service.WebApplications)
+                    {
+                        foreach (SPSite site in webapp.Sites)
+                        {
+                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connected to Site");
+                            foreach (SPWeb web in site.AllWebs)
+                            {
+                                SPAudit audit = web.Audit;
+                                SPAuditQuery auditQuery = new SPAuditQuery(site);
+                                auditQuery.SetRangeStart(CheckPointer.Occured);
+                                auditQuery.SetRangeEnd(DateTime.Now);
+                                SPAuditEntryCollection auditCol = audit.GetEntries(auditQuery);
+                                SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done Reading Audit Entry");
+                                SplunkTextEmitter emitter = new SplunkTextEmitter();
+                                foreach (SPAuditEntry entry in auditCol)
+                                {
+                                    //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
+                                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
+                                    if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
+                                    {
+                                        string userName;
+                                        String data = entry.Occurred.ToString() + "," + "SiteId=" + entry.SiteId.ToString() + "," + "ItemId=" + entry.ItemId.ToString() + "," + "ItemType=" + entry.ItemType.ToString() + "," + "UserId=" + entry.UserId + "," + "DocLocation=" + entry.DocLocation + "," + "LocationType=" + entry.LocationType + "," + "Event=" + entry.Event + "," + "EventSource=" + entry.EventSource + "," + "MachineIP=" + entry.MachineIP + "," + "MachineName=" + entry.MachineName;
+                                        if (entry.UserId == -1)
+                                        {
+                                            userName = @"SHAREPOINT\System";
+                                        }
+                                        else
+                                        {
+                                            userName = web.AllUsers.GetByID(entry.UserId).Name;
+                                        }
+                                        data = data + "," + "UserName=" + userName;
 
-						using (SPWeb site = siteColl.OpenWeb())
-						{
-							SPAuditQuery wssQuery = new SPAuditQuery(siteColl);
-							SPAuditEntryCollection auditCol = siteColl.Audit.GetEntries(wssQuery);
-							foreach (SPAuditEntry entry in auditCol)
-							{
-								//When the current event datetime is less than check point datetime, Id and event Name
-								//that means the data is already indexed. In that case ,we are skipping the record.
-								if ((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId) && (entry.EventName != CheckPointer.Event))
-								{
-									XmlDocument auditEntryDoc = new XmlDocument();
-									auditEntryDoc.LoadXml(entry.ToString());
-									XmlNode root = auditEntryDoc.DocumentElement;
+                                        
+                                        emitter.emit(data);
 
-									Dictionary<string, string> Nodes = new Dictionary<string, string>();
-									Nodes.Add("MachineIP", entry.MachineIP);
-									Nodes.Add("MachineName", entry.MachineName);
-									Nodes.Add("UserName", entry.UserId == -1 ? @"SHAREPOINT\System" : site.AllUsers.GetByID(entry.UserId).Name);
-									Nodes.Add("SourceName", entry.SourceName);
-									Nodes.Add("SiteName", GetSiteNameById(entry.SiteId, site));
-									Nodes.Add("ItemName", GetItemNameById(entry.SiteId, site));
+                                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
+                                        CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId);
+                                    }
+                                    else
+                                    {
+                                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
 
-									foreach (KeyValuePair<string, string> Node in Nodes)
-									{
-										//Create a new node.
-										XmlElement infoElement = auditEntryDoc.CreateElement(Node.Key);
-										infoElement.InnerText = Node.Value;
-										//Add the node to the document.
-										root.AppendChild(infoElement);
-									}
-
-									CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId, entry.EventName);
-									SharepointLogger.SystemLogger(LogLevel.INFO, "Sending audit log to STDOUT");
-									Console.WriteLine(auditEntryDoc.InnerXml);
-									Console.WriteLine("");
-								}
-							}
-						}
-					}
-
-					CheckPointer.SaveCheckPoint();
-					SharepointLogger.SystemLogger(LogLevel.INFO, "Done sending Audit entry data");
-				});
-			}
-			catch (Exception ex)
-			{
-				SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
-				Console.Write(ex);
-				Console.WriteLine("Press enter to continue");
-				Console.ReadLine();
-			}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(),config["SchemeName"].ToString());
+                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done sending Audit entry");
+                });
+            }
+            catch (Exception ex)
+            {
+                CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(), config["SchemeName"].ToString());
+                SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
+            }
 		}
+
+       
 
 		/// <summary>
 		/// The function reads modular input definition
@@ -93,17 +145,35 @@ namespace SharepointAuditLogger
 		/// <returns>Hashtable containging Service URI and port to connect to sharepoint</returns>
 		static Hashtable GetConfig()
 		{
-			SharepointLogger.SystemLogger(LogLevel.INFO, "Reading InputDefinition File");
-			SharepointInputDefinition id = SharepointInputDefinition.ReadSharepointInputDefinition(Console.In);
-
-			Hashtable inputCollection = new Hashtable();
-			inputCollection["ServerHost"] = id.ServerHost;
-			inputCollection["ServerURI"] = id.ServerUri;
-			inputCollection["PortNumber"] = id.PortNumber;
-			inputCollection["CheckDir"] = id.CheckpointDirectory;
-
-			return inputCollection;
+            SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML:Processing Input Configuration");
+            Hashtable inputCollection = new Hashtable();
+            SharepointInputDefinition id = SharepointInputDefinition.ReadSharepointInputDefinition(Console.In);
+            if (id != null)
+            {
+                SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML:Found Configuration");
+                inputCollection["ServerHost"] = id.ServerHost;
+                inputCollection["ServerURI"] = id.ServerUri;
+                inputCollection["CheckDir"] = id.CheckpointDirectory;
+                inputCollection["SessionKey"] = id.SessionKey;
+                if (id.Stanzas.Count > 0)
+                {
+                    inputCollection["SchemeName"] = id.Stanzas[0].Name;
+                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Stanza");
+                    if (id.Stanzas[0].Parameters.Count > 0)
+                    {
+                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Parameters");
+                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("Interval", "10");
+                    }
+                }
+            }
+            else
+            {
+                SharepointLogger.SystemLogger(LogLevel.ERROR, "XML:Configuration Not Found");
+            }
+            return inputCollection;
 		}
+
+        
 
 		/// <summary>
 		/// This function gets the sharepoint site name.
@@ -134,7 +204,7 @@ namespace SharepointAuditLogger
 			{
 				using (SPWeb web = site.OpenWeb())
 				{
-					return web.Title;
+                    return web.Title;
 				}
 			}
 		}

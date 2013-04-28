@@ -13,7 +13,8 @@ namespace Splunk.Sharepoint.ModularInputs
 	/// </summary>
 	public static class CheckPointer
 	{
-		/// <summary>
+
+        /// <summary>
 		/// The time of occurance of the event
 		/// </summary>
 		private static DateTime sOccured;
@@ -21,7 +22,6 @@ namespace Splunk.Sharepoint.ModularInputs
 		{
 			get
 			{
-				//TO-DO: if default value, read from file to get the value
 				return sOccured;
 			}
 			set
@@ -38,7 +38,6 @@ namespace Splunk.Sharepoint.ModularInputs
 		{
 			get
 			{
-				//TO-DO: if default value, read from file to get the value
 				return sItemId;
 			}
 			set
@@ -47,22 +46,7 @@ namespace Splunk.Sharepoint.ModularInputs
 			}
 		}
 
-		/// <summary>
-		/// The evnt name e.g. view, edit
-		/// </summary>
-		private static string sEvent;
-		public static string Event
-		{
-			get
-			{
-				//TO-DO: if default value, read from file to get the value
-				return sEvent;
-			}
-			set
-			{
-				sEvent = value;
-			}
-		}
+		
 
 		/// <summary>
 		/// Set the values of event occurance date time, Item id and event type to save the check point.
@@ -70,41 +54,48 @@ namespace Splunk.Sharepoint.ModularInputs
 		/// <param name="occured">The time of event occurance</param>
 		/// <param name="itemId">The item id</param>
 		/// <param name="eventName"></param>
-		public static void SetCheckPoint(DateTime occured, Guid itemId, string eventName)
+		public static void SetCheckPoint(DateTime occured, Guid itemId)
 		{
-			CheckPointer.Occured = occured;
+            CheckPointer.Occured = occured;
 			CheckPointer.ItemId = itemId;
-			CheckPointer.Event = eventName;
 		}
 
 		/// <summary>
-		/// Save the checkpoint data- Event Occured time, Item id and Event Name in a file.
+		/// Save the checkpoint data- Event Occured time and Item id in a file.
 		/// This data is used to check already indexed data.
 		/// </summary>
-		public static void SaveCheckPoint()
+		public static void SaveCheckPoint(string checkpointdir,string filename)
 		{
-			string splunkdir = Environment.GetEnvironmentVariable("SPLUNK_HOME");
-			string logdir = Path.Combine(splunkdir, "log");
-			string logfile = Path.Combine(logdir, "checkpoint" + ".txt");
-
-			string[] checkData = {CheckPointer.Occured.ToString() , CheckPointer.ItemId.ToString() , CheckPointer.Event};
-			System.IO.File.WriteAllLines(logfile, checkData);
+            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("//", ";").Split(';')[1] + "_chkpt" + ".txt");
+			string[] checkData = {CheckPointer.Occured.ToString() , CheckPointer.ItemId.ToString()};
+            try
+            {
+                System.IO.File.WriteAllLines(checkpointfile, checkData);
+            }
+            catch(Exception ex)
+            {
+                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: "+ex.Message);
+            }
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public static void GetCheckPoint()
+		public static void GetCheckPoint(string checkpointdir,string filename)
 		{
-			string splunkdir = Environment.GetEnvironmentVariable("SPLUNK_HOME");
-			string logdir = Path.Combine(splunkdir, "log");
-			string logfile = Path.Combine(logdir, "checkpoint" + ".txt");
-
-			string[] lines = System.IO.File.ReadAllLines(logfile);
-
-			CheckPointer.Occured = Convert.ToDateTime(lines[0]);
-			CheckPointer.ItemId = new Guid(lines[1]);
-			CheckPointer.Event = lines[2];
+            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("//", ";").Split(';')[1]+ "_chkpt" + ".txt");
+            try
+            {
+                string[] lines = System.IO.File.ReadAllLines(checkpointfile);
+                CheckPointer.Occured = Convert.ToDateTime(lines[0]);
+                CheckPointer.ItemId = new Guid(lines[1]);
+            }
+            catch (Exception ex)
+            {
+                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
+            }
+            
+            
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace Splunk.Sharepoint.ModularInputs
 		/// </summary>
 		public SharepointInputDefinition()
 		{
+            //Console.WriteLine("CAlling InputDefinition.cs");//modified by shaju
 			_stanzas = new List<Stanza>();
 		}
 
@@ -60,13 +61,14 @@ namespace Splunk.Sharepoint.ModularInputs
 		public string CheckpointDirectory
 		{ get; set; }
 
-		/// <summary>
-		/// The REST API session key for this modular input
-		/// </summary>
-		[XmlElement("port_number")]
-		public string PortNumber
-		{ get; set; }
+        /// <summary>
+        /// The REST API session key for this modular input
+        /// </summary>
+        [XmlElement("session_key")]
+        public string SessionKey
+        { get; set; }
 
+              
 		/// <summary>
 		/// The child tags for &lt;configuration&gt; are based on the schema you define in the
 		/// inputs.conf.spec file for your modular input.  Splunk reads all the configurations in

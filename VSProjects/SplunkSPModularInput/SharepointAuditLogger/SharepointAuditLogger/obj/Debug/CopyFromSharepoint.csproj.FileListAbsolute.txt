@@ -1,0 +1,7 @@
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\bin\Debug\CopyFromSharepoint.exe.config
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\bin\Debug\CopyFromSharepoint.exe
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\bin\Debug\CopyFromSharepoint.pdb
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\obj\Debug\CopyFromSharepoint.csprojResolveAssemblyReference.cache
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\obj\Debug\CopyFromSharepoint.exe
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\obj\Debug\CopyFromSharepoint.pdb
+E:\Shamala\Practise Project Code\CopyFromSharepoint\CopyFromSharepoint\bin\Debug\SharepointLogger.exe.config
