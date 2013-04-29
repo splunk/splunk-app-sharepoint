@@ -26,7 +26,7 @@ namespace SharepointAuditLogger
                     SharepointScheme scheme = new SharepointScheme();
                     scheme.Title = "Microsoft Sharepoint 2010";
                     scheme.UseExternalValidation = false;
-                    scheme.StreamingMode = StreamingMode.XML;
+                    scheme.StreamingMode = StreamingMode.SIMPLE;
                     Endpoint endpoint = new Endpoint();
                     List<EndpointArgument> arguments = new List<EndpointArgument>();
                     EndpointArgument arg = new EndpointArgument();
@@ -49,6 +49,7 @@ namespace SharepointAuditLogger
             {
                 try
                 {
+                    //Get the modular inputs definition from Splunk
                     Hashtable config = GetConfig();
                     int timespan = Int32.Parse(config["Interval"].ToString()) * 60000;//converting the interval into milliseconds
                 MyLabel:
@@ -65,7 +66,7 @@ namespace SharepointAuditLogger
 
        
 		/// <summary>
-		/// This object is used to get the sharepoint logs. The list is send to STDOUT
+		/// This function is used to get the sharepoint logs. The data is send to stdout
 		/// </summary>
         /// 
 		static void GetSharepointLogs(Hashtable config)
@@ -92,7 +93,10 @@ namespace SharepointAuditLogger
                                 auditQuery.SetRangeEnd(DateTime.Now);
                                 SPAuditEntryCollection auditCol = audit.GetEntries(auditQuery);
                                 SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done Reading Audit Entry");
+
+                                // SplunkTextEmitter object is used to stream the output to Splunk in text format
                                 SplunkTextEmitter emitter = new SplunkTextEmitter();
+
                                 foreach (SPAuditEntry entry in auditCol)
                                 {
                                     //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
@@ -111,7 +115,7 @@ namespace SharepointAuditLogger
                                         }
                                         data = data + "," + "UserName=" + userName;
 
-                                        
+                                        // Streams the data into stdout
                                         emitter.emit(data);
 
                                         SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
@@ -126,12 +130,14 @@ namespace SharepointAuditLogger
                             }
                         }
                     }
+                    //Saves the checkpoint once done with streaming all the entries
                     CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(),config["SchemeName"].ToString());
                     SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done sending Audit entry");
                 });
             }
             catch (Exception ex)
             {
+                //Saves the last successfully streamed entry into the Checkpoint
                 CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(), config["SchemeName"].ToString());
                 SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
             }
@@ -142,7 +148,7 @@ namespace SharepointAuditLogger
 		/// <summary>
 		/// The function reads modular input definition
 		/// </summary>
-		/// <returns>Hashtable containging Service URI and port to connect to sharepoint</returns>
+		/// <returns>Hashtable containing Service URI,Server Host, Checkpoint Dir, Session Key and Interval </returns>
 		static Hashtable GetConfig()
 		{
             SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML:Processing Input Configuration");
@@ -162,7 +168,7 @@ namespace SharepointAuditLogger
                     if (id.Stanzas[0].Parameters.Count > 0)
                     {
                         SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Parameters");
-                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("Interval", "10");
+                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("interval", "10");//interval is the field obtained from inputs.conf
                     }
                 }
             }

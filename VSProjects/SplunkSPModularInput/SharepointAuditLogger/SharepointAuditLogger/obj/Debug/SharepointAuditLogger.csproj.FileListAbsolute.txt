@@ -76,3 +76,6 @@ C:\Users\Shaju\Downloads\Sharepoint_Code_25-Apr-2013\vsprojects\SplunkSPModularI
 C:\Users\Shaju\Downloads\Sharepoint_Code_25-Apr-2013\vsprojects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\bin\Debug\SharepointAuditLogger.pdb
 C:\Users\Shaju\Downloads\Sharepoint_Code_25-Apr-2013\vsprojects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\bin\Debug\SplunkSPModularInput.dll
 C:\Users\Shaju\Downloads\Sharepoint_Code_25-Apr-2013\vsprojects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\bin\Debug\SplunkSPModularInput.pdb
+F:\GitHub\splunk-app-sharepoint\VSProjects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\bin\Debug\SharepointAuditLogger.exe.config
+F:\GitHub\splunk-app-sharepoint\VSProjects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\obj\Debug\SharepointAuditLogger.exe
+F:\GitHub\splunk-app-sharepoint\VSProjects\SplunkSPModularInput\SharepointAuditLogger\SharepointAuditLogger\obj\Debug\SharepointAuditLogger.pdb

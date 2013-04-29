@@ -8,12 +8,14 @@ using System.IO;
 
 namespace Splunk.Sharepoint.ModularInputs
 {
+    /// <summary>
+    /// The SplunkXmlEmitter class emits the output in XML format if the Streaming mode in the Introspection scheme is set to XML
+    /// </summary>
+    
     [XmlRoot("stream")]
     public class SplunkXmlEmitter : SplunkEmitter
     {
-        /// <summary>
-        /// The Modular Input title.
-        /// </summary>
+       
         [XmlElement("event")]
         public XmlEmitterEvent Event
         { get; set; }
@@ -33,7 +35,6 @@ namespace Splunk.Sharepoint.ModularInputs
 
         public void emit(string data)
         {
-            
             XmlSerializer x = new XmlSerializer(typeof(SplunkXmlEmitter));
             StringWriter sw = new StringWriter();
             x.Serialize(sw, this);
@@ -47,7 +48,7 @@ namespace Splunk.Sharepoint.ModularInputs
             public XmlEmitterEvent()
             {
                 data = new List<string>();
-                source = new Source();
+                source = "";
             }
 
             [XmlAttribute("stanza")]
@@ -85,7 +86,7 @@ namespace Splunk.Sharepoint.ModularInputs
             }
 
             [XmlElement("source")]
-            public Source source
+            public string source
             {
                 set;
                 get;
@@ -100,26 +101,7 @@ namespace Splunk.Sharepoint.ModularInputs
             }
 
         }
-
-       
-        [XmlRoot("source")]
-        public class Source
-        {
-            public string src
-            {
-                set;
-                get;
-            }
-
-            public string Serialize()
-            {
-                XmlSerializer x = new XmlSerializer(typeof(Source));
-                StringWriter sw = new StringWriter();
-                x.Serialize(sw, this);
-                Dictionary<string, string> dic = new Dictionary<string, string>();
-                return sw.ToString();
-            }
-        }
+        
     }
 
 }

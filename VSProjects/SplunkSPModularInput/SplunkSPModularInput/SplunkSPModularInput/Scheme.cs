@@ -9,9 +9,9 @@ namespace Splunk.Sharepoint.ModularInputs
 {
     /// <summary>
     /// The SharepointScheme class represents the XML output when a Modular Input is called
-    /// with the --SharepointScheme argument.
+    /// with the --scheme argument.
     /// </summary>
-    [XmlRoot("SharepointScheme")]
+    [XmlRoot("scheme")]
     public class SharepointScheme
     {
         /// <summary>
