@@ -101,30 +101,32 @@ namespace SharepointAuditLogger
                                 {
                                     //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
                                     SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
-                                    if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
+                                    if (entry.MachineName.Equals(config["ServerHost"].ToString(), StringComparison.InvariantCultureIgnoreCase))
                                     {
-                                        string userName;
-                                        String data = entry.Occurred.ToString() + "," + "SiteId=" + entry.SiteId.ToString() + "," + "ItemId=" + entry.ItemId.ToString() + "," + "ItemType=" + entry.ItemType.ToString() + "," + "UserId=" + entry.UserId + "," + "DocLocation=" + entry.DocLocation + "," + "LocationType=" + entry.LocationType + "," + "Event=" + entry.Event + "," + "EventSource=" + entry.EventSource + "," + "MachineIP=" + entry.MachineIP + "," + "MachineName=" + entry.MachineName;
-                                        if (entry.UserId == -1)
+                                        if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
                                         {
-                                            userName = @"SHAREPOINT\System";
+                                            string userName;
+                                            String data = entry.Occurred.ToString() + "," + "SiteId=" + entry.SiteId.ToString() + "," + "ItemId=" + entry.ItemId.ToString() + "," + "ItemType=" + entry.ItemType.ToString() + "," + "UserId=" + entry.UserId + "," + "DocLocation=" + entry.DocLocation + "," + "LocationType=" + entry.LocationType + "," + "Event=" + entry.Event + "," + "EventSource=" + entry.EventSource + "," + "MachineIP=" + entry.MachineIP + "," + "MachineName=" + entry.MachineName;
+                                            if (entry.UserId == -1)
+                                            {
+                                                userName = @"SHAREPOINT\System";
+                                            }
+                                            else
+                                            {
+                                                userName = web.AllUsers.GetByID(entry.UserId).Name;
+                                            }
+                                            data = data + "," + "UserName=" + userName;
+
+                                            // Streams the data into stdout
+                                            emitter.emit(data);
+
+                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
+                                            CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId);
                                         }
                                         else
                                         {
-                                            userName = web.AllUsers.GetByID(entry.UserId).Name;
+                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
                                         }
-                                        data = data + "," + "UserName=" + userName;
-
-                                        // Streams the data into stdout
-                                        emitter.emit(data);
-
-                                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
-                                        CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId);
-                                    }
-                                    else
-                                    {
-                                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
-
                                     }
                                 }
                             }
