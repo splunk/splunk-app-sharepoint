@@ -101,6 +101,8 @@ namespace SharepointAuditLogger
                                 {
                                     //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
                                     SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
+                                    
+                                    //Will look for audit logs related to the specified host in config["ServerHost"]
                                     if (entry.MachineName.Equals(config["ServerHost"].ToString(), StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
