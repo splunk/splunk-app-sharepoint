@@ -20,6 +20,13 @@ Splunk_for_Sharepoint/build/dist/*.gz
 .project
 .pydevproject
 #
+# Visual Studio OBJ and BIN Directories
+#
+VSProjects/SplunkSPModularInput/SharepointAuditLogger/SharepointAuditLogger/obj
+VSProjects/SplunkSPModularInput/SharepointAuditLogger/SharepointAuditLogger/bin
+VSProjects/SplunkSPModularInput/SplunkSPModularInput/SplunkSPModularInput/obj
+VSProjects/SplunkSPModularInput/SplunkSPModularInput/SplunkSPModularInput/bin
+#
 # OS generated files
 #
 .DS_Store
