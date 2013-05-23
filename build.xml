@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Splunk_for_Sharepoint">
+
+ <!-- Directories that we need to operate -->
+ <property name="vsprojects.dir" value="VSProjects"/>
+ <property name="build.dir" value="build"/>
+ <property name="build.version" value="0.1.0"/>
+ 
+ <!-- Where we place the distribution file -->
+ <property name="dist.file" value="${build.dir}/dist/${ant.project.name}.tar.gz"/>
+ 
+ <!-- Various build directories for our apps -->
+ <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
+ <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
+ <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
+
+ <target name="clean">
+  <delete dir="${build.dir}"/>
+ </target>  
+
+ <target name="mainapp">
+ </target>
+ 
+ <!-- Creates the TA-Sharepoint2010 area -->
+ <target name="sp2010-addon">
+  <mkdir dir="${sp2010-addon.dir}"/>
+  <copy todir="${sp2010-addon.dir}">
+   <fileset dir="TA-Sharepoint2010"/>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>
+ </target>
+ 
+ <!-- Creates the TA-Windows2008R2-IIS area -->
+ <target name="iis2008r2-addon">
+ </target>
+ 
+ <!-- Packages the whole app together into something that can be uploaded to Splunkbase -->
+ <target name="package" depends="mainapp,sp2010-addon,iis2008r2-addon">
+  <mkdir dir="${build.dir}/dist"/>
+  <tar destfile="${dist.file}" longfile="gnu" compression="gzip">
+   <tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
+    <include name="Splunk_for_Sharepoint/**"/>
+   </tarfileset>
+  </tar>
+ </target>
+
+ <!--
+	 <target name="build">
+	  <concat destfile="default/eventtypes.conf">
+	   <fileset dir="default/eventtypes.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/eventtypes.conf</echo>
+	  <concat destfile="default/macros.conf">
+	   <fileset dir="default/macros.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/macros.conf</echo>
+	  <concat destfile="default/props.conf">
+	   <fileset dir="default/props.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/props.conf</echo>
+	  <concat destfile="default/transforms.conf">
+	   <fileset dir="default/transforms.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/transforms.conf</echo>
+	  <concat destfile="default/savedsearches.conf">
+	   <fileset dir="default/savedsearches.d" includes="*.conf"/>
+	  </concat>
+	  <echo>Created concatenated file ${ant.project.name}/default/savedsearches.conf</echo>
+	 </target>		
+-->
+
+</project>

@@ -2,21 +2,7 @@
 # Ignore File for GIT
 #
 ######################################################
-#
-# The generated files
-#
-Splunk_for_Sharepoint/default/eventtypes.conf
-Splunk_for_Sharepoint/default/macros.conf
-Splunk_for_Sharepoint/default/props.conf
-Splunk_for_Sharepoint/default/transforms.conf
-Splunk_for_Sharepoint/default/savedsearches.conf
-#
-# The build file
-#
-Splunk_for_Sharepoint/build/dist/*.gz
-#
-# Project Files
-#
+build
 .project
 .pydevproject
 #
