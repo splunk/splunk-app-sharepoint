@@ -13,27 +13,114 @@
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
  <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
+ <property name="SPModularInput.dir" value="${vsprojects.dir}\\SplunkSPModularInput\\SplunkSPModularInput\\SplunkSPModularInput"/>
+ <property name="SharepointAuditLogger.dir" value="${vsprojects.dir}\\SplunkSPModularInput\\SharepointAuditLogger\\SharepointAuditLogger"/>
 
+ <!-- Compilation Directives for C#.NET -->
+ <property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
+ 
  <target name="clean">
   <delete dir="${build.dir}"/>
  </target>  
 
  <target name="mainapp">
+  <mkdir dir="${mainapp.dir}"/>
+  
+  <!-- Copy the main files into the build area, replacing VERSION where possible -->
+  <copy todir="${mainapp.dir}">
+   <fileset dir="Splunk_for_Sharepoint">
+    <exclude name="**/.*"/>
+	<exclude name="local/**"/>
+	<exclude name="**/*-gist"/>
+	<exclude name="**/*.xcf"/>
+	<exclude name="**/*.d/**"/>
+   </fileset>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>
+  
+  <!-- Build the target configuration files -->
+  <concat destfile="${mainapp.dir}/default/eventtypes.conf">
+   <fileset dir="Splunk_for_Sharepoint/default/eventtypes.d" includes="*.conf"/>
+  </concat>
+  <echo>[concat] Created ${mainapp.dir}/default/eventtypes.conf</echo>
+  
+  <concat destfile="${mainapp.dir}/default/macros.conf">
+   <fileset dir="Splunk_for_Sharepoint/default/macros.d" includes="*.conf"/>
+  </concat>
+  <echo>[concat] Created ${mainapp.dir}/default/macros.conf</echo>
+  
+  <concat destfile="${mainapp.dir}/default/props.conf">
+   <fileset dir="Splunk_for_Sharepoint/default/props.d" includes="*.conf"/>
+  </concat>
+  <echo>[concat] Created ${mainapp.dir}/default/props.conf</echo>
+
+  <concat destfile="${mainapp.dir}/default/transforms.conf">
+   <fileset dir="Splunk_for_Sharepoint/default/transforms.d" includes="*.conf"/>
+  </concat>
+  <echo>[concat] Created ${mainapp.dir}/default/transforms.conf</echo>
+
+  <concat destfile="${mainapp.dir}/default/savedsearches.conf">
+   <fileset dir="Splunk_for_Sharepoint/default/savedsearches.d" includes="*.conf"/>
+  </concat>
+  <echo>[concat] Created ${mainapp.dir}/default/savedsearches.conf</echo>
+  
  </target>
  
  <!-- Creates the TA-Sharepoint2010 area -->
  <target name="sp2010-addon">
   <mkdir dir="${sp2010-addon.dir}"/>
+  
+  <!-- Copy the main files into the build area, replacing VERSION where possible -->
   <copy todir="${sp2010-addon.dir}">
    <fileset dir="TA-Sharepoint2010"/>
    <filterset>
     <filter token="VERSION" value="${build.version}"/>
    </filterset>
   </copy>
+  
+  <!-- Compile the SplunkSPModularInput library code -->
+  <mkdir dir="${build.dir}/SharepointAuditLogger"/>
+  <exec executable="${csc.exe}">
+   <arg value="/target:library"/>
+   <arg value="/out:${build.dir}\\SharepointAuditLogger\\SplunkSPModularInput.dll"/>
+   <arg value="${SPModularInput.dir}\\*.cs"/>
+  </exec>
+  
+  <!-- Copy the Microsoft.SharePoint.dll file into the build area -->
+  <copy file="${vsprojects.dir}/Microsoft.SharePoint.dll" tofile="${build.dir}/SharepointAuditLogger/Microsoft.SharePoint.dll"/>
+  
+  <!-- Compile the SharepointAuditLogger executable code -->
+  <exec executable="${csc.exe}">
+   <arg value="/reference:${build.dir}\\SharepointAuditLogger\Microsoft.SharePoint.dll"/>
+   <arg value="/reference:${build.dir}\\SharepointAuditLogger\SplunkSPModularInput.dll"/>
+   <arg value="/target:exe"/>
+   <arg value="/out:${build.dir}\\SharepointAuditLogger\\SharepointAuditLogger.exe"/>
+   <arg value="${SharepointAuditLogger.dir}\\Logger.cs"/>
+  </exec>
+  
+  <!-- Copy the required files into the TA-Sharepoint2010 area -->
+  <copy todir="${sp2010-addon.dir}/bin">
+   <fileset dir="${build.dir}/SharepointAuditLogger">
+    <include name="SplunkSPModularInput.dll"/>
+	<include name="SharepointAuditLogger.exe"/>
+   </fileset>
+  </copy>
+  
  </target>
  
  <!-- Creates the TA-Windows2008R2-IIS area -->
  <target name="iis2008r2-addon">
+  <mkdir dir="${iis2008r2-addon.dir}"/>
+  
+  <!-- Copy the main files into the build area, replacing VERSION where possible -->
+  <copy todir="${iis2008r2-addon.dir}">
+   <fileset dir="TA-Windows2008R2-IIS"/>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>
  </target>
  
  <!-- Packages the whole app together into something that can be uploaded to Splunkbase -->
@@ -46,29 +133,6 @@
   </tar>
  </target>
 
- <!--
-	 <target name="build">
-	  <concat destfile="default/eventtypes.conf">
-	   <fileset dir="default/eventtypes.d" includes="*.conf"/>
-	  </concat>
-	  <echo>Created concatenated file ${ant.project.name}/default/eventtypes.conf</echo>
-	  <concat destfile="default/macros.conf">
-	   <fileset dir="default/macros.d" includes="*.conf"/>
-	  </concat>
-	  <echo>Created concatenated file ${ant.project.name}/default/macros.conf</echo>
-	  <concat destfile="default/props.conf">
-	   <fileset dir="default/props.d" includes="*.conf"/>
-	  </concat>
-	  <echo>Created concatenated file ${ant.project.name}/default/props.conf</echo>
-	  <concat destfile="default/transforms.conf">
-	   <fileset dir="default/transforms.d" includes="*.conf"/>
-	  </concat>
-	  <echo>Created concatenated file ${ant.project.name}/default/transforms.conf</echo>
-	  <concat destfile="default/savedsearches.conf">
-	   <fileset dir="default/savedsearches.d" includes="*.conf"/>
-	  </concat>
-	  <echo>Created concatenated file ${ant.project.name}/default/savedsearches.conf</echo>
-	 </target>		
--->
+
 
 </project>
