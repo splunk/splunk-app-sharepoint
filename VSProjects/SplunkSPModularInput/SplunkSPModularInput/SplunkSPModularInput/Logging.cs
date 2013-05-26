@@ -114,11 +114,10 @@ namespace Splunk.Sharepoint.ModularInputs
 		/// <param name="name">The name of the log</param>
 		public SharepointLogger(string name)
 		{
-            Console.WriteLine("CAlling Logging.cs");//modified by shaju
-			try
+           try
 			{
 				string splunkdir = Environment.GetEnvironmentVariable("SPLUNK_HOME");
-				string logdir = Path.Combine(splunkdir, "log");
+				string logdir = Path.Combine(splunkdir, @"var\log");
 				string logfile = Path.Combine(logdir, name + ".log");
 				_out = File.AppendText(logfile);
 			}

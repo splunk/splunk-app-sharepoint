@@ -233,8 +233,7 @@ namespace Splunk.Sharepoint.ModularInputs
         { get; set; }
 
         /// <summary>
-        /// Defines validation rules for arguments passed to an endpoint 
-        /// create or edit action.
+        /// Defines validation rules for arguments passed to an endpoint create or edit action.
         /// </summary>
         [XmlElement("validation")]
         public string Validation

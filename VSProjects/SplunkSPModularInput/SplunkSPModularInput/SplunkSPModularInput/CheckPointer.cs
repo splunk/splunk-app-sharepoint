@@ -7,83 +7,84 @@ using System.IO;
 
 namespace Splunk.Sharepoint.ModularInputs
 {
-	/// <summary>
-	/// Check pointer helps to reduce re-indexing of data. The last record of indexed data is stored in a file.
-	/// The getter properties helps to read data from file and setter sets the data.
-	/// </summary>
-	public static class CheckPointer
-	{
+    /// <summary>
+    /// Check pointer helps to reduce re-indexing of data. The last record of indexed data is stored in a file.
+    /// The getter properties helps to read data from file and setter sets the data.
+    /// </summary>
+    public static class CheckPointer
+    {
 
         /// <summary>
-		/// The time of occurance of the event
-		/// </summary>
-		private static DateTime sOccured;
-		public static DateTime Occured
-		{
-			get
-			{
-				return sOccured;
-			}
-			set
-			{
-				sOccured = value;
-			}
-		}
+        /// The time of occurance of the event
+        /// </summary>
+        private static DateTime _occured;
+        public static DateTime Occured
+        {
+            get
+            {
+                return _occured;
+            }
+            set
+            {
+                _occured = value;
+            }
+        }
 
-		/// <summary>
-		/// The item id on which the event occured
-		/// </summary>
-		private static Guid sItemId;
-		public static Guid ItemId
-		{
-			get
-			{
-				return sItemId;
-			}
-			set
-			{
-				sItemId = value;
-			}
-		}
+        /// <summary>
+        /// The item id on which the event occured
+        /// </summary>
+        private static Guid _itemId;
+        public static Guid ItemId
+        {
+            get
+            {
+                return _itemId;
+            }
+            set
+            {
+                _itemId = value;
+            }
+        }
 
-		
 
-		/// <summary>
-		/// Set the values of event occurance date time, Item id and event type to save the check point.
-		/// </summary>
-		/// <param name="occured">The time of event occurance</param>
-		/// <param name="itemId">The item id</param>
-		/// <param name="eventName"></param>
-		public static void SetCheckPoint(DateTime occured, Guid itemId)
-		{
+        /// <summary>
+        /// Set the values of event occurance date time and Item id to save the check point.
+        /// </summary>
+        /// <param name="occured">The time of event occurance</param>
+        /// <param name="itemId">The item id</param>
+        public static void SetCheckPoint(DateTime occured, Guid itemId)
+        {
             CheckPointer.Occured = occured;
-			CheckPointer.ItemId = itemId;
-		}
+            CheckPointer.ItemId = itemId;
+        }
 
-		/// <summary>
-		/// Save the checkpoint data- Event Occured time and Item id in a file.
-		/// This data is used to check already indexed data.
-		/// </summary>
-		public static void SaveCheckPoint(string checkpointdir,string filename)
-		{
-            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("//", ";").Split(';')[1] + "_chkpt" + ".txt");
-			string[] checkData = {CheckPointer.Occured.ToString() , CheckPointer.ItemId.ToString()};
+        /// <summary>
+        /// Save the checkpoint data- Event Occured time and Item id in a file.
+        /// This data is used to check already indexed data.
+        /// </summary>
+        /// <param name="checkpointdir">path to the check point directory</param>
+        /// <param name="filename">Check point filename</param>
+        public static void SaveCheckPoint(string checkpointdir, string filename)
+        {
+            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("://", "_") + "_chkpt" + ".txt");
+            string[] checkData = { CheckPointer.Occured.ToString(), CheckPointer.ItemId.ToString() };
             try
             {
                 System.IO.File.WriteAllLines(checkpointfile, checkData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: "+ex.Message);
+                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
             }
-		}
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public static void GetCheckPoint(string checkpointdir,string filename)
-		{
-            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("//", ";").Split(';')[1]+ "_chkpt" + ".txt");
+        /// <summary>
+        /// Get the stored checkpoint data- Event Occured time and Item id from the checkpoint file
+        /// This data is used to skip the already indexed data and look for the latest entries 
+        /// </summary>
+        public static void GetCheckPoint(string checkpointdir, string filename)
+        {
+            string checkpointfile = Path.Combine(checkpointdir, filename.Replace("://", "_") + "_chkpt" + ".txt");
             try
             {
                 string[] lines = System.IO.File.ReadAllLines(checkpointfile);
@@ -94,8 +95,8 @@ namespace Splunk.Sharepoint.ModularInputs
             {
                 SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
             }
-            
-            
-		}
-	}
+
+
+        }
+    }
 }

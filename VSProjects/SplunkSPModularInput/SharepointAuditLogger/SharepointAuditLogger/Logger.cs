@@ -11,13 +11,22 @@ using System.Xml;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
 using Splunk.Sharepoint.ModularInputs;
+using System.Web;
+using Microsoft.SharePoint.Workflow;
+using System.Data;
+using System.IO;
+using Microsoft.SharePoint.Administration.Health;
+using Microsoft.Office.Server;
+using Microsoft.Office.Server.UserProfiles;
+
 
 namespace SharepointAuditLogger
 {
 	class Program
 	{
-		static void Main(string[] args)
+        static void Main(string[] args)
 		{
+            
             if (args.Length > 0)
             {
                 if (args[0].Equals("--scheme"))
@@ -40,10 +49,6 @@ namespace SharepointAuditLogger
                     scheme.Endpoint = endpoint;
                     Console.WriteLine(scheme.Serialize());
                 }
-                else if (args[0].Equals("--test"))
-                {
-                    Console.WriteLine("testing");
-                }
             }
             else
             {
@@ -61,11 +66,11 @@ namespace SharepointAuditLogger
                 {
                     SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
                 }
+
             }
         }
-
-       
-		/// <summary>
+        
+       /// <summary>
 		/// This function is used to get the sharepoint logs. The data is send to stdout
 		/// </summary>
         /// 
@@ -84,53 +89,86 @@ namespace SharepointAuditLogger
                     {
                         foreach (SPSite site in webapp.Sites)
                         {
-                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connected to Site");
+                            SPServiceContext context = SPServiceContext.GetContext(site);
+                            UserProfileManager upm = new UserProfileManager(context);
+                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connected to Steite");
                             foreach (SPWeb web in site.AllWebs)
                             {
+                                
                                 SPAudit audit = web.Audit;
+
+                                //enables auditing in SharePoint 
+                                audit.AuditFlags = SPAuditMaskType.All;
+                                audit.Update();
                                 SPAuditQuery auditQuery = new SPAuditQuery(site);
                                 auditQuery.SetRangeStart(CheckPointer.Occured);
                                 auditQuery.SetRangeEnd(DateTime.Now);
                                 SPAuditEntryCollection auditCol = audit.GetEntries(auditQuery);
                                 SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done Reading Audit Entry");
-
+                               
                                 // SplunkTextEmitter object is used to stream the output to Splunk in text format
                                 SplunkTextEmitter emitter = new SplunkTextEmitter();
-
+                                SPSite.UsageInfo usageInfo = site.Usage;
+                                string webappName = site.WebApplication.DisplayName;
                                 foreach (SPAuditEntry entry in auditCol)
                                 {
-                                    //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
-                                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
                                     
-                                    //Will look for audit logs related to the specified host in config["ServerHost"]
+                                    //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
+                                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
                                     if (entry.MachineName.Equals(config["ServerHost"].ToString(), StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
                                         {
                                             string userName;
-                                            String data = entry.Occurred.ToString() + "," + "SiteId=" + entry.SiteId.ToString() + "," + "ItemId=" + entry.ItemId.ToString() + "," + "ItemType=" + entry.ItemType.ToString() + "," + "UserId=" + entry.UserId + "," + "DocLocation=" + entry.DocLocation + "," + "LocationType=" + entry.LocationType + "," + "Event=" + entry.Event + "," + "EventSource=" + entry.EventSource + "," + "MachineIP=" + entry.MachineIP + "," + "MachineName=" + entry.MachineName;
+                                            string groupName;
+                                            string userLoginName;
+                                            string department;
+                                            
+                                            String data = entry.Occurred.ToString() + "," + "SiteId=\"" + entry.SiteId.ToString() + "\",SiteName=\"" + GetSiteNameById(entry.SiteId) + "\"," + "ItemId=\"" + entry.ItemId.ToString()  + ",ItemName=\"" + GetItemNameById(entry) + "\",ItemType=\"" + entry.ItemType.ToString() + "\",UserId=" + entry.UserId + "," + "DocLocation=\"" + entry.DocLocation + "\"," + "LocationType=\"" + entry.LocationType + "\",Event=\"" + entry.Event + "\"," + "EventSource=\"" + entry.EventSource + "\"," + "MachineIP=\"" + entry.MachineIP + "\"," + "MachineName=\"" + entry.MachineName + "\"";
                                             if (entry.UserId == -1)
                                             {
                                                 userName = @"SHAREPOINT\System";
+                                                groupName = "";
+                                                department = "";
                                             }
                                             else
                                             {
                                                 userName = web.AllUsers.GetByID(entry.UserId).Name;
+                                                userLoginName = web.AllUsers.GetByID(entry.UserId).LoginName;
+                                                try
+                                                {
+                                                    department = upm.GetUserProfile(userLoginName)["Department"].ToString();
+                                                }
+                                                catch
+                                                {
+                                                    department = "";
+                                                }
+                                                SPUser oUser = web.AllUsers[userLoginName];
+                                                groupName = "";
+                                                for (int i = 0; i < oUser.Groups.Count; i++)
+                                                {
+                                                    groupName = groupName + oUser.Groups[i].Name;
+                                                    if (i < oUser.Groups.Count - 1)
+                                                        groupName = groupName + ";";
+                                                }
                                             }
-                                            data = data + "," + "UserName=" + userName;
-
+                                            
+                                            data = data + ",ListName=\"" + GetListName(entry.SiteId, entry.ItemType.ToString(), entry.DocLocation.ToString())+"\"";
+                                            data = data + ",ItemName=\"" + GetItemNameById(entry) + "\"";
+                                            data = data + "," + "Department=\""+department+"\",UserName=\"" + userName + "\",GroupName=\"" + groupName + "\",ApplicationName=\"" + webappName+"\"";
+                                            
                                             // Streams the data into stdout
                                             emitter.emit(data);
-
                                             SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
                                             CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId);
                                         }
                                         else
                                         {
-                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item Id: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
+                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
                                         }
                                     }
                                 }
+                                
                             }
                         }
                     }
@@ -145,9 +183,10 @@ namespace SharepointAuditLogger
                 CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(), config["SchemeName"].ToString());
                 SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
             }
+            
 		}
 
-       
+
 
 		/// <summary>
 		/// The function reads modular input definition
@@ -172,7 +211,7 @@ namespace SharepointAuditLogger
                     if (id.Stanzas[0].Parameters.Count > 0)
                     {
                         SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Parameters");
-                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("interval", "10");//interval is the field obtained from inputs.conf
+                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("interval", "5");//interval is the field obtained from inputs.conf
                     }
                 }
             }
@@ -183,15 +222,40 @@ namespace SharepointAuditLogger
             return inputCollection;
 		}
 
-        
-
-		/// <summary>
-		/// This function gets the sharepoint site name.
+        /// </summary>
+        /// <param name="siteId">Site id as in the Audit log entry</param>
+        /// <param name="itemId"></param>
+        /// /// <param name="itemType"></param>
+        /// <returns>A long that contains the size of the item in bytes</returns>
+		
+        static long GetSizeOfItem(Guid siteId,Guid itemId,string itemType)
+        {
+            using (SPSite site = new SPSite(siteId))
+            {
+                using (SPWeb web = site.OpenWeb())
+                {
+                    switch (itemType)
+                    {
+                        case "Document":
+                            try
+                            {
+                                return web.GetFile(itemId).Length;
+                            }
+                            catch
+                            {
+                                return 0;
+                            }
+                        default:
+                            return 0;
+                    }
+                }
+            }
+            
+        }
 		/// </summary>
 		/// <param name="siteId">Site id as in the Audit log entry</param>
-		/// <param name="webId">Web id</param>
-		/// <returns></returns>
-		static string GetSiteNameById(Guid siteId, SPWeb webId)
+		/// <returns>A string that contains the name of the site</returns>
+		static string GetSiteNameById(Guid siteId)
 		{
 			using (SPSite site = new SPSite(siteId))
 			{
@@ -203,20 +267,81 @@ namespace SharepointAuditLogger
 		}
 
 		/// <summary>
-		/// This function gets the item name from its ID. THis need to be updated.
+		/// This function gets the item name from Document Location. 
 		/// </summary>
 		/// <param name="siteId"></param>
 		/// <param name="itemId"></param>
-		/// <returns></returns>
-		static string GetItemNameById(Guid siteId, SPWeb itemId)
+		/// <returns>A string that contains the name of the item</returns>
+		static string GetItemNameById(SPAuditEntry entry)
 		{
-			using (SPSite site = new SPSite(siteId))
+			using (SPSite site = new SPSite(entry.SiteId))
 			{
 				using (SPWeb web = site.OpenWeb())
 				{
-                    return web.Title;
-				}
-			}
+                    switch (entry.ItemType.ToString())
+                    {
+                        case "Document":
+                            try
+                            {
+                                return web.GetFile(entry.ItemId).Title;
+                            }
+                            catch
+                            {
+                                string[] seperator = {"/"};
+                                string[] filename = entry.DocLocation.ToString().Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                                return filename[filename.Length - 1];
+                            }
+                        default:
+                                string[] seperator1 = {"/"};
+                                string[] filename1 = entry.DocLocation.ToString().Split(seperator1, StringSplitOptions.RemoveEmptyEntries);
+                                return filename1[filename1.Length - 1];
+                    }
+                }
+            }
+            
+			
 		}
+        
+        /// <summary>
+        /// This function gets the list name from item type.
+        /// </summary>
+        /// <param name="siteId"></param>
+        /// <param name="itemType"></param>
+        /// /// <param name="docLocation"></param>
+        /// <returns>A string that contains the name of the list</returns>
+        static string GetListName(Guid siteId, string itemType, string docLocation)
+        {
+            using (SPSite site = new SPSite(siteId))
+            {
+                using (SPWeb web = site.OpenWeb())
+                {
+
+                    switch (itemType)
+                    {
+                        case "Site":
+                            return GetSiteNameById(siteId);
+                        case "Folder":
+                            return "";
+                        case "Web":
+                            return GetSiteNameById(siteId); 
+                        default:
+                            try
+                            {
+                                return web.GetList(docLocation).Title;
+                            }
+                            catch
+                            {
+                                string[] seperator = { "/" };
+                                string[] filename = docLocation.ToString().Split(seperator, StringSplitOptions.RemoveEmptyEntries);
+                                if(filename[filename.Length-1].IndexOf(".")!=-1)
+                                    return filename[filename.Length-2];
+                                else
+                                    return filename[filename.Length - 1];
+                            }
+                    }
+                }
+            }
+        }
+
 	}
 }

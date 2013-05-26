@@ -23,8 +23,7 @@ namespace Splunk.Sharepoint.ModularInputs
 		/// </summary>
 		public SharepointInputDefinition()
 		{
-            //Console.WriteLine("CAlling InputDefinition.cs");//modified by shaju
-			_stanzas = new List<Stanza>();
+            _stanzas = new List<Stanza>();
 		}
 
 		/// <summary>
