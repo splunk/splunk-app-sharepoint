@@ -13,7 +13,6 @@
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
  <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
- <property name="SPModularInput.dir" value="${vsprojects.dir}\\SplunkSPModularInput\\SplunkSPModularInput\\SplunkSPModularInput"/>
  <property name="SharepointAuditLogger.dir" value="${vsprojects.dir}\\SplunkSPModularInput\\SharepointAuditLogger\\SharepointAuditLogger"/>
 
  <!-- Compilation Directives for C#.NET -->
@@ -80,21 +79,16 @@
    </filterset>
   </copy>
   
-  <!-- Compile the SplunkSPModularInput library code -->
   <mkdir dir="${build.dir}/SharepointAuditLogger"/>
-  <exec executable="${csc.exe}">
-   <arg value="/target:library"/>
-   <arg value="/out:${build.dir}\\SharepointAuditLogger\\SplunkSPModularInput.dll"/>
-   <arg value="${SPModularInput.dir}\\*.cs"/>
-  </exec>
   
   <!-- Copy the Microsoft.SharePoint.dll file into the build area -->
   <copy file="${vsprojects.dir}/Microsoft.SharePoint.dll" tofile="${build.dir}/SharepointAuditLogger/Microsoft.SharePoint.dll"/>
+  <copy file="${vsprojects.dir}/SplunkSDK.dll" tofile="${build.dir}/SharepointAuditLogger/SplunkSDK.dll"/>
   
   <!-- Compile the SharepointAuditLogger executable code -->
   <exec executable="${csc.exe}">
    <arg value="/reference:${build.dir}\\SharepointAuditLogger\Microsoft.SharePoint.dll"/>
-   <arg value="/reference:${build.dir}\\SharepointAuditLogger\SplunkSPModularInput.dll"/>
+   <arg value="/reference:${build.dir}\\SharepointAuditLogger\SplunkSDK.dll"/>
    <arg value="/target:exe"/>
    <arg value="/out:${build.dir}\\SharepointAuditLogger\\SharepointAuditLogger.exe"/>
    <arg value="${SharepointAuditLogger.dir}\\Logger.cs"/>
@@ -103,7 +97,7 @@
   <!-- Copy the required files into the TA-Sharepoint2010 area -->
   <copy todir="${sp2010-addon.dir}/bin">
    <fileset dir="${build.dir}/SharepointAuditLogger">
-    <include name="SplunkSPModularInput.dll"/>
+    <include name="SplunkSDK.dll"/>
 	<include name="SharepointAuditLogger.exe"/>
    </fileset>
   </copy>
@@ -132,7 +126,5 @@
    </tarfileset>
   </tar>
  </target>
-
-
 
 </project>
