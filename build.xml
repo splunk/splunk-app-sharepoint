@@ -13,6 +13,8 @@
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
  <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
+ 
+ <property name="sharepointaudit.dir" value="${build.dir}/sharepointaudit"/>
  <property name="SharepointAuditLogger.dir" value="${vsprojects.dir}\\SplunkSPModularInput\\SharepointAuditLogger\\SharepointAuditLogger"/>
 
  <!-- Compilation Directives for C#.NET -->
@@ -67,8 +69,26 @@
   
  </target>
  
+ <!-- Creates the sharepointaudit executable -->
+ <target name="sharepointaudit">
+  <mkdir dir="${sharepointaudit.dir}"/>
+
+  <!-- Copy the Microsoft.SharePoint.dll file into the build area -->
+  <copy file="${vsprojects.dir}/Microsoft.SharePoint.dll" tofile="${sharepointaudit.dir}/Microsoft.SharePoint.dll"/>
+  <copy file="${vsprojects.dir}/SplunkSDK.dll" tofile="${sharepointaudit.dir}/SplunkSDK.dll"/>
+  
+  <!-- Compile the SharepointAuditLogger executable code -->
+  <exec executable="${csc.exe}">
+   <arg value="/reference:${build.dir}\\sharepointaudit\Microsoft.SharePoint.dll"/>
+   <arg value="/reference:${build.dir}\\sharepointaudit\SplunkSDK.dll"/>
+   <arg value="/target:exe"/>
+   <arg value="/out:${build.dir}\\sharepointaudit\\sharepointaudit.exe"/>
+   <arg value="${SharepointAuditLogger.dir}\\Logger.cs"/>
+  </exec>  
+ </target>
+ 
  <!-- Creates the TA-Sharepoint2010 area -->
- <target name="sp2010-addon">
+ <target name="sp2010-addon" depends="sharepointaudit">
   <mkdir dir="${sp2010-addon.dir}"/>
   
   <!-- Copy the main files into the build area, replacing VERSION where possible -->
@@ -79,26 +99,11 @@
    </filterset>
   </copy>
   
-  <mkdir dir="${build.dir}/SharepointAuditLogger"/>
-  
-  <!-- Copy the Microsoft.SharePoint.dll file into the build area -->
-  <copy file="${vsprojects.dir}/Microsoft.SharePoint.dll" tofile="${build.dir}/SharepointAuditLogger/Microsoft.SharePoint.dll"/>
-  <copy file="${vsprojects.dir}/SplunkSDK.dll" tofile="${build.dir}/SharepointAuditLogger/SplunkSDK.dll"/>
-  
-  <!-- Compile the SharepointAuditLogger executable code -->
-  <exec executable="${csc.exe}">
-   <arg value="/reference:${build.dir}\\SharepointAuditLogger\Microsoft.SharePoint.dll"/>
-   <arg value="/reference:${build.dir}\\SharepointAuditLogger\SplunkSDK.dll"/>
-   <arg value="/target:exe"/>
-   <arg value="/out:${build.dir}\\SharepointAuditLogger\\SharepointAuditLogger.exe"/>
-   <arg value="${SharepointAuditLogger.dir}\\Logger.cs"/>
-  </exec>
-  
   <!-- Copy the required files into the TA-Sharepoint2010 area -->
   <copy todir="${sp2010-addon.dir}/bin">
-   <fileset dir="${build.dir}/SharepointAuditLogger">
+   <fileset dir="${sharepointaudit.dir}">
     <include name="SplunkSDK.dll"/>
-	<include name="SharepointAuditLogger.exe"/>
+	<include name="sharepointaudit.exe"/>
    </fileset>
   </copy>
   
