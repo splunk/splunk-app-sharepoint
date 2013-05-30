@@ -1,26 +1,22 @@
 Installing Splunk App for Sharepoint
 ------------------------------------
 
-1) Prepare the Indexing Layer
+1) Install the Splunk Universal Forwarder (v5.0.2.2 or later) on all Sharepoint and SQL Servers
 
-	* Install the following apps on the Indexers:
-			
-			TA-Sharepoint2010  (available from Splunk_for_Sharepoint/appserver/addons)
-			TA-Windows2008R2-IIS (available from Splunk_for_Sharepoint/appserver/addons)
-			
-	* Ensure all inputs in the inputs.conf for both of these apps are DISABLED
-	* Ensure the following indices are created:
+	* The Universal Forwarder installed on the Central Administration host needs special privileges
+		- Must be a domain user
+		- The domain user must also be a Farm Administrator
+		- The domain user must also have PowerShell (Add-SPShellAdmin) access
+		- The domain user must have sysadmin privileges on the SQL Server for all content databases and the Sharepoint_Config database
 
-			mssharepoint
-			iis
-			perfmon
+	* All other universal forwarders can be installed as NT AUTHORITY\SYSTEM
 
-2) Prepare the Sharepoint Servers
+2) Prepare the Indexing Layer
+	
+	* Create the following indices: mssharepoint, iis, perfmon.
+	* Also create "mssql" index if deploying TA-SQLServer.
 
-Install .NET Framework 4.5
-	* Download the .NET Framework 4.5 from http://www.microsoft.com/en-us/download/details.aspx?id=30653
-	* Run the Installer
-	* Reboot if necessary
+3) Prepare the Sharepoint Servers
 	
 Configure Audit Log Reporting:
 	* Open up SharePoint 2010 Central Administration (run as Farm Administrator)
@@ -30,33 +26,12 @@ Configure Audit Log Reporting:
 	* Leave the location to store audit reports blank
 	* Under every other section, check the box necessary to turn on audit 
 	* Click on OK
+			
+4) Install Splunk for Sharepoint on the Search Head
 
-Install a Universal Forwarder on each Sharepoint Server.
-	
-	* If installing the UF for LOCAL SYSTEM DATA ONLY:
-		* Log on to Sharepoint Central Administration as a Farm Admin
-		* Go to Manage Farm Administrators
-		* Click on New -> Add Users
-		* Add "NT AUTHORITY\system" as a new farm administrator
-		* Start Sharepoint 2010 Management Shell
-		* Enter:
-				Add-SPShellAdmin -Username "NT AUTHORITY\system"
-			
-	* If installing the UF as a DOMAIN USER with the username DOMAIN\spl_sharepoint:
-		* Log on to Sharepoint Central Administration as a Farm Admin
-		* Go to Manage Farm Administrators
-		* Click on New -> Add Users
-		* Add "DOMAIN\spl_sharepoint" as a new farm administrator
-		* Start Sharepoint 2010 Management Shell
-		* Enter:
-				Add-SPShellAdmin -Username "DOMAIN\spl_sharepoint"
-			
+5) Deploy the following apps per role:
 
-	* The following apps must be installed on the Universal Forwarder:
-	
-			Splunk_TA_windows (available from Splunkbase)
-			Splunk_TA_powershell (will be available from Splunkbase by launch)
-			TA-Sharepoint2010 (available in Splunk_for_Sharepoint\appserver\addons)
-			TA-Windows2008R2-IIS (available in Splunk_for_Sharepoint\appserver\addons)
-			
-3) Install Splunk for Sharepoint on the Search Head
+	SQL Server:		Splunk_TA_Windows, SA-ModularInput-PowerShell, TA-SQLServer
+	Sharepoint 2010 Server:	Splunk_TA_Windows, TA-Sharepoint2010, TA-Windows2008R2-IIS
+
+6) Regenerate all lookups after 24 hours (takes overnight to gather all the data!)
