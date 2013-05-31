@@ -52,28 +52,34 @@
   </copy>
   
   <!-- Build the target configuration files -->
-  <concat destfile="${mainapp.dir}/default/eventtypes.conf">
+  <concat destfile="${mainapp.dir}/default/eventtypes.conf" fixlastline="yes">
    <fileset dir="Splunk_for_Sharepoint/default/eventtypes.d" includes="*.conf"/>
   </concat>
   <echo>[concat] Created ${mainapp.dir}/default/eventtypes.conf</echo>
   
-  <concat destfile="${mainapp.dir}/default/macros.conf">
+  <concat destfile="${mainapp.dir}/default/macros.conf" fixlastline="yes">
    <fileset dir="Splunk_for_Sharepoint/default/macros.d" includes="*.conf"/>
   </concat>
   <echo>[concat] Created ${mainapp.dir}/default/macros.conf</echo>
   
-  <concat destfile="${mainapp.dir}/default/props.conf">
+  <concat destfile="${mainapp.dir}/default/props.conf" fixlastline="yes">
    <fileset dir="Splunk_for_Sharepoint/default/props.d" includes="*.conf"/>
   </concat>
   <echo>[concat] Created ${mainapp.dir}/default/props.conf</echo>
 
-  <concat destfile="${mainapp.dir}/default/transforms.conf">
+  <concat destfile="${mainapp.dir}/default/transforms.conf" fixlastline="yes">
    <fileset dir="Splunk_for_Sharepoint/default/transforms.d" includes="*.conf"/>
   </concat>
   <echo>[concat] Created ${mainapp.dir}/default/transforms.conf</echo>
 
-  <concat destfile="${mainapp.dir}/default/savedsearches.conf">
+  <concat destfile="${mainapp.dir}/default/savedsearches.conf" fixlastline="yes">
    <fileset dir="Splunk_for_Sharepoint/default/savedsearches.d" includes="*.conf"/>
+   <filterchain>
+	<tokenfilter>
+      <filetokenizer/>
+	  <replaceregex flags="gms" pattern="\\\s*[\n\r]+\s*" replace="" />
+	</tokenfilter>
+   </filterchain>
   </concat>
   <echo>[concat] Created ${mainapp.dir}/default/savedsearches.conf</echo>
   

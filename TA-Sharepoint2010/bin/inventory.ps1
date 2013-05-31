@@ -49,6 +49,7 @@ function Out-Splunk
 				if ($p.Name -eq "TypeName") {
 					continue
 				}
+				
 				switch ($p.TypeNameOfValue.ToString())
 				{
 				"Microsoft.SharePoint.Administration.SPApplicationPool" {
@@ -111,7 +112,11 @@ function Out-Splunk
 					break
 				}
 				default {
-					[void]$arr.Add("$($p.Name)=`"$($p.Value)`"")
+					if ($p.Name -eq "ID") {
+						[void]$arr.Add("Id=`"$($p.Value)`"")
+					} else {
+						[void]$arr.Add("$($p.Name)=`"$($p.Value)`"")
+					}
 				}
 				}
 			}
