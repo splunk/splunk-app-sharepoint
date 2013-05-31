@@ -10,15 +10,13 @@ using System.Text;
 using System.Xml;
 using Microsoft.SharePoint;
 using Microsoft.SharePoint.Administration;
-using Splunk.Sharepoint.ModularInputs;
 using System.Web;
-using Microsoft.SharePoint.Workflow;
 using System.Data;
 using System.IO;
-using Microsoft.SharePoint.Administration.Health;
 using Microsoft.Office.Server;
 using Microsoft.Office.Server.UserProfiles;
-
+using Splunk.ModularInputs;
+using System.Xml.Serialization;
 
 namespace SharepointAuditLogger
 {
@@ -26,20 +24,19 @@ namespace SharepointAuditLogger
 	{
         static void Main(string[] args)
 		{
-            
             if (args.Length > 0)
             {
                 if (args[0].Equals("--scheme"))
                 {
                     //Create an Introspection Scheme
-                    SharepointScheme scheme = new SharepointScheme();
+                    Scheme scheme = new Scheme();
                     scheme.Title = "Microsoft Sharepoint 2010";
                     scheme.UseExternalValidation = false;
-                    scheme.StreamingMode = StreamingMode.SIMPLE;
-                    Endpoint endpoint = new Endpoint();
-                    List<EndpointArgument> arguments = new List<EndpointArgument>();
-                    EndpointArgument arg = new EndpointArgument();
-                    arg.DataType = ArgumentDataType.NUMBER;
+                    scheme.StreamingMode = StreamingMode.Simple;
+                    Scheme.EndpointElement endpoint = scheme.Endpoint;
+                    List<Argument> arguments = new List<Argument>();
+                    Argument arg = new Argument();
+                    arg.DataType = DataType.Number;
                     arg.Name = "interval";
                     arg.Description = "Timespan to execute the code";
                     arg.RequiredOnEdit = true;
@@ -47,7 +44,7 @@ namespace SharepointAuditLogger
                     arguments.Add(arg);
                     endpoint.Arguments = arguments;
                     scheme.Endpoint = endpoint;
-                    Console.WriteLine(scheme.Serialize());
+                    Console.WriteLine(Serialize(scheme));
                 }
             }
             else
@@ -64,10 +61,22 @@ namespace SharepointAuditLogger
                 }
                 catch (Exception ex)
                 {
-                    SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
+                    SystemLogger.Write(LogLevel.Error, ex.Message);
                 }
 
             }
+        }
+
+        /// <summary>
+        /// Serializes object to XML output
+        /// </summary>
+        /// <returns>The XML String</returns>
+        static string Serialize(Object obj)
+        {
+            XmlSerializer x = new XmlSerializer(obj.GetType());
+            StringWriter sw = new StringWriter();
+            x.Serialize(sw, obj);
+            return sw.ToString();
         }
         
        /// <summary>
@@ -76,27 +85,24 @@ namespace SharepointAuditLogger
         /// 
 		static void GetSharepointLogs(Hashtable config)
 		{
+            EventStreamWriter writer = new EventStreamWriter();
             try
             {
                 CheckPointer.GetCheckPoint(config["CheckDir"].ToString(),config["SchemeName"].ToString());
                 SPSecurity.RunWithElevatedPrivileges(delegate()
                 {
-                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connecting to Site");
+                    string data;
+                    SystemLogger.Write(LogLevel.Debug, "Connecting to Site");
                     SPFarm farm = SPFarm.Local;
                     SPWebService service = farm.Services.GetValue<SPWebService>("");
-                    StringBuilder dataColl = new StringBuilder();
                     foreach(SPWebApplication webapp in service.WebApplications)
                     {
                         foreach (SPSite site in webapp.Sites)
                         {
-                            SPServiceContext context = SPServiceContext.GetContext(site);
-                            UserProfileManager upm = new UserProfileManager(context);
-                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Connected to Steite");
+                            SystemLogger.Write(LogLevel.Debug, "Connected to Site");
                             foreach (SPWeb web in site.AllWebs)
                             {
-                                
                                 SPAudit audit = web.Audit;
-
                                 //enables auditing in SharePoint 
                                 audit.AuditFlags = SPAuditMaskType.All;
                                 audit.Update();
@@ -104,17 +110,17 @@ namespace SharepointAuditLogger
                                 auditQuery.SetRangeStart(CheckPointer.Occured);
                                 auditQuery.SetRangeEnd(DateTime.Now);
                                 SPAuditEntryCollection auditCol = audit.GetEntries(auditQuery);
-                                SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done Reading Audit Entry");
-                               
-                                // SplunkTextEmitter object is used to stream the output to Splunk in text format
-                                SplunkTextEmitter emitter = new SplunkTextEmitter();
-                                SPSite.UsageInfo usageInfo = site.Usage;
+                                SystemLogger.Write(LogLevel.Debug, "Done Reading Audit Entry");
                                 string webappName = site.WebApplication.DisplayName;
+                                long storage = site.Usage.Storage / 1024 / 1024;
+                                int UserMaximumLevel = site.Quota.InvitedUserMaximumLevel;
+                                ulong dbsize = (site.ContentDatabase.DiskSizeRequired) / 1024 / 1024;
+                                long storageMaximumLevel = (site.Quota.StorageMaximumLevel) / 1024 / 1024;
+                                long storageWarningLevel = (site.Quota.StorageWarningLevel) / 1024 / 1024;
                                 foreach (SPAuditEntry entry in auditCol)
                                 {
-                                    
                                     //When the current event datetime is less than check point datetime and equal to ItemId that means the data is already indexed. In that case ,we are skipping the record.
-                                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Processing Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
+                                    SystemLogger.Write(LogLevel.Debug, "Processing Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred);
                                     if (entry.MachineName.Equals(config["ServerHost"].ToString(), StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         if (((entry.Occurred >= CheckPointer.Occured) && (entry.ItemId != CheckPointer.ItemId)))
@@ -123,8 +129,7 @@ namespace SharepointAuditLogger
                                             string groupName;
                                             string userLoginName;
                                             string department;
-                                            
-                                            String data = entry.Occurred.ToString() + "," + "SiteId=\"" + entry.SiteId.ToString() + "\",SiteName=\"" + GetSiteNameById(entry.SiteId) + "\"," + "ItemId=\"" + entry.ItemId.ToString()  + ",ItemName=\"" + GetItemNameById(entry) + "\",ItemType=\"" + entry.ItemType.ToString() + "\",UserId=" + entry.UserId + "," + "DocLocation=\"" + entry.DocLocation + "\"," + "LocationType=\"" + entry.LocationType + "\",Event=\"" + entry.Event + "\"," + "EventSource=\"" + entry.EventSource + "\"," + "MachineIP=\"" + entry.MachineIP + "\"," + "MachineName=\"" + entry.MachineName + "\"";
+                                            data = entry.Occurred.ToString() + "," + "SiteId=\"" + entry.SiteId.ToString() + "\",SiteName=\"" + GetSiteNameById(entry.SiteId) + "\"," + "ItemId=\"" + entry.ItemId.ToString() + ",ItemName=\"" + GetItemNameById(entry) + "\",ItemType=\"" + entry.ItemType.ToString() + "\",UserId=" + entry.UserId + "," + "DocLocation=\"" + entry.DocLocation + "\"," + "LocationType=\"" + entry.LocationType + "\",Event=\"" + entry.Event + "\"," + "EventSource=\"" + entry.EventSource + "\"," + "MachineIP=\"" + entry.MachineIP + "\"," + "MachineName=\"" + entry.MachineName + "\",DBSizeMB=" + dbsize;
                                             if (entry.UserId == -1)
                                             {
                                                 userName = @"SHAREPOINT\System";
@@ -133,16 +138,10 @@ namespace SharepointAuditLogger
                                             }
                                             else
                                             {
+                                                department = "";
                                                 userName = web.AllUsers.GetByID(entry.UserId).Name;
                                                 userLoginName = web.AllUsers.GetByID(entry.UserId).LoginName;
-                                                try
-                                                {
-                                                    department = upm.GetUserProfile(userLoginName)["Department"].ToString();
-                                                }
-                                                catch
-                                                {
-                                                    department = "";
-                                                }
+                                                
                                                 SPUser oUser = web.AllUsers[userLoginName];
                                                 groupName = "";
                                                 for (int i = 0; i < oUser.Groups.Count; i++)
@@ -152,19 +151,25 @@ namespace SharepointAuditLogger
                                                         groupName = groupName + ";";
                                                 }
                                             }
+
+                                            data = data + ",ListName=\"" + GetListName(entry.SiteId, entry.ItemType.ToString(), entry.DocLocation.ToString()) + "\"";
+                                            data = data + ",ItemName=\"" + GetItemNameById(entry) + "\",,StorageMB=" + storage;
+                                            data = data + ",ItemSize=" + GetSizeOfItem(entry.SiteId, entry.ItemId, entry.ItemType.ToString());
+                                            data = data + "," + "Department=\"" + department + "\",UserName=\"" + userName + "\",GroupName=\"" + groupName + "\",ApplicationName=\"" + webappName + "\"" + ",StorageMaximumLevelMB=" + storageMaximumLevel + ",StorageWarningLevelMB=" + storageWarningLevel;
                                             
-                                            data = data + ",ListName=\"" + GetListName(entry.SiteId, entry.ItemType.ToString(), entry.DocLocation.ToString())+"\"";
-                                            data = data + ",ItemName=\"" + GetItemNameById(entry) + "\"";
-                                            data = data + "," + "Department=\""+department+"\",UserName=\"" + userName + "\",GroupName=\"" + groupName + "\",ApplicationName=\"" + webappName+"\"";
-                                            
-                                            // Streams the data into stdout
-                                            emitter.emit(data);
-                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Sending Audit entry to STDOUT");
+                                            EventElement eventElement = new EventElement
+                                            {
+                                                Time = entry.Occurred,
+                                                Data = data
+                                            };
+                                            writer.Write(eventElement);
+
+                                            SystemLogger.Write(LogLevel.Debug, "Sending Audit entry to STDOUT");
                                             CheckPointer.SetCheckPoint(entry.Occurred, entry.ItemId);
                                         }
                                         else
                                         {
-                                            SharepointLogger.SystemLogger(LogLevel.DEBUG, "Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
+                                            SystemLogger.Write(LogLevel.Debug, "Entry with Item IE: " + entry.ItemId + " and Occured Time: " + entry.Occurred + " already Processed");
                                         }
                                     }
                                 }
@@ -174,18 +179,16 @@ namespace SharepointAuditLogger
                     }
                     //Saves the checkpoint once done with streaming all the entries
                     CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(),config["SchemeName"].ToString());
-                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "Done sending Audit entry");
+                    SystemLogger.Write(LogLevel.Debug, "Done sending Audit entry");
                 });
             }
             catch (Exception ex)
             {
                 //Saves the last successfully streamed entry into the Checkpoint
                 CheckPointer.SaveCheckPoint(config["CheckDir"].ToString(), config["SchemeName"].ToString());
-                SharepointLogger.SystemLogger(LogLevel.ERROR, ex.Message);
+                SystemLogger.Write(LogLevel.Error, ex.Message);
             }
-            
 		}
-
 
 
 		/// <summary>
@@ -194,33 +197,35 @@ namespace SharepointAuditLogger
 		/// <returns>Hashtable containing Service URI,Server Host, Checkpoint Dir, Session Key and Interval </returns>
 		static Hashtable GetConfig()
 		{
-            SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML:Processing Input Configuration");
             Hashtable inputCollection = new Hashtable();
-            SharepointInputDefinition id = SharepointInputDefinition.ReadSharepointInputDefinition(Console.In);
+            SystemLogger.Write(LogLevel.Debug, "XML:Processing Input Configuration");
+            XmlSerializer x = new XmlSerializer(typeof(InputDefinition));
+            InputDefinition id = (InputDefinition)x.Deserialize(Console.In);
             if (id != null)
             {
-                SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML:Found Configuration");
+                SystemLogger.Write(LogLevel.Debug, "XML:Found Configuration");
                 inputCollection["ServerHost"] = id.ServerHost;
                 inputCollection["ServerURI"] = id.ServerUri;
                 inputCollection["CheckDir"] = id.CheckpointDirectory;
                 inputCollection["SessionKey"] = id.SessionKey;
                 if (id.Stanzas.Count > 0)
                 {
-                    inputCollection["SchemeName"] = id.Stanzas[0].Name;
-                    SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Stanza");
-                    if (id.Stanzas[0].Parameters.Count > 0)
+                    inputCollection["SchemeName"] = id.Stanza.Name;
+                    SystemLogger.Write(LogLevel.Debug, "XML: Found Stanza");
+                    if (id.Stanza.Parameters.Count > 0)
                     {
-                        SharepointLogger.SystemLogger(LogLevel.DEBUG, "XML: Found Parameters");
-                        inputCollection["Interval"] = id.Stanzas[0].GetParameterByName("interval", "5");//interval is the field obtained from inputs.conf
+                        SystemLogger.Write(LogLevel.Debug, "XML: Found Parameters");
+                        inputCollection["Interval"] = id.Stanza.Parameters["interval"];
                     }
                 }
             }
             else
             {
-                SharepointLogger.SystemLogger(LogLevel.ERROR, "XML:Configuration Not Found");
+                SystemLogger.Write(LogLevel.Error, "XML:Configuration Not Found");
             }
             return inputCollection;
 		}
+
 
         /// </summary>
         /// <param name="siteId">Site id as in the Audit log entry</param>
@@ -252,6 +257,8 @@ namespace SharepointAuditLogger
             }
             
         }
+
+
 		/// </summary>
 		/// <param name="siteId">Site id as in the Audit log entry</param>
 		/// <returns>A string that contains the name of the site</returns>
@@ -265,6 +272,7 @@ namespace SharepointAuditLogger
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// This function gets the item name from Document Location. 
@@ -298,9 +306,8 @@ namespace SharepointAuditLogger
                     }
                 }
             }
-            
-			
 		}
+
         
         /// <summary>
         /// This function gets the list name from item type.
