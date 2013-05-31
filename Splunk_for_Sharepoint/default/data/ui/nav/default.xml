@@ -1,4 +1,10 @@
 <nav>
+ <view name="flashtimeline" default="view"/>
+ 
+ <collection label="Health">
+  <view name="ops_overview"/>
+ </collection>
+ 
     <collection label="Application Usage">
     <collection label="Top Apps">
       <view name="application_center" />

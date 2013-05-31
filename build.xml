@@ -33,14 +33,19 @@
   <mkdir dir="${mainapp.dir}"/>
   
   <!-- Copy the main files into the build area, replacing VERSION where possible -->
-  <copy todir="${mainapp.dir}">
+  <copy todir="${mainapp.dir}" filtering="off" verbose="on">
    <fileset dir="Splunk_for_Sharepoint">
     <exclude name="**/.*"/>
 	<exclude name="local/**"/>
 	<exclude name="**/*-gist"/>
 	<exclude name="**/*.xcf"/>
 	<exclude name="**/*.d/**"/>
+	<exclude name="default/app.conf"/>
    </fileset>
+  </copy>
+  
+  <!-- Special Treatment for app.conf for versioning -->
+  <copy todir="${mainapp.dir}/default" file="Splunk_for_Sharepoint/default/app.conf" verbose="on">
    <filterset>
     <filter token="VERSION" value="${build.version}"/>
    </filterset>

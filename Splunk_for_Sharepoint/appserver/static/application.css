@@ -1,0 +1,30 @@
+/*
+** Application Logo in a Splunk 5.0 Simple XML Document
+** Recipe for when you want a logo and not a title
+*/
+div.AccountBar,
+div.splHeader-navigation {
+  background-color: #0072c6
+}
+
+.appLogoContainer {
+	height: 64px;
+}
+
+.appLogoContainer .appLogo {
+	width: 441px;
+	height: 64px;
+	background-image: url('BannerLogo.png');
+	background-repeat: no-repeat;
+}
+
+.appLogoContainer h1 {
+	width: 0px;
+	font-size: 1px;
+	color: #0072c6;
+}
+
+.appHeaderWrapper,
+.appHeaderWrapper a {
+  color: white;
+}
