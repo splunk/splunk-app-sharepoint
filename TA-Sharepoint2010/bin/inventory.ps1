@@ -251,6 +251,8 @@ foreach ($webapp in Get-SPWebApplication)
 
 	$webapp.Features `
 	| Select-Object DefinitionId, Version, FeatureDefinitionScope `
+	| Foreach-Object { $_ | Add-Member -PassThru -MemberType NoteProperty -Name Id -Value $_.DefinitionId } `
+	| Select-Object Id, Version, FeatureDefinitionScope `
 	| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Feature" `
 	| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 	| Add-Member -PassThru -MemberType NoteProperty -Name WebApplicationId -Value $webapp.Id `
@@ -285,6 +287,7 @@ Get-SPContentDatabase `
 		DatabaseConnectionString, DiskSizeRequired, Exists, ExistsInFarm, FailoverServer, `
 		FailoverServiceInstance, IncludeInVssBackup, IsAttachedToFarm, IsReadOnly, NormalizedDataSource, `
 		Server, WebApplication, Farm `
+| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "ContentDatabase" `
 | Out-Splunk
 
 #
@@ -313,7 +316,7 @@ foreach ($site in Get-SPSite)
 	$site.Owner | %{ if ($_.UserLogin -eq $myID) { $foundMe = $true } }
 	$site.SecondaryContact | %{ if ($_.UserLogin -eq $myID) { $foundMe = $true } }
 	if ($foundMe -eq $false) {
-		New-Object PSOBject `
+		New-Object PSObject `
 		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Error" `
 		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 		| Add-Member -PassThru -MemberType NoteProperty -Name Exception -Value "Permission Denied" `
@@ -323,7 +326,7 @@ foreach ($site in Get-SPSite)
 	}
 			
 	$site `
-	| Select-Object ID, Url, AdministrationSiteType, AllowDesigner, AllowMasterPageEditing, `
+	| Select-Object Id, Url, AdministrationSiteType, AllowDesigner, AllowMasterPageEditing, `
 			AllowRevertFromTemplate, AllowRssFeeds, AllowUnsafeUpdates, Audit, `
 			AuditLogTrimmingCallout, AuditLogTrimmingRetention, AverageResourceUsage, `
 			BrowserDocumentsEnabled, CatchAccessDeniedException, CertificationDate, `
@@ -344,7 +347,7 @@ foreach ($site in Get-SPSite)
 	foreach ($spweb in Get-SPWeb $site.Url)
 	{
 		$spweb `
-		| Select-Object ID, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
+		| Select-Object Id, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
 				AllowRssFeeds, AllowUnsafeUpdates, AllWebTemplatesAllowed, AlternateCssUrl, `
 				AlternateHeader, ASPXPageIndexer, ASPXPageIndexMode, Audit, AuthenticationMode, `
 				Author, ClientTag, Configuration, Created, CurrencyLocaleID, CustomJavaScriptFileUrl, `
@@ -365,7 +368,7 @@ foreach ($site in Get-SPSite)
 		| Out-Splunk
 
 		$spweb.AllUsers `
-		| Select-Object ID, LoginName, Email, Sid, DisplayName, RequireRequestToken, `
+		| Select-Object Id, LoginName, Email, Sid, DisplayName, RequireRequestToken, `
 				IsSiteAdmin, IsSiteAuditor, IsDomainGroup, IsApplicationPrincipal `
 		| Add-Member -PassThru -MemberType NoteProperty -Name WebId -Value $spweb.Id `
 		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "User" `
@@ -378,7 +381,7 @@ foreach ($site in Get-SPSite)
 			$size = 0
 			$list.Items.GetDataTable() | %{ $size += $_.FileSizeDisplay }
 
-			$list | Select-Object ID, Title, ItemCount, Hidden, EmailAlias, Audit, Author, Created, `
+			$list | Select-Object Id, Title, ItemCount, Hidden, EmailAlias, Audit, Author, Created, `
 				EmailInsertsFolder, EnableAssignToEmail, EnableAttachments, EnableDeployingList, `
 				EnableDeployWithDependentList, EnableFolderCreation, EnableMinorVersions, `
 				EnableModeration, EnablePeopleSelector, EnableResourceSelector, `
