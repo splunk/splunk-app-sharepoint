@@ -8,6 +8,8 @@ build
 #
 # Visual Studio OBJ and BIN Directories
 #
+VSProjects/SharepointAudit/bin
+VSProjects/SharepointAudit/obj
 VSProjects/SplunkSPModularInput/SharepointAuditLogger/SharepointAuditLogger/obj
 VSProjects/SplunkSPModularInput/SharepointAuditLogger/SharepointAuditLogger/bin
 VSProjects/SplunkSPModularInput/SplunkSPModularInput/SplunkSPModularInput/obj
