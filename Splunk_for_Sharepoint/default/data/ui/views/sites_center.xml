@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dashboard>
+  <label>Sites Center</label>
+  <row>
+      
+    <table>
+        <title>Top Sites by DBSize</title>
+      <searchTemplate>sourcetype="SharepointAuditLogger"| top SiteName,DBSizeMB</searchTemplate>
+      
+    </table>
+  </row>
+    
+    <row>
+      
+    <table>
+        <title>Top Sites by Library Size</title>
+      <searchTemplate>sourcetype="SharepointAuditLogger" | top SiteName, ItemSize</searchTemplate>
+      
+    </table>
+  </row>
+    
+    
+      <row>
+      
+    <table>
+        <title>Top Sites by Quota Usage Percentage</title>
+      <searchTemplate>sourcetype="SharepointAuditLogger" | eval Quota_Usage_percentage=round( (StorageMB/StorageMaximumLevelMB)*100)|TOP SiteName,Quota_Usage_percentage| fields SiteName,Quota_Usage_percentage</searchTemplate>
+      
+    </table>
+  </row>
+</dashboard>
+
+
+
+
+
+

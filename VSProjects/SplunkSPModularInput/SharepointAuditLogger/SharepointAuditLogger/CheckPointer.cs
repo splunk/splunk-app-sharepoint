@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using Splunk.ModularInputs;
 
-namespace Splunk.Sharepoint.ModularInputs
+namespace SharepointAuditLogger
 {
     /// <summary>
     /// Check pointer helps to reduce re-indexing of data. The last record of indexed data is stored in a file.
@@ -74,7 +75,7 @@ namespace Splunk.Sharepoint.ModularInputs
             }
             catch (Exception ex)
             {
-                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
+                SystemLogger.Write(LogLevel.Error, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
             }
         }
 
@@ -93,10 +94,8 @@ namespace Splunk.Sharepoint.ModularInputs
             }
             catch (Exception ex)
             {
-                SharepointLogger.SystemLogger(LogLevel.ERROR, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
+                SystemLogger.Write(LogLevel.Error, "CheckPoint:Failed to open file checkpoint.txt: " + ex.Message);
             }
-
-
         }
     }
 }

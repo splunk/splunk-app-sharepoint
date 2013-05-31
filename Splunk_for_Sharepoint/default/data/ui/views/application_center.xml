@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dashboard>
+  <label>Application Center</label>
+  <row>
+    <table>
+      <searchTemplate>sourcetype="SharepointAuditLogger" | top ApplicationName, UserName|Fields ApplicationName, UserName</searchTemplate>
+      <title>Top Applications by Unique UserName</title>
+    </table>
+  </row>
+  <row>
+    <chart>
+      <searchTemplate> sourcetype="SharepointAuditLogger" Event="View" | top ApplicationName limit=50</searchTemplate>
+      <title>Top Applications by Documents Download</title>
+      <option name="charting.chart">pie</option>
+      <option name="count">10</option>
+      <option name="displayRowNumbers">true</option>
+    </chart>
+    <chart>
+      <searchTemplate> sourcetype="SharepointAuditLogger" Event="Update" | top ApplicationName limit=50</searchTemplate>
+      <title>Top Applications by Documents Uploads</title>
+      <option name="charting.chart">pie</option>
+      <option name="count">10</option>
+      <option name="displayRowNumbers">true</option>
+    </chart>
+  </row>
+</dashboard>

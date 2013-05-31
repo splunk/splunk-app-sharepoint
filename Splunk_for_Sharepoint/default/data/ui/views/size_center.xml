@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dashboard>
+  <label>Size Center</label>
+  <row>
+    <table>
+      <searchTemplate>sourcetype="SharepointAuditLogger" | top  ApplicationName, DBSizeMB| Fields ApplicationName, DBSizeMB</searchTemplate>
+      <title>Top application by DBSize</title>
+    </table>
+    <table>
+      <searchTemplate>sourcetype="SharepointAuditLogger" ItemType=Document  |eval ItemSize1 =round( ItemSize/1024)|rename ItemSize1 as ItemSize(KB)|top ItemName,ItemSize(KB)| fields ItemName,ItemSize(KB)</searchTemplate>
+      <title>Top Document By LibrarySize</title>
+    </table>
+  </row>
+  <row>
+    <table>
+      <searchTemplate>sourcetype="SharepointAuditLogger" | top  ListName, DBSizeMB| Fields ListName, DBSizeMB</searchTemplate>
+      <title>Top List by DBSize</title>
+    </table>
+  </row>
+</dashboard>

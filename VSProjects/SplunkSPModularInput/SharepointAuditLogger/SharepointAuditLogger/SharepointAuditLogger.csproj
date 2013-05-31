@@ -54,6 +54,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Shamala-2012\V5_UR12_onD\public\ext\Sharepoint\14.0.0.0\Microsoft.SharePoint.dll</HintPath>
     </Reference>
+    <Reference Include="SplunkSDK">
+      <HintPath>..\..\..\SplunkSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -63,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckPointer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -85,12 +89,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SplunkSPModularInput\SplunkSPModularInput\SplunkSPModularInput.csproj">
-      <Project>{BD0E5D54-81A1-4A87-87F5-CDAFF8AA1E82}</Project>
-      <Name>SplunkSPModularInput</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
