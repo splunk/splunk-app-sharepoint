@@ -7,20 +7,7 @@
 			<title>Overall Health of the Solution</title>
 		</table>
 	</row>
-  
-	<row>
-		<table>
-			<searchTemplate></searchTemplate>
-			<title>Overall Health of each System</title>
-		</table>
-	</row>
-  
-	<row>
-		<table>
-			<searchTemplate>index=perfmon sourcetype="Perfmon:IIS2"| dedup instance | table instance,host| sort instance</searchTemplate>
-			<title>Service Availability Per System</title>
-		</table>
-	</row>
+
   
 	<row>
 		<table>
@@ -28,13 +15,7 @@
 			<title>SQL Server Health</title>
 		</table>
 	</row>
-  
-	<row>
-		<table>
-			<searchTemplate></searchTemplate>
-			<title>Host Information For Every Host in the Cluster</title>
-		</table>
-	</row>
+
 
 	<row>
 		<table>

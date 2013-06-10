@@ -3,12 +3,6 @@
   <label>Application Center</label>
   <row>
     <table>
-      <searchTemplate></searchTemplate>
-      <title>Top Apps by Page Impressions</title>
-    </table>
-  </row>
-  <row>
-    <table>
       <searchTemplate>sourcetype="SharepointAuditLogger" | top ApplicationName, UserName|Fields ApplicationName, UserName</searchTemplate>
       <title>Top Applications by Unique Users</title>
     </table>
@@ -29,10 +23,5 @@
       <option name="displayRowNumbers">true</option>
     </chart>
   </row>
-  <row>
-    <table>
-      <searchTemplate></searchTemplate>
-      <title>Top Apps by SQL Loads</title>
-    </table>
-  </row>
+  
 </dashboard>

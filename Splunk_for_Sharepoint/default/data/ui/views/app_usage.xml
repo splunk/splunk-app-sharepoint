@@ -24,10 +24,4 @@
 		</chart>
 	</row>
   
-	<row>
-		<table>
-		  <searchTemplate></searchTemplate>
-		  <title>Overtime by SQL Load</title>
-		</table>
-	  </row>
 </dashboard>
