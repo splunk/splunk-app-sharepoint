@@ -1,55 +1,57 @@
 <nav>
- <view name="flashtimeline" default="view"/>
- 
- <collection label="Health">
-  <view name="ops_overview"/>
- </collection>
- 
-    <collection label="Application Usage">
-    <collection label="Top Apps">
-      <view name="application_center" />
-    </collection>
-	 <collection label="Usage">
-      
-    </collection>
-  </collection>
-  
-  
-    <collection label="Application Views">
-    <collection label="App Views">
-      <view name="app_views" />
-    </collection>
-  </collection>
-  
-  <collection label="Documents">
-      <view name="document_center" />
-    </collection>
+	<view name="flashtimeline" default="view"/>
 
+	<collection label="Health">
+		<view name="ops_overview"/>
+		<view name="health"/>
+	</collection>
+
+	<collection label="Application Usage">
+		<collection label="Top Apps">
+			<view name="application_center" />
+		</collection>
+
+		<collection label="Usage">
+			<view name="app_usage" />
+		</collection>
+	</collection>
+
+	<collection label="Application Views">
+		<collection label="App Views">
+			<view name="app_views" />
+		</collection>
+	</collection>
   
-   <collection label="Sizing">
-   <collection label="Top Items by DB-Size">
-      <view name="size_center" />
-    </collection>
-	<collection label="Top Sites">
-      <view name="sites_center" />
-    </collection>
-	<collection label="Quota Usage">
-      <view name="quota_usage" />
-    </collection>
-	
-  </collection>
-  <collection label="Object Usage">
-      <view name="object_usage" />
-    </collection>
+	<collection label="Documents">
+		<view name="document_center" />
+	</collection>
+
+	<collection label="Sizing">
+		<collection label="Top Items by DB-Size">
+			<view name="size_center" />
+		</collection>
+		<collection label="Top Sites">
+			<view name="sites_center" />
+		</collection>
+		<collection label="Quota Usage">
+			<view name="quota_usage" />
+		</collection>
+	</collection>
+
+	<collection label="Object Usage">
+		<view name="id_usage" />
+		<view name="object_usage" />
+	</collection>
+
 	<collection label="Performance">
-      <view name="perfmon_monitor" />
-    </collection>
+		<view name="perfmon_monitor" />
+	</collection>
+	
 	<collection label="Access">
-      <view name="access" />
-    </collection>
+		<view name="access" />
+	</collection>
+	
 	<collection label="Suspicious Activity">
-      <view name="suspicious_or_anamalous_activity" />
-    </collection>
-  
-  
+		<view name="suspicious_or_anamalous_activity" />
+	</collection>
 </nav>
