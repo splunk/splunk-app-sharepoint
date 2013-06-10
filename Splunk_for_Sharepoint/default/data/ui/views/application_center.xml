@@ -3,24 +3,36 @@
   <label>Application Center</label>
   <row>
     <table>
+      <searchTemplate></searchTemplate>
+      <title>Top Apps by Page Impressions</title>
+    </table>
+  </row>
+  <row>
+    <table>
       <searchTemplate>sourcetype="SharepointAuditLogger" | top ApplicationName, UserName|Fields ApplicationName, UserName</searchTemplate>
-      <title>Top Applications by Unique UserName</title>
+      <title>Top Applications by Unique Users</title>
     </table>
   </row>
   <row>
     <chart>
       <searchTemplate> sourcetype="SharepointAuditLogger" Event="View" | top ApplicationName limit=50</searchTemplate>
-      <title>Top Applications by Documents Download</title>
+      <title>Top Apps by Document Downloads</title>
       <option name="charting.chart">pie</option>
       <option name="count">10</option>
       <option name="displayRowNumbers">true</option>
     </chart>
     <chart>
-      <searchTemplate> sourcetype="SharepointAuditLogger" Event="Update" | top ApplicationName limit=50</searchTemplate>
-      <title>Top Applications by Documents Uploads</title>
+      <searchTemplate>sourcetype="SharepointAuditLogger" Event="Update" | top ApplicationName limit=50</searchTemplate>
+      <title>Top Apps by Document Uploads</title>
       <option name="charting.chart">pie</option>
       <option name="count">10</option>
       <option name="displayRowNumbers">true</option>
     </chart>
+  </row>
+  <row>
+    <table>
+      <searchTemplate></searchTemplate>
+      <title>Top Apps by SQL Loads</title>
+    </table>
   </row>
 </dashboard>

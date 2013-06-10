@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dashboard>
+	<label>Health</label>
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-iis" cs_uri_stem!="/_*"| stats avg(time_taken) as avg,min(time_taken) as "Min. Duration(sec)",max(time_taken) as "Max. Duration(sec)",count(cs_uri_stem) as "# Requests" by cs_uri_stem|eval "Avg. Duration(sec)"=round(avg,2)|rename cs_uri_stem as Url|fields Url, "Avg. Duration(sec)","Min. Duration(sec)","Max. Duration(sec)","# Requests"|sort -"# Requests"</searchTemplate>
+			<title>Overall Health of the Solution</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate></searchTemplate>
+			<title>Overall Health of each System</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate>index=perfmon sourcetype="Perfmon:IIS2"| dedup instance | table instance,host| sort instance</searchTemplate>
+			<title>Service Availability Per System</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate>index=mssql sourcetype="MSSQL:Database:Health" | lookup database_name_lookup.csv DatabaseGuid OUTPUT DatabaseName| top DatabaseName,Size,SpaceAvailable,Status|eval avail = round((Size/SpaceAvailable)*100)|sort -avail|rename avail as "% Availability" | fields - count,percent</searchTemplate>
+			<title>SQL Server Health</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate></searchTemplate>
+			<title>Host Information For Every Host in the Cluster</title>
+		</table>
+	</row>
+
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-iis"|table s_ip,cs_uri_stem,time_taken|rename s_ip as "IP Address",cs_uri_stem as URL, time_taken as "Latency Time"|sort -"Latency Time"</searchTemplate>
+			<title>Latency Time Across Cluster</title>
+		</table>
+	</row>
+
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-iis" cs_uri_stem!="/_*" |stats count(cs_uri_stem) as count,avg(time_taken) as time by host|eval cal=round(count/time,2) | rename count as "#Page Visits", cal as "Page Impression/sec"</searchTemplate>
+			<title>Page Impressions/second Across All Hosts</title>
+		</table>
+	</row>
+
+
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-inventory" Type="ContentDatabase" |  stats latest(DiskSizeRequired) as disksize by WebApplicationId|eval disksize=disksize/1024/1024| rename disksize as "Disk Usage MB",WebApplicationId as Id |lookup SPWebApplication Id output Name as "Application Name" | table "Application Name","Disk Usage MB"</searchTemplate>
+			<title>Disk Usage Per Application</title>
+		</table>
+	</row>	
+</dashboard>

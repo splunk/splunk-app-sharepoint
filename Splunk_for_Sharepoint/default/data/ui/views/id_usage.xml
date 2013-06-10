@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dashboard>
+	<label>ID Usage</label>
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-inventory" Type="FeatureDefinition"|lookup Farm_lookup.csv FarmId OUTPUT FarmName|table DisplayName,FarmName,RootDirectory,Scope,Status,ActivateOnDefault</searchTemplate>
+			<title>Feature ID Usage</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-index"  NOT Correlation="Correlation" |top Correlation,Message,Process,Level|fields - percent</searchTemplate>
+			<title>Correlation Usage</title>
+		</table>
+	</row>
+  
+	<row>
+		<table>
+			<searchTemplate>eventtype="mssharepoint-iis" |stats dc(cs_uri_stem) as "# Pages"  by cs_username |rename cs_username as "User"</searchTemplate>
+			<title>User ID Usage</title>
+		</table>
+	</row>
+</dashboard>

@@ -1,26 +1,1 @@
-<form>    <label>Documents Center</label>	     <fieldset>      <html>      <p style="padding-top: 20px">
-        Select a series from the dropdown to return information about the selection.       </p>      </html>	  <input type="dropdown" token="ApplicationName"> <label>Select App Name</label>  <populatingSearch fieldForValue="ApplicationName" fieldForLabel="ApplicationName">
- <![CDATA[ sourcetype="SharepointAuditLogger" ItemType="Document" | top ApplicationName limit=100]]></populatingSearch> <choice value="*">All</choice> </input> </fieldset> <row><table>     <title>Most Popular Documents</title>  <searchTemplate> sourcetype="SharepointAuditLogger" ItemType="Document" ApplicationName="$ApplicationName$" NOT ItemName=""| top  ApplicationName, ItemName </searchTemplate> <option name="count">20</option></table></row>   <row> <table>   <title>Most Updated Documents</title>    <searchTemplate>  sourcetype="SharepointAuditLogger" ItemType="Document" Event="Update" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName,ItemName|   </searchTemplate> <option name="count">20</option> </table> </row>
-  <row>
-      <table>
-          <title>Stale Documents</title>
-          <searchTemplate>
-          sourcetype="SharepointAuditLogger" ItemType="Document" Event!="Update" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName, ItemName
-          </searchTemplate>
-          <option name="count">20</option>
-      </table>
-  </row>
-    <row>
-      <table>
-          <title>Inactive Documents</title>
-          <searchTemplate>
-          sourcetype="SharepointAuditLogger" ItemType="Document" Event="Delete" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName,ItemName |
-          </searchTemplate>
-          <option name="count">20</option>
-      </table>	  </row>
- 
-</form>
-
- 
-
- 
+<form>	<label>Documents Center</label>	<fieldset>		<html>			<p style="padding-top: 20px">				Select a series from the dropdown to return information about the selection.			</p>		</html>		<input type="dropdown" token="ApplicationName">			<label>Select App Name</label>			<populatingSearch fieldForValue="ApplicationName" fieldForLabel="ApplicationName">				<![CDATA[ sourcetype="SharepointAuditLogger" ItemType="Document" | top ApplicationName limit=100]]>			</populatingSearch>			<choice value="*">All</choice>		</input>	</fieldset>	<row>		<table>			<title>Most Popular Documents</title>			<searchTemplate>sourcetype="SharepointAuditLogger" ItemType="Document" ApplicationName="$ApplicationName$" NOT ItemName=""| top  ApplicationName, ItemName</searchTemplate>			<option name="count">20</option>		</table>	</row>	<row>		<table>			<title>Most Updated Documents</title>			<searchTemplate>sourcetype="SharepointAuditLogger" ItemType="Document" Event="Update" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName,ItemName</searchTemplate>			<option name="count">20</option>		</table>	</row>	<row>		<table>			<title>Stale Documents</title>			<searchTemplate>sourcetype="SharepointAuditLogger" ItemType="Document" Event!="Update" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName, ItemName</searchTemplate>			<option name="count">20</option>		</table>	</row>	<row>		<table>			<title>Inactive Documents</title>			<searchTemplate>sourcetype="SharepointAuditLogger" ItemType="Document" Event="Delete" ApplicationName="$ApplicationName$" NOT ItemName=""| top ApplicationName,ItemName</searchTemplate>			<option name="count">20</option>		</table>	</row></form>  

@@ -1,158 +1,1 @@
-<view template="dashboard.html">
-  <label>Perfromance Per System</label>
-  <module name="AccountBar" layoutPanel="appHeader"/>
-  <module name="AppBar" layoutPanel="navigationHeader"/>
-  <module name="Message" layoutPanel="messaging">
-    <param name="filter">*</param>
-    <param name="clearOnJobDispatch">False</param>
-    <param name="maxSize">1</param>
-  </module>
-  <module name="TitleBar" layoutPanel="viewHeader">
-    <param name="actionsMenuFilter">dashboard</param>
-  </module>
- 
-  <module name="GenericHeader" layoutPanel="panel_row2_col1">
-        <param name="label">Network Health</param>
-      </module>
-  <!-- Group selector -->
-  <module name="SearchSelectLister" layoutPanel="panel_row2_col1">
-       
-       
-    <param name="settingToCreate">group_setting</param>
-    <param name="search">|inputlookup counter_network_lookup.csv</param>
-   
-    <param name="label">counter</param>
-    <param name="searchFieldsToDisplay">
-      <!--
-        TODO use list lookups and the lookup command to get another field that is a pretty label here. '
-        Sourcetypes' vs 'Sources' vs 'Indexes'
-      -->
-      <list>
-        <param name="label">counter</param>
-        <param name="value">counter</param>
-      </list>
-    </param>
-    <module name="ConvertToIntention">
-      <param name="settingToConvert">group_setting</param>
-      <param name="intention">
-        <param name="name">addterm</param>
-        <param name="arg">
-          <param name="counter">$target$</param>
-        </param>
-		</param>
-       
-            <!-- Group selector -->
-  <module name="SearchSelectLister" layoutPanel="panel_row2_col1">
-    <param name="settingToCreate">group_setting</param>
-    <param name="search">|inputlookup network_instances_lookup.csv</param>
-   
-    <param name="label">instance</param>
-    <param name="searchFieldsToDisplay">
-      <!--
-        TODO use list lookups and the lookup command to get another field that is a pretty label here. '
-        Sourcetypes' vs 'Sources' vs 'Indexes'
-      -->
-      <list>
-        <param name="label">instance</param>
-        <param name="value">instance</param>
-      </list>
-    </param>
-    <module name="ConvertToIntention">
-      <param name="settingToConvert">group_setting</param>
-      <param name="intention">
-        <param name="name">addterm</param>
-        <param name="arg">
-          <param name="instance">$target$</param>
-        </param>
-		</param>
-			
-		
-       
-           <module name="HiddenSearch">
-        <param name="search">
-         sourcetype="Perfmon:Network"| stats sparkline(avg(Value)) as Trend avg(Value) as Average, max(Value) as Peak, latest(Value) as Current, latest(_time) as "Last Updated" by host | convert ctime("Last Updated") | sort -Current | eval Average=round(Average, 2) | eval Peak=round(Peak, 2) | eval Current=round(Current, 2)
-        </param>
-        
-          <module name="SimpleResultsTable"></module>
-               
-          </module>
-		
-
-      </module>
-        </module>
-      </module>
-    </module>
-    <module name="GenericHeader" layoutPanel="panel_row3_col1">
-        <param name="label">Network Health</param>
-      </module>
-  <!-- Group selector -->
-  <module name="SearchSelectLister" layoutPanel="panel_row3_col1">
-       
-       
-    <param name="settingToCreate">group_setting</param>
-    <param name="search">|inputlookup counters_cpu_lookup.csv</param>
-   
-    <param name="label">counter</param>
-    <param name="searchFieldsToDisplay">
-      <!--
-        TODO use list lookups and the lookup command to get another field that is a pretty label here. '
-        Sourcetypes' vs 'Sources' vs 'Indexes'
-      -->
-      <list>
-        <param name="label">counter</param>
-        <param name="value">counter</param>
-      </list>
-    </param>
-    <module name="ConvertToIntention">
-      <param name="settingToConvert">group_setting</param>
-      <param name="intention">
-        <param name="name">addterm</param>
-        <param name="arg">
-          <param name="counter">$target$</param>
-        </param>
-		</param>
-       
-            <!-- Group selector -->
-  <module name="SearchSelectLister" layoutPanel="panel_row3_col1">
-    <param name="settingToCreate">group_setting</param>
-    <param name="search">|inputlookup cpu_instances_lookup.csv</param>
-   
-    <param name="label">instance</param>
-    <param name="searchFieldsToDisplay">
-      <!--
-        TODO use list lookups and the lookup command to get another field that is a pretty label here. '
-        Sourcetypes' vs 'Sources' vs 'Indexes'
-      -->
-      <list>
-        <param name="label">instance</param>
-        <param name="value">instance</param>
-      </list>
-    </param>
-    <module name="ConvertToIntention">
-      <param name="settingToConvert">group_setting</param>
-      <param name="intention">
-        <param name="name">addterm</param>
-        <param name="arg">
-          <param name="instance">$target$</param>
-        </param>
-		</param>
-			
-		
-       
-           <module name="HiddenSearch">
-        <param name="search">
-         sourcetype="Perfmon:CPU"| stats sparkline(avg(Value)) as Trend avg(Value) as Average, max(Value) as Peak, latest(Value) as Current, latest(_time) as "Last Updated" by host | convert ctime("Last Updated") | sort -Current | eval Average=round(Average, 2) | eval Peak=round(Peak, 2) | eval Current=round(Current, 2)
-        </param>
-        
-          <module name="SimpleResultsTable"></module>
-               
-          </module>
-		
-
-      </module>
-        </module>
-      </module>
-    </module>
-    </view>
-          
-          
+<view template="dashboard.html">  <label>Perfromance Per System</label>  <module name="AccountBar" layoutPanel="appHeader"/>  <module name="AppBar" layoutPanel="navigationHeader"/>  <module name="Message" layoutPanel="messaging">    <param name="filter">*</param>    <param name="clearOnJobDispatch">False</param>    <param name="maxSize">1</param>  </module>  <module name="TitleBar" layoutPanel="viewHeader">    <param name="actionsMenuFilter">dashboard</param>  </module>   <module name="GenericHeader" layoutPanel="panel_row2_col1">        <param name="label">Network Health</param>    </module>  <!-- Group selector -->	<module name="SearchSelectLister" layoutPanel="panel_row2_col1">                  <param name="settingToCreate">group_setting</param>    <param name="search">|inputlookup counter_network_lookup.csv</param>       <param name="label">counter</param>    <param name="searchFieldsToDisplay">      <!--        TODO use list lookups and the lookup command to get another field that is a pretty label here. '        Sourcetypes' vs 'Sources' vs 'Indexes'      -->      <list>        <param name="label">counter</param>        <param name="value">counter</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>		<param name="intention">        <param name="name">addterm</param>        <param name="arg">			<param name="counter">$target$</param>        </param>	</param>                   <!-- Group selector -->  <module name="SearchSelectLister" layoutPanel="panel_row2_col1">    <param name="settingToCreate">group_setting</param>    <param name="search">index="perfmon" sourcetype="Perfmon:Network"|dedup instance|table instance</param>    <param name="label">instance</param>    <param name="searchFieldsToDisplay">      <list>        <param name="label">instance</param>        <param name="value">instance</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>      <param name="intention">        <param name="name">addterm</param>        <param name="arg">          <param name="instance">$target$</param>        </param>	  </param>					             <module name="HiddenSearch">        <param name="search">         index="perfmon" sourcetype="Perfmon:Network"| stats sparkline(avg(Value)) as Trend avg(Value) as Average, max(Value) as Peak, latest(Value) as Current, latest(_time) as "Last Updated" by host | convert ctime("Last Updated") | sort -Current | eval Average=round(Average, 2) | eval Peak=round(Peak, 2) | eval Current=round(Current, 2)        </param>        <module name="SimpleResultsTable"></module>      </module>    </module>  </module> </module></module>    <module name="GenericHeader" layoutPanel="panel_row3_col1">        <param name="label">CPU Health</param>    </module>  <!-- Group selector -->  <module name="SearchSelectLister" layoutPanel="panel_row3_col1">           <param name="settingToCreate">group_setting</param>    <param name="search">|inputlookup counters_cpu_lookup.csv</param>       <param name="label">counter</param>    <param name="searchFieldsToDisplay">      <!--        TODO use list lookups and the lookup command to get another field that is a pretty label here. '        Sourcetypes' vs 'Sources' vs 'Indexes'      -->      <list>        <param name="label">counter</param>        <param name="value">counter</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>      <param name="intention">        <param name="name">addterm</param>        <param name="arg">          <param name="counter">$target$</param>        </param>		</param>         <!-- Group selector -->  <module name="SearchSelectLister" layoutPanel="panel_row3_col1">    <param name="settingToCreate">group_setting</param>    <param name="search">index="perfmon" sourcetype="Perfmon:CPU" | dedup instance | table instance</param>       <param name="label">instance</param>    <param name="searchFieldsToDisplay">      <!--        TODO use list lookups and the lookup command to get another field that is a pretty label here. '        Sourcetypes' vs 'Sources' vs 'Indexes'      -->      <list>        <param name="label">instance</param>        <param name="value">instance</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>      <param name="intention">        <param name="name">addterm</param>        <param name="arg">          <param name="instance">$target$</param>        </param>		</param>             <module name="HiddenSearch">        <param name="search">         index="perfmon" sourcetype="Perfmon:CPU"| stats sparkline(avg(Value)) as Trend avg(Value) as Average, max(Value) as Peak, latest(Value) as Current, latest(_time) as "Last Updated" by host | convert ctime("Last Updated") | sort -Current | eval Average=round(Average, 2) | eval Peak=round(Peak, 2) | eval Current=round(Current, 2)        </param>                  <module name="SimpleResultsTable"></module>      </module>    </module>  </module>  </module>  </module>        <module name="GenericHeader" layoutPanel="panel_row4_col1">        <param name="label">Memory Health</param>    </module>  <!-- Group selector -->	<module name="SearchSelectLister" layoutPanel="panel_row4_col1">                  <param name="settingToCreate">group_setting</param>    <param name="search">|inputlookup counter_memory_lookup.csv</param>       <param name="label">counter</param>    <param name="searchFieldsToDisplay">      <!--        TODO use list lookups and the lookup command to get another field that is a pretty label here. '        Sourcetypes' vs 'Sources' vs 'Indexes'      -->      <list>        <param name="label">counter</param>        <param name="value">counter</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>		<param name="intention">        <param name="name">addterm</param>        <param name="arg">			<param name="counter">$target$</param>        </param>	</param>                   <!-- Group selector -->  <module name="SearchSelectLister" layoutPanel="panel_row4_col1">    <param name="settingToCreate">group_setting</param>    <param name="search">index="perfmon" sourcetype="Perfmon:Memory"|dedup instance|table instance</param>    <param name="label">instance</param>    <param name="searchFieldsToDisplay">      <list>        <param name="label">instance</param>        <param name="value">instance</param>      </list>    </param>    <module name="ConvertToIntention">      <param name="settingToConvert">group_setting</param>      <param name="intention">        <param name="name">addterm</param>        <param name="arg">          <param name="instance">$target$</param>        </param>	  </param>      <module name="HiddenSearch">        <param name="search">         index="perfmon" sourcetype="Perfmon:Memory"| stats sparkline(avg(Value)) as Trend avg(Value) as Average, max(Value) as Peak, latest(Value) as Current, latest(_time) as "Last Updated" by host | convert ctime("Last Updated") | sort -Current | eval Average=round(Average, 2) | eval Peak=round(Peak, 2) | eval Current=round(Current, 2)        </param>                <module name="SimpleResultsTable"></module>                     </module>    </module>  </module> </module></module></view>                    
