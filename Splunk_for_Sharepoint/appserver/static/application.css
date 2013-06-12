@@ -28,3 +28,23 @@ div.splHeader-navigation {
 .appHeaderWrapper a {
   color: white;
 }
+
+/*
+** Single Value - MSSP_Ops_Farm
+*/
+.MSSP_Ops_Farm span.singleResult {
+  font-style: normal;
+  font-size: 64px;
+  font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  color: green;
+  vertical-align: top;
+  margin-top: 0px;
+} 
+
+.MSSP_Ops_Farm span.singleLabel {
+  font-style: normal;
+  font-size: 64px;
+  vertical-align: bottom;
+  font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  color: #404040;
+  margin-top: 0px;
