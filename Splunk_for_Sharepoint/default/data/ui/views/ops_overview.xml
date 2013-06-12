@@ -1,0 +1,25 @@
+<dashboard>
+ <label>Health Overview</label>
+ <row>
+  <single>
+   <title>Farms</title>
+   <searchName>Ops Overview - Farm Count</searchName>
+   <option name="additionalClass">MSSP_Ops_Farm</option>
+   <option name="afterLabel">Farm(s)</option>
+  </single>
+  <chart>
+   <title>Page Impressions (Last 10 Minutes)</title>
+   <searchName>Ops Overview - Page Impressions</searchName>
+   <option name="charting.chart">radialGauge</option>
+   <option name="charting.legend.placement">none</option>
+   <option name="height">150px</option>
+  </chart>
+  <chart>
+   <title>Unique Users (Last 10 Minutes)</title>
+   <searchName>Ops Overview - Unique Users</searchName>
+   <option name="charting.chart">radialGauge</option>
+   <option name="charting.legend.placement">none</option>
+   <option name="height">150px</option>
+  </chart>
+ </row>
+</dashboard>

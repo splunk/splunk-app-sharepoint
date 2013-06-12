@@ -32,6 +32,10 @@ div.splHeader-navigation {
 /*
 ** Single Value - MSSP_Ops_Farm
 */
+.MSSP_Ops_Farm {
+  cursor: pointer;
+}
+
 .MSSP_Ops_Farm span.singleResult {
   font-style: normal;
   font-size: 64px;
