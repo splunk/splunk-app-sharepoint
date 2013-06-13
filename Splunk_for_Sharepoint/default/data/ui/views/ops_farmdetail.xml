@@ -1,9 +1,9 @@
-<form>
+<form isVisible="false">
  <label>Farm Information</label>
  <fieldset autoRun="true" submitButton="true">
   <input type="dropdown" token="FarmId">
    <label>Farm GUID</label>
-   <populatingSearch fieldForValue="Id" fieldForLabel="Id">|inputlookup SPFarm</populatingSearch>
+   <populatingSearch fieldForValue="Id" fieldForLabel="Id" earliest="-1m" latest="now">|inputlookup SPFarm</populatingSearch>
   </input>
  </fieldset>
 
@@ -47,13 +47,15 @@ eventtype=mssharepoint-iis
  <row>
   <table>
    <title>SQL Servers</title>
-   <searchTemplate>
-|inputlookup SPServer
-|search FarmId="$FarmId$" Role="Invalid"
-|lookup SQLHostInformation Name AS ComputerName OUTPUTNEW OSVersionName
-|table Name, OSVersionName
-|rename OSVersionName AS "OS Version"
-   </searchTemplate>
+   <searchTemplate><![CDATA[
+| inputlookup SPServer 
+| search FarmId="$FarmId$" Role="Invalid"
+| lookup SQLHostInformation ComputerName as Name OUTPUTNEW OSVersion
+| rex field=OSVersion "^(?<OSBaseVersion>\d+\.\d+)"
+| lookup OSVersion OSBaseVersion OUTPUTNEW OSVersionName
+| table Name,OSVersionName
+| rename OSVersionName as "OS Version"
+   ]]></searchTemplate>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
    <drilldown>
@@ -62,17 +64,17 @@ eventtype=mssharepoint-iis
   </table>
   <table>
    <title>Application Servers</title>
-   <searchTemplate>
-|inputlookup SPServer
-|search FarmId="$FarmId$" Role="Application"
-|lookup SPHostInfo host as Name OUTPUTNEW OSVersion,SharedToolsVersion
-|table Name,OSVersion,SharedToolsVersion
-|rename OSVersion as "OS Version", SharedToolsVersion as "Shared Tools"
-   </searchTemplate>
+   <searchTemplate><![CDATA[
+| inputlookup SPServer
+| search FarmId="$FarmId$" Role="Application"
+| lookup SPHostInfo host as Name OUTPUTNEW OSVersion,SharedToolsVersion
+| table Name,OSVersion,SharedToolsVersion
+| rename OSVersion as "OS Version", SharedToolsVersion as "Shared Tools"
+   ]]></searchTemplate>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
    <drilldown>
-    <link>/app/Splunk_for_Sharepoint/ops_host?form.Name=$row.Name$</link>
+    <link>/app/Splunk_for_Sharepoint/ops_host?form.Server=$row.Name$</link>
    </drilldown>
   </table>
  </row>

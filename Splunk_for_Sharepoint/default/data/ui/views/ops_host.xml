@@ -1,0 +1,94 @@
+<form isVisible="false">
+ <label>Host Information</label>
+ <fieldset autoRun="true">
+  <input type="dropdown" token="Server">
+   <label>Server</label>
+   <populatingSearch fieldForLabel="Name" fieldForValue="Name" earliest="-1m" latest="now">|inputlookup SPServer|search Role="Application"</populatingSearch>
+  </input>
+ </fieldset>
+ 
+ <row>
+  <table>
+   <title>Information</title>
+   <searchTemplate><![CDATA[
+| inputlookup SPServer 
+| search Name="$Server$"
+| lookup SPHostInfo host as Name OUTPUTNEW OSVersion,SharedToolsVersion
+| rex field=OSVersion "^(?<OSBaseVersion>\d+\.\d+)"
+| lookup OSVersion OSBaseVersion OUTPUTNEW OSVersionName
+| table Name,OSVersion,OSVersionName,SharedToolsVersion
+| rename OSVersion as "OS Build", SharedToolsVersion as "Installed Tools", OSVersionName as "OS Version"
+| transpose
+   ]]></searchTemplate>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+   <option name="showPager">false</option>
+  </table>
+  <table>
+   <title>Services</title>
+   <searchTemplate><![CDATA[
+eventtype=mssharepoint-inventory Type="ServiceInstance" Server="$Server$"
+| stats latest(Status) as SPStatus by Name,Service,Server 
+| where SPStatus!="Disabled" 
+| rex field=Service "Name=(?<SPService>.*)" 
+| eval SPService=if(isnull(SPService),Service,SPService) 
+| join type=outer Server,SPService [search eventtype=mssharepoint-service host="$Server$" | stats latest(Status) as Status by Name,host | rename host as Server,Name as SPService,Status as WinStatus] 
+| where isnotnull(WinStatus) 
+| append [search eventtype=mssharepoint-service host="$Server$" | stats latest(Status) as WinStatus by host,Name | lookup CriticalServices Name OUTPUT Required | where Required=="True" | table Name,host,WinStatus | rename host as Server ] 
+| table Name,WinStatus 
+   ]]></searchTemplate>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+   <option name="showPager">true</option>
+  </table>
+  <table>
+   <title>Drives</title>
+   <searchTemplate>
+eventtype=perfmon-index host="$Server$" object="LogicalDisk" (counter="% Free Space" OR counter="Disk Transfers/sec") instance!="_Total"
+| eval Value=round(Value,2)
+| chart latest(Value) as Value by instance,counter
+   </searchTemplate>
+   <earliestTime>-15m</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+   <option name="showPager">true</option>
+  </table>
+ </row>
+ 
+ <row>
+  <table>
+   <title>Performance (Last 15 minutes)</title>
+   <searchTemplate>
+eventtype=perfmon-index host="$Server$" ((object="Memory" counter="% Committed Bytes In Use") OR (object="Processor" counter="% Processor Time" instance="_Total") OR (object="Network Interface" instance!="isatap.*" counter="Bytes Total/sec"))
+| eval Value=round(Value,2) 
+| eval counter=if(object=="Network Interface","Net("+instance+")",counter) 
+| stats sparkline(avg(Value)) as History,max(Value) as Peak by counter 
+| eval Peak=if(match(counter,"^Net\("),tostring(Peak) + " bytes/sec",tostring(Peak)+"%")
+   </searchTemplate>
+   <earliestTime>-15m</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+   <option name="showPager">true</option>
+  </table>
+  <table>
+   <title>Application Pools</title>
+   <searchTemplate>
+eventtype=perfmon-index host="$Server$" object=APP_POOL_WAS counter="Current Application Pool State"
+| stats latest(Value) as State by instance
+| eval State=case(State==3,"Started",State==5,"Stopped",isnotnull(State),"Unknown")
+| rename instance as "Application Pool"
+   </searchTemplate>
+   <earliestTime>-15m</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+   <option name="showPager">true</option>
+  </table>
+ </row>
+</form>

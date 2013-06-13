@@ -29,6 +29,9 @@
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
+   <drilldown>
+    <link>/app/Splunk_for_Sharepoint/ops_host?form.Server=$row.Name$</link>
+   </drilldown>
   </table>
   <table>
    <title>Servers with No Connections (Last 15 Minutes)</title>
@@ -36,6 +39,9 @@
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
+   <drilldown>
+    <link>/app/Splunk_for_Sharepoint/ops_host?form.Server=$row.Name$</link>
+   </drilldown>
   </table>
   <table>
    <title>Servers with High Load (Last 15 Minutes)</title>
@@ -43,6 +49,9 @@
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
+   <drilldown>
+    <link>/app/Splunk_for_Sharepoint/ops_host?form.Server=$row.Name$</link>
+   </drilldown>
   </table>
  </row>
 </dashboard>
