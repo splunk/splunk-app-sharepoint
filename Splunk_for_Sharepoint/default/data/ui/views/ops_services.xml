@@ -1,0 +1,12 @@
+<dashboard>
+ <label>Services</label>
+ <row>
+  <table>
+   <title>Service Instances</title>
+   <searchName>Ops - Service Instances</searchName>
+   <option name="count">30</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">true</option>
+  </table>
+ </row>
+</dashboard>

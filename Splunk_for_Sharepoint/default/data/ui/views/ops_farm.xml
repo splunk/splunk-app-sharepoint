@@ -5,7 +5,7 @@
   <table>
    <searchName>Ops Farm - Farm List</searchName>
    <drilldown>
-    <link>/app/Splunk_for_Sharepoint/ops_farmdetail?Id=$row.Id$</link>
+    <link>/app/Splunk_for_Sharepoint/ops_farmdetail?form.Id=$row.Id$</link>
    </drilldown>
   </table>
  </row>

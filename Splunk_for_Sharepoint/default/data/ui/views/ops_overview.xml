@@ -22,4 +22,27 @@
    <option name="height">150px</option>
   </chart>
  </row>
+ <row>
+  <table>
+   <title>Failed Services</title>
+   <searchName>Ops Overview - Service Status</searchName>
+   <option name="count">10</option>
+   <option name="showPager">true</option>
+   <option name="displayRowNumbers">false</option>
+  </table>
+  <table>
+   <title>Servers with No Connections (Last 15 Minutes)</title>
+   <searchName>Ops Overview - No Volume</searchName>
+   <option name="count">10</option>
+   <option name="showPager">true</option>
+   <option name="displayRowNumbers">false</option>
+  </table>
+  <table>
+   <title>Servers with High Load (Last 15 Minutes)</title>
+   <searchName>Ops Overview - High Load</searchName>
+   <option name="count">10</option>
+   <option name="showPager">true</option>
+   <option name="displayRowNumbers">false</option>
+  </table>
+ </row>
 </dashboard>

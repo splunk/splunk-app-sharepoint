@@ -1,0 +1,80 @@
+<form>
+ <label>Farm Information</label>
+ <fieldset autoRun="true" submitButton="true">
+  <input type="dropdown" token="FarmId">
+   <label>Farm GUID</label>
+   <populatingSearch fieldForValue="Id" fieldForLabel="Id">|inputlookup SPFarm</populatingSearch>
+  </input>
+ </fieldset>
+
+ <row>
+  <table>
+   <title>Farm Information</title>
+   <searchTemplate>
+|inputlookup SPFarm
+|search Id="$FarmId$"
+|eval CEIP=if(CEIPEnabled=="True","Enabled","Disabled")
+|eval ErrorReporting=if(ErrorReportingEnabled=="True","Enabled","Disabled")
+|lookup Build BuildNumber as BuildVersion OUTPUTNEW BuildDescription
+|table Id,DisplayName,BuildVersion,BuildDescription,ErrorReporting,CEIP,Status
+|rename Id as GUID, DisplayName as Name, BuildVersion as Build, BuildDescription as Version, ErrorReporting as "Error Reporting", CEIP as "Customer Experience Reporting"
+|transpose
+   </searchTemplate>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="showPager">false</option>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">false</option>
+  </table>
+  <chart>
+   <title>Page Impressions (Last 24 hours)</title>
+   <searchTemplate>
+eventtype=mssharepoint-iis
+| lookup SPServer Name AS host OUTPUTNEW FarmId
+| search FarmId="$FarmId$"
+| eval x=1
+| timechart per_minute(x) as "Pages/Minute" by host
+   </searchTemplate>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
+   <option name="charting.chart">area</option>
+   <option name="charting.stackMode">stacked</option>
+   <option name="charting.nullValueMode">zero</option>
+   <option name="charting.axitTitlesY.text">Pages/Minute</option>
+  </chart>
+ </row>
+ 
+ <row>
+  <table>
+   <title>SQL Servers</title>
+   <searchTemplate>
+|inputlookup SPServer
+|search FarmId="$FarmId$" Role="Invalid"
+|lookup SQLHostInformation Name AS ComputerName OUTPUTNEW OSVersionName
+|table Name, OSVersionName
+|rename OSVersionName AS "OS Version"
+   </searchTemplate>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
+   <drilldown>
+    <link>/app/Splunk_for_SQLServer/ops_host?form.SQLHost=$row.Name$</link>
+   </drilldown>
+  </table>
+  <table>
+   <title>Application Servers</title>
+   <searchTemplate>
+|inputlookup SPServer
+|search FarmId="$FarmId$" Role="Application"
+|lookup SPHostInfo host as Name OUTPUTNEW OSVersion,SharedToolsVersion
+|table Name,OSVersion,SharedToolsVersion
+|rename OSVersion as "OS Version", SharedToolsVersion as "Shared Tools"
+   </searchTemplate>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
+   <drilldown>
+    <link>/app/Splunk_for_Sharepoint/ops_host?form.Name=$row.Name$</link>
+   </drilldown>
+  </table>
+ </row>
+
+</form>

@@ -5,5 +5,25 @@
   <view name="ops_overview"/>
   <divider/>
   <view name="ops_farm"/>
+  <view name="ops_services"/>
+ </collection>
+ <collection label="Searches &amp; Reports">
+  <collection label="Lookup Generators">
+   <saved name="Lookup - SPContentDatabase"/>
+   <saved name="Lookup - SPFarm"/>
+   <saved name="Lookup - SPServer"/>
+   <saved name="Lookup - SPSite"/>
+   <saved name="Lookup - SPWeb"/>
+   <saved name="Lookup - SPWebApplication"/>
+   <saved name="Lookup - SPWebTemplate"/>
+   <saved name="Lookup - SharepointGuid"/>
+   <saved name="Lookup - Host Information"/>
+  </collection>
+  <collection label="Saved Searches">
+   <saved source="unclassified"/>
+  </collection>
+  <collection label="Dashboards">
+   <view source="unclassified"/>
+  </collection>
  </collection>
 </nav>

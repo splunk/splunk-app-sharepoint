@@ -1,0 +1,14 @@
+Name,Required
+DCLauncher14,False
+DCLoadBalancer14,False
+FIMService,False
+FIMSynchronizationService,False
+IISADMIN,True
+SPAdminV4,True
+SPSearchV4,True
+SPTimerV4,True
+SPTraceV4,False
+SPUserCodeV4,False
+SPWriterV4,False
+W3SVC,True
+W32TIME,True
