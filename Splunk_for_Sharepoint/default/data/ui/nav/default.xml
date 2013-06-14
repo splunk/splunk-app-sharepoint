@@ -7,6 +7,9 @@
   <view name="ops_farm"/>
   <view name="ops_services"/>
  </collection>
+ <collection label="Usage">
+  <view name="usage_webs"/>
+ </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
    <saved name="Lookup - SPContentDatabase"/>

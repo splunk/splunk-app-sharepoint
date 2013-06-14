@@ -1,0 +1,21 @@
+<dashboard>
+ <label>Web Usage</label>
+ <row>
+  <chart>
+   <title>Page Impressions by SPWeb (Last 24 hours)</title>
+   <searchName>Usage - Page Impressions by SPWeb</searchName>
+   <option name="charting.chart">area</option>
+   <option name="charting.stackMode">stacked</option>
+   <option name="charting.nullValueMode">zero</option>
+   <option name="height">250px</option>
+  </chart>
+  <chart>
+   <title>Unique Users by SPWeb (Last 24 hours)</title>
+   <searchName>Usage - Unique Users by SPWeb</searchName>
+   <option name="charting.chart">area</option>
+   <option name="charting.stackMode">stacked</option>
+   <option name="charting.nullValueMode">zero</option>
+   <option name="height">250px</option>
+  </chart>
+ </row>
+</dashboard>

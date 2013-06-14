@@ -35,3 +35,14 @@ Configure Audit Log Reporting:
 	Sharepoint 2010 Server:	Splunk_TA_Windows, TA-Sharepoint2010, TA-Windows2008R2-IIS
 
 6) Regenerate all lookups after 24 hours (takes overnight to gather all the data!)
+
+7) Edit lookups/HostMapping.csv to map each combination of HOST and PORT to the appropriate Url listed in the SPWebApplication table.  E.g.
+
+host,s_port,Url
+APP01,3000,http://app01:3000/
+APP01,80,http://sharepoint.shellmonger.com/
+WEB01,80,http://sharepoint.shellmonger.com/
+WEB02,80,http://sharepoint.shellmonger.com/
+
+We need to properly determine the Web Application from the IIS logs and this table is the quickest method of doing it.  This table should
+not change often.
