@@ -25,6 +25,7 @@ namespace Splunk.SharePoint2010.Audit
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Occurred.ToString("R"));
+            sb.AppendLine(string.Format("CheckSum={0}", CheckSum));
             sb.AppendLine(string.Format("FarmId={0}", FarmId));
             sb.AppendLine(string.Format("SiteId={0}", SiteId));
             sb.AppendLine(string.Format("ItemId={0}", ItemId));

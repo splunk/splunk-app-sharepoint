@@ -11,14 +11,13 @@
  
  <!-- Various build directories for our apps -->
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
- <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
- <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
+ <property name="addon.dir" value="${mainapp.dir}/appserver/addons"/>
  <property name="sharepointaudit.src" value="${vsprojects.dir}/SP10Audit"/>
  
  <!-- Compilation Directives for C#.NET -->
  <property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
  <property name="msbuild.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\msbuild.exe"/>
- <property name="vsconfig" value="Release"/>
+ <property name="vsconfig" value="Debug"/>
  <property name="targetinfo" value="/p:Configuration=${vsconfig};Platform=Any CPU;TargetFrameworkVersion=v3.5"/>
  
  <target name="clean">
@@ -93,29 +92,38 @@
  </target>
  
  <!-- Creates the TA-Sharepoint2010 area -->
- <target name="sp2010-addon" depends="SP10Audit">
-  <mkdir dir="${sp2010-addon.dir}"/>
-  
+ <target name="TA-Sharepoint2010">
+  <mkdir dir="${addon.dir}/TA-Sharepoint2010"/>
   <!-- Copy the main files into the build area, replacing VERSION where possible -->
-  <copy todir="${sp2010-addon.dir}">
+  <copy todir="${addon.dir}/TA-Sharepoint2010">
    <fileset dir="TA-Sharepoint2010"/>
    <filterset>
     <filter token="VERSION" value="${build.version}"/>
    </filterset>
-  </copy>
-  
-  <!-- Copy the required files into the TA-Sharepoint2010 area -->
-  <copy todir="${sp2010-addon.dir}/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
-  <copy todir="${sp2010-addon.dir}/bin" file="${vsprojects.dir}/SP10Audit/bin/${vsconfig}/SP10Audit.exe"/>
-  
+  </copy>  
+ </target>
+ 
+ <!-- Creates the TA-Sharepoint2010-Audit area -->
+ <target name="TA-Sharepoint2010-Audit" depends="SP10Audit">
+  <mkdir dir="${addon.dir}/TA-Sharepoint2010-Audit"/>
+  <!-- Copy the main files into the build area, replacing VERSION where possible -->
+  <copy todir="${addon.dir}/TA-Sharepoint2010-Audit">
+   <fileset dir="TA-Sharepoint2010-Audit"/>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>  
+  <!-- Copy the required files into the TA-Sharepoint2010-Audit area -->
+  <copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
+  <copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${vsconfig}/SP10Audit.exe"/>
  </target>
  
  <!-- Creates the TA-Windows2008R2-IIS area -->
- <target name="iis2008r2-addon">
-  <mkdir dir="${iis2008r2-addon.dir}"/>
+ <target name="TA-Windows2008R2-IIS">
+  <mkdir dir="${addon.dir}/TA-Windows2008R2-IIS"/>
   
   <!-- Copy the main files into the build area, replacing VERSION where possible -->
-  <copy todir="${iis2008r2-addon.dir}">
+  <copy todir="${addon.dir}/TA-Windows2008R2-IIS">
    <fileset dir="TA-Windows2008R2-IIS"/>
    <filterset>
     <filter token="VERSION" value="${build.version}"/>
@@ -124,7 +132,7 @@
  </target>
  
  <!-- Packages the whole app together into something that can be uploaded to Splunkbase -->
- <target name="package" depends="mainapp,sp2010-addon,iis2008r2-addon">
+ <target name="package" depends="mainapp,TA-Sharepoint2010,TA-Sharepoint2010-Audit,TA-Windows2008R2-IIS">
   <mkdir dir="${build.dir}/dist"/>
   <tar destfile="${dist.file}" longfile="gnu" compression="gzip">
    <tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">

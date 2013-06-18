@@ -123,54 +123,84 @@ namespace Splunk.SharePoint2010.Audit
         public List<AuditRecord> GetLatestEntries()
         {
             SystemLogger.Write(LogLevel.Debug, string.Format("Entering GetLatestEntries for database {0}", Id));
-            SqlConnection oSqlConnection = GetConnection();
             List<AuditRecord> oAuditRecords = new List<AuditRecord>();
-
-            string query = GetQueryString();
-            SystemLogger.Write(LogLevel.Debug, string.Format("Query String is {0}", query));
-            SqlCommand oQuery = new SqlCommand(query, oSqlConnection);
-            SystemLogger.Write(LogLevel.Debug, "Executing Query");
-            SqlDataReader row = oQuery.ExecuteReader();
-            SystemLogger.Write(LogLevel.Debug, "Processing Results");
-            while (row.Read())
+            using (SqlConnection oSqlConnection = GetConnection())
             {
-                // Create the new Audit Record object
-                AuditRecord oAuditRecord = new AuditRecord
-                {
-                    CheckSum        = row.GetInt32(row.GetOrdinal("CheckSum")),
-                    FarmId          = this.FarmId,
-                    SiteId          = row.GetGuid(row.GetOrdinal("SiteId")),
-                    ItemId          = row.GetGuid(row.GetOrdinal("ItemId")),
-                    ItemType        = row.GetInt16(row.GetOrdinal("ItemType")),
-                    UserId          = (row.IsDBNull(row.GetOrdinal("UserId")) ? -1 : row.GetInt32(row.GetOrdinal("UserId"))),
-                    DocLocation     = (row.IsDBNull(row.GetOrdinal("DocLocation")) ? "" : row.GetString(row.GetOrdinal("DocLocation"))),
-                    LocationType    = (row.IsDBNull(row.GetOrdinal("LocationType")) ? (byte)0xFF : row.GetByte(row.GetOrdinal("Locationtype"))),
-                    Occurred        = row.GetDateTime(row.GetOrdinal("Occurred")),
-                    Event           = row.GetInt32(row.GetOrdinal("Event")),
-                    EventName       = (row.IsDBNull(row.GetOrdinal("EventName")) ? "" : row.GetString(row.GetOrdinal("EventName"))),
-                    EventSource     = row.GetByte(row.GetOrdinal("EventSource")),
-                    SourceName      = (row.IsDBNull(row.GetOrdinal("SourceName")) ? "" : row.GetString(row.GetOrdinal("SourceName"))),
-                    EventData       = (row.IsDBNull(row.GetOrdinal("EventData")) ? "" : row.GetString(row.GetOrdinal("EventData"))),
-                    UserName        = (row.IsDBNull(row.GetOrdinal("UserName")) ? "" : row.GetString(row.GetOrdinal("UserName")))
-                };
 
-                // We need to figure out when we have logged a particular audit record
-                // to the Splunk database.  We do this with the query time and the 
-                // checksums of the records in that query time - this code block does
-                // this for us.
-                if (oAuditRecord.Occurred.Ticks > LastQuery.Ticks)
+                string query = GetQueryString();
+                SystemLogger.Write(LogLevel.Info, string.Format("Query String is {0}", query));
+                SqlCommand oQuery = new SqlCommand(query, oSqlConnection);
+                SystemLogger.Write(LogLevel.Debug, "Executing Query");
+                using (SqlDataReader row = oQuery.ExecuteReader())
                 {
-                    LastQuery = oAuditRecord.Occurred;
-                    CheckSums.Clear();
-                }
-                if (oAuditRecord.Occurred.Ticks == LastQuery.Ticks)
-                {
-                    CheckSums.Add(oAuditRecord.CheckSum);
-                }
+                    SystemLogger.Write(LogLevel.Debug, "Processing Results");
 
-                // Add the last audit record to the list to be returned.
-                oAuditRecords.Add(oAuditRecord);
-            }
+                    // Optimization - pull out the field ordinals before going into the loop.
+                    int ordCheckSum = row.GetOrdinal("CheckSum");
+                    int ordSiteId = row.GetOrdinal("SiteId");
+                    int ordItemId = row.GetOrdinal("ItemId");
+                    int ordItemType = row.GetOrdinal("ItemType");
+                    int ordUserId = row.GetOrdinal("UserId");
+                    int ordDocLocation = row.GetOrdinal("DocLocation");
+                    int ordLocationType = row.GetOrdinal("LocationType");
+                    int ordOccurred = row.GetOrdinal("Occurred");
+                    int ordEvent = row.GetOrdinal("Event");
+                    int ordEventName = row.GetOrdinal("EventName");
+                    int ordEventSource = row.GetOrdinal("EventSource");
+                    int ordSourceName = row.GetOrdinal("SourceName");
+                    int ordEventData = row.GetOrdinal("EventData");
+                    int ordUserName = row.GetOrdinal("UserName");
+
+                    while (row.Read())
+                    {
+                        // Create the new Audit Record object
+                        AuditRecord oAuditRecord = new AuditRecord
+                        {
+                            CheckSum = row.GetInt32(ordCheckSum),
+                            FarmId = this.FarmId,
+                            SiteId = row.GetGuid(ordSiteId),
+                            ItemId = row.GetGuid(ordItemId),
+                            ItemType = row.GetInt16(ordItemType),
+                            UserId = (row.IsDBNull(ordUserId) ? -1 : row.GetInt32(ordUserId)),
+                            DocLocation = (row.IsDBNull(ordDocLocation) ? "" : row.GetString(ordDocLocation)),
+                            LocationType = (row.IsDBNull(ordLocationType) ? (byte)0xFF : row.GetByte(ordLocationType)),
+                            Occurred = row.GetDateTime(ordOccurred),
+                            Event = row.GetInt32(ordEvent),
+                            EventName = (row.IsDBNull(ordEventName) ? "" : row.GetString(ordEventName)),
+                            EventSource = row.GetByte(ordEventSource),
+                            SourceName = (row.IsDBNull(ordSourceName) ? "" : row.GetString(ordSourceName)),
+                            EventData = (row.IsDBNull(ordEventData) ? "" : row.GetString(ordEventData)),
+                            UserName = (row.IsDBNull(ordUserName) ? "" : row.GetString(ordUserName))
+                        };
+
+                        // We need to figure out when we have logged a particular audit record
+                        // to the Splunk database.  We do this with the query time and the 
+                        // checksums of the records in that query time - this code block does
+                        // this for us.
+                        if (oAuditRecord.Occurred.Ticks > LastQuery.Ticks)
+                        {
+                            LastQuery = oAuditRecord.Occurred;
+                            CheckSums.Clear();
+                        }
+                        if (oAuditRecord.Occurred.Ticks == LastQuery.Ticks)
+                        {
+                            CheckSums.Add(oAuditRecord.CheckSum);
+                        }
+
+                        // Add the last audit record to the list to be returned.
+                        oAuditRecords.Add(oAuditRecord);
+                    } // End of row.Read() loop
+                    
+                    // At the end of the loop, the SqlDataReader calculates a whole bunch of 
+                    // statistics, so cancel the query before the end, but after the rows have
+                    // been read to avoid that.
+                    oQuery.Cancel();
+                } // End of using SqlDataReader
+
+                // Close the connection
+                oSqlConnection.Close();
+
+            } // End of using SqlConnection
 
             return oAuditRecords;
         }
@@ -192,29 +222,19 @@ namespace Splunk.SharePoint2010.Audit
         /// <returns>the query string</returns>
         private string GetQueryString()
         {
-            string baseQuery = @"SELECT 
-                CHECKSUM(*) AS CheckSum,
-	            [AuditData].[SiteId], 
-	            [AuditData].[ItemId], 
-	            [AuditData].[ItemType], 
-	            [AuditData].[UserId],
-	            [AuditData].[DocLocation],
-	            [AuditData].[LocationType],
-	            [AuditData].[Occurred],
-	            [AuditData].[Event],
-	            [AuditData].[EventName],
-	            [AuditData].[EventSource],
-	            [AuditData].[SourceName],
-	            [AuditData].[EventData],
-	            [UserInfo].[tp_Login] AS UserName
-	            FROM [dbo].[AuditData], [dbo].[UserInfo]
+            string baseQuery = @"SELECT CHECKSUM(*) AS CheckSum,
+	            [AuditData].[SiteId], [AuditData].[ItemId], [AuditData].[ItemType], 
+	            [AuditData].[UserId], [AuditData].[DocLocation], [AuditData].[LocationType],
+	            [AuditData].[Occurred], [AuditData].[Event], [AuditData].[EventName],
+	            [AuditData].[EventSource], [AuditData].[SourceName], [AuditData].[EventData],
+	            [UserInfo].[tp_Login] AS UserName FROM [dbo].[AuditData], [dbo].[UserInfo]
 	            WHERE ([AuditData].[UserId] = [UserInfo].[tp_ID] AND [AuditData].[SiteId] = [UserInfo].[tp_SiteId])";
             StringBuilder query = new StringBuilder(baseQuery);
 
             // If we have a last query time, then use that
             if (!LastQuery.Equals(DateTime.MinValue))
             {
-                query.AppendFormat(" AND ([AuditData].[Occurred] >= '{0}')", LastQuery.ToString("yyyy-MM-dd HH:mm:ss"));
+                query.AppendFormat(" AND ([AuditData].[Occurred] >= '{0}')", LastQuery.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             }
 
             // If we have any hashes, then use those
@@ -223,12 +243,13 @@ namespace Splunk.SharePoint2010.Audit
                 List<string> orField = new List<string>();
                 foreach (int hash in CheckSums)
                 {
-                    orField.Add(string.Format("CHECKSUM(*) != {0}", hash));
+                    orField.Add(string.Format("CHECKSUM(*) = {0}", hash));
                 }
-                query.AppendFormat(" AND ({0})", string.Join(" OR ", orField.ToArray()));
+                query.AppendFormat(" AND NOT ({0})", string.Join(" OR ", orField.ToArray()));
             }
+            query.AppendFormat(" ORDER BY [AuditData].[Occurred]");
 
-            return query.ToString();
+            return query.Replace("\r\n", "").ToString();
         }
 
         /// <summary>

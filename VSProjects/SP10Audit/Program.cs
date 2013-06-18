@@ -247,18 +247,26 @@ namespace Splunk.SharePoint2010.Audit
         /// </summary>
         private void EnableAllSites()
         {
+            SystemLogger.Write(LogLevel.Debug, "EnableAllSites: Starting SPSecurity.RunWithElevatedPrivileges");
             SPSecurity.RunWithElevatedPrivileges(delegate()
             {
+                SystemLogger.Write(LogLevel.Debug, "EnableAllSites: Looping over all SPServices");
                 foreach (SPService oService in SPFarm.Local.Services)
                 {
-                    if (oService is SPWebService)
+                    SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: Handling Service {0} (Type {1})", oService.Id, oService.GetType().ToString()));
+                    // Skip Central Administration service - we are not interested in that
+                    if (oService is SPWebService && !oService.TypeName.Equals("Central Administration"))
                     {
+                        SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: Service {0} is a SPWebervice - looping over Web Applications", oService.Id));
                         foreach (SPWebApplication oWebApp in ((SPWebService)oService).WebApplications)
                         {
+                            SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: WebApplication {0}: {1}", oWebApp.Id, oWebApp.DisplayName));
                             foreach (SPSite oSite in oWebApp.Sites)
                             {
+                                SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: SPSite {0}: {1}", oSite.ID, oSite.Url));
                                 foreach (SPWeb oWeb in oSite.AllWebs)
                                 {
+                                    SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: SPWeb {0}: {1}", oWeb.ID, oWeb.Name));
                                     if (oWeb.Audit.AuditFlags == SPAuditMaskType.None)
                                     {
                                         SystemLogger.Write(LogLevel.Info, string.Format("Enabling Full Audit on Web {0}: {1}", oWeb.ID, oWeb.Title));
