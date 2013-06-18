@@ -13,13 +13,13 @@
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="sp2010-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Sharepoint2010"/>
  <property name="iis2008r2-addon.dir" value="${mainapp.dir}/appserver/addons/TA-Windows2008R2-IIS"/>
- <property name="sharepointaudit.src" value="${vsprojects.dir}/SharepointAudit"/>
+ <property name="sharepointaudit.src" value="${vsprojects.dir}/SP10Audit"/>
  
  <!-- Compilation Directives for C#.NET -->
  <property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
  <property name="msbuild.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\msbuild.exe"/>
  <property name="vsconfig" value="Release"/>
- <property name="targetinfo" value="/p:Configuration=${vsconfig};Platform=x64;TargetFrameworkVersion=v3.5"/>
+ <property name="targetinfo" value="/p:Configuration=${vsconfig};Platform=Any CPU;TargetFrameworkVersion=v3.5"/>
  
  <target name="clean">
   <delete dir="${build.dir}"/>
