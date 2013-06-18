@@ -128,7 +128,7 @@ namespace Splunk.SharePoint2010.Audit
             {
 
                 string query = GetQueryString();
-                SystemLogger.Write(LogLevel.Info, string.Format("Query String is {0}", query));
+                SystemLogger.Write(LogLevel.Debug, string.Format("Query String is {0}", query));
                 SqlCommand oQuery = new SqlCommand(query, oSqlConnection);
                 SystemLogger.Write(LogLevel.Debug, "Executing Query");
                 using (SqlDataReader row = oQuery.ExecuteReader())

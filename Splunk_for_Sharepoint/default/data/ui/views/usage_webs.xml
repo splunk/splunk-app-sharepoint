@@ -18,4 +18,27 @@
    <option name="height">250px</option>
   </chart>
  </row>
+ <row>
+  <table>
+   <title>Top Pages (Last 24 hours)</title>
+   <searchName>Usage - Top Pages</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">false</option>
+  </table>
+  <table>
+   <title>Top Visitors (Last 24 hours)</title>
+   <searchName>Usage - Top Visitors</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">false</option>
+  </table>
+  <table>
+   <title>Top Browsers (Last 24 hours)</title>
+   <searchName>Usage - Top Browsers</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">false</option>
+  </table>  
+ </row>
 </dashboard>
