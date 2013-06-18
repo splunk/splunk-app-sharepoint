@@ -86,14 +86,14 @@
  </target>
  
  <!-- Creates the sharepointaudit executable -->
- <target name="sharepointaudit">
+ <target name="SP10Audit">
 	<exec executable="${msbuild.exe}" dir="${sharepointaudit.src}">
 	 <arg value="${targetinfo}"/>
 	</exec>
  </target>
  
  <!-- Creates the TA-Sharepoint2010 area -->
- <target name="sp2010-addon" depends="sharepointaudit">
+ <target name="sp2010-addon" depends="SP10Audit">
   <mkdir dir="${sp2010-addon.dir}"/>
   
   <!-- Copy the main files into the build area, replacing VERSION where possible -->
@@ -106,7 +106,7 @@
   
   <!-- Copy the required files into the TA-Sharepoint2010 area -->
   <copy todir="${sp2010-addon.dir}/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
-  <copy todir="${sp2010-addon.dir}/bin" file="${vsprojects.dir}/SharepointAudit/bin/${vsconfig}/SharepointAudit.exe"/>
+  <copy todir="${sp2010-addon.dir}/bin" file="${vsprojects.dir}/SP10Audit/bin/${vsconfig}/SP10Audit.exe"/>
   
  </target>
  
