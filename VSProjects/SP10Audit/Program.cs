@@ -30,14 +30,14 @@ namespace Splunk.SharePoint2010.Audit
         private int Interval { get; set; }
 
         /// <summary>
-        /// Parameter for storing the Interval between new SPSite checks for auto-audit enable, measured in ms
+        /// Parameter for storing the Interval between new SPSite checks for auto-audit enable, measured in ticks (see DateTime.Ticks)
         /// </summary>
-        private int AutoEnableInterval { get; set; }
+        private long AutoEnableInterval { get; set; }
 
         /// <summary>
-        /// Parameter for storing the Interval between content database checks, measured in ms
+        /// Parameter for storing the Interval between content database checks, measured in ticks (see DateTime.Ticks)
         /// </summary>
-        private int DBCheckInterval { get; set; }
+        private long DBCheckInterval { get; set; }
 
         /// <summary>
         /// Parameter for storing the AutoEnable setting - true for autoenable, false for don't
@@ -117,17 +117,17 @@ namespace Splunk.SharePoint2010.Audit
             }
 
 
-            AutoEnableInterval = 86400000;
+            AutoEnableInterval = (long)864000000000;
             if (pStanza.SingleValueParameters.TryGetValue("autoenableinterval", out sCurrentArgument)) {
-                AutoEnableInterval = int.Parse(sCurrentArgument) * 1000;
+                AutoEnableInterval = long.Parse(sCurrentArgument) * 10000000;
                 SystemLogger.Write(LogLevel.Info, string.Format("AutoEnable Check Interval = {0} ms", AutoEnableInterval));
             } else {
                 SystemLogger.Write(LogLevel.Info, "AutoEnable Check Interval not specified - default = 1d");
             }
 
-            DBCheckInterval = 86400000;
+            DBCheckInterval = (long)864000000000;
             if (pStanza.SingleValueParameters.TryGetValue("dbcheckinterval", out sCurrentArgument)) {
-                DBCheckInterval = int.Parse(sCurrentArgument) * 1000;
+                DBCheckInterval = long.Parse(sCurrentArgument) * 10000000;
                 SystemLogger.Write(LogLevel.Info, string.Format("Database Check Interval = {0} ms", DBCheckInterval));
             } else {
                 SystemLogger.Write(LogLevel.Info, "Database Check Interval not specified - default = 1d");
@@ -173,7 +173,6 @@ namespace Splunk.SharePoint2010.Audit
                         if ((DateTime.Now.Ticks - lastAutoEnablePoll.Ticks) > AutoEnableInterval)
                         {
                             SystemLogger.Write(LogLevel.Debug, "Initiating poll for auto-enabling all SPSites");
-                            // TODO: Capture any SPExceptions as it would indicate the farm is down.
                             try
                             {
                                 EnableAllSites();
@@ -193,7 +192,6 @@ namespace Splunk.SharePoint2010.Audit
                     if ((DateTime.Now.Ticks - lastDBCheckPoll.Ticks) > DBCheckInterval)
                     {
                         SystemLogger.Write(LogLevel.Debug, "Initiating poll for content database discovery");
-                        // TODO: Capture SPException and SQLException as it would indicate the farm or SQL Server is down
                         try
                         {
                             oAuditDatabaseCollection.Discover();
@@ -213,25 +211,28 @@ namespace Splunk.SharePoint2010.Audit
                     }
 
                     // Poll each content database for new audit data
-                    // TODO: Capture any SQLException as it would indicate the SQL Server is down
                     foreach (var oAuditDatabase in oAuditDatabaseCollection)
                     {
                         SystemLogger.Write(LogLevel.Debug, string.Format("Processing database {0}", oAuditDatabase.Key));
-                        try {
+                        try
+                        {
                             List<AuditRecord> lAuditEntries = oAuditDatabase.Value.GetLatestEntries();
                             SystemLogger.Write(LogLevel.Debug, string.Format("Found {0} audit entries", lAuditEntries.Count));
                             foreach (AuditRecord oAuditRecord in lAuditEntries)
                             {
-                                writer.Write(new EventElement {
+                                writer.Write(new EventElement
+                                {
                                     Data = oAuditRecord.ToLogString(true),
                                     Time = DateTime.SpecifyKind(oAuditRecord.Occurred, DateTimeKind.Utc)
                                 });
                             }
-                        } catch (SqlException ex) {
+                            // Save current state to the checkpoint file
+                            oAuditDatabase.Value.Save();
+                        }
+                        catch (SqlException ex)
+                        {
                             SystemLogger.Write(LogLevel.Error, string.Format("SQL Server Error: {0} - audit log reading has been skipped for this poll", ex.Message));
                         }
-                        // Save current state to the checkpoint file
-                        oAuditDatabase.Value.Save();
                     }
 
                     // Sleep for the duration of the poll interval
