@@ -209,6 +209,7 @@ namespace Splunk.SharePoint2010.Audit
                         {
                             SystemLogger.Write(LogLevel.Error, string.Format("SQL Server Error: {0} - discovery has been skipped for this day", ex.Message));
                         }
+                        lastDBCheckPoll = DateTime.Now;
                     }
 
                     // Poll each content database for new audit data

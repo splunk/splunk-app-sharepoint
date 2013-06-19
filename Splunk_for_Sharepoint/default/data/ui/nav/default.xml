@@ -9,6 +9,9 @@
  </collection>
  <collection label="Usage">
   <view name="usage_webs"/>
+  <collection label="Audit Reports">
+   <view name="usage_updateddocs"/>
+  </collection>
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
