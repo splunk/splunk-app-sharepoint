@@ -3,7 +3,7 @@
  <row>
   <table>
    <title>Most Updated Documents</title>
-   <searchName>Most Updated Documents</searchName>
+   <searchName>Audit - Most Updated Documents</searchName>
    <option name="count">20</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">false</option>
