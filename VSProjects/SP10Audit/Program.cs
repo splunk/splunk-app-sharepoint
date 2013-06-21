@@ -265,7 +265,21 @@ namespace Splunk.SharePoint2010.Audit
                             SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: WebApplication {0}: {1}", oWebApp.Id, oWebApp.DisplayName));
                             foreach (SPSite oSite in oWebApp.Sites)
                             {
-                                SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: SPSite {0}: {1}", oSite.ID, oSite.Url));
+                                SystemLogger.Write(LogLevel.Debug, string.Format("EnableAllSites: SPSite {0}: {1} - AuditFlags = {2}", oSite.ID, oSite.Url, oSite.Audit.AuditFlags));
+                                try
+                                {
+                                    if (oSite.Audit.AuditFlags == SPAuditMaskType.None)
+                                    {
+                                        SystemLogger.Write(LogLevel.Info, string.Format("Enabling full Audit on Site {0}: {1}", oSite.ID, oSite.Url));
+                                        oSite.Audit.AuditFlags = SPAuditMaskType.All;
+                                        oSite.Audit.Update();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    SystemLogger.Write(LogLevel.Error, string.Format("Cannot enable full audit on Site {0}: {1}", oSite.ID, ex.Message));
+                                }
+
                                 foreach (SPWeb oWeb in oSite.AllWebs)
                                 {
                                     try
