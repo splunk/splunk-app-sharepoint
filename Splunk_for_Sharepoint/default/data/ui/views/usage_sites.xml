@@ -31,4 +31,19 @@
    <option name="showPager">true</option>
   </table>
  </row>
+ <row>
+  <table>
+   <title>Largest Sites by Database Size</title>
+   <searchName>Usage - Largest Sites by DB Size</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">true</option>
+  </table>
+  <table>
+   <title>Largest Sites by List Count</title>
+   <searchName>Usage - Largest Sites by List Count</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">true</option>
+  </table>
 </dashboard>
