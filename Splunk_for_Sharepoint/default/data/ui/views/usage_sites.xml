@@ -1,0 +1,34 @@
+<dashboard>
+ <label>Site Usage</label>
+ <row>
+  <table>
+   <title>Most Active Sites by Uploads</title>
+   <searchName>Usage - Most Active Sites by Uploads</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">false</option>
+  </table>
+  <table>
+   <title>Most Active Sites by Downloads</title>
+   <searchName>Usage - Most Active Sites by Downloads</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">false</option>  </table>
+ </row>
+ <row>
+  <table>
+   <title>Dormant Sites (No Activity in Last 7 days)</title>
+   <searchName>Usage - Dormant Sites</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">true</option>
+  </table>
+  <table>
+   <title>Read-Only Sites (No Uploads in Last 7 days)</title>
+   <searchName>Usage - Read-Only Sites</searchName>
+   <option name="count">10</option>
+   <option name="displayRowNumbers">true</option>
+   <option name="showPager">true</option>
+  </table>
+ </row>
+</dashboard>
