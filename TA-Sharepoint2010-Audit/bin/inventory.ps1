@@ -187,7 +187,7 @@ Get-SPDiagnosticsProvider `
 #
 # SPFeatureDefinition
 #
-Get-SPFeature `
+Get-SPFeature -Limit All `
 | Select-Object Id, Name, DisplayName, ActivateOnDefault, AlwaysForceInstall, `
 		AutoActivateInCentralAdmin, Hidden, ReceiverAssembly, ReceiverClass, RequireResources, `
 		RootDirectory, Scope, SolutionId, Status, UIVersion, Version `
@@ -213,7 +213,7 @@ Get-SPWebTemplate `
 #
 # Web Applications
 # 
-Get-SPWebApplication `
+Get-SPWebApplication -IncludeCentralAdministration `
 | Select-Object Id, Name, DisplayName, Status, Version, Url, `
 		AlertFlags, AlertsEnabled, AlertsEventBatchSize, AlertsLimited, AlertsMaximum, `
 		AlertsMaximumQuerySet, AllowAccessToWebpartCatalog, AllowContributorsToEditScriptableParts, `
@@ -243,7 +243,7 @@ Get-SPWebApplication `
 | Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 | Out-Splunk
 
-foreach ($webapp in Get-SPWebApplication)
+foreach ($webapp in Get-SPWebApplication -IncludeCentralAdministration)
 {
 	$webapp.ApplicationPool `
 	| Select-Object Id, Name, DisplayName, Status, Version, Username, `
@@ -302,7 +302,7 @@ Get-SPContentDatabase `
 # Within Each SPSite is a number of SPWebs.
 # Within Each SPWeb is a bunch of lists, folders, users, etc.
 #
-foreach ($site in Get-SPSite)
+foreach ($site in Get-SPSite -Limit All)
 {
 	$o_arr = New-Object System.Collections.ArrayList
 	$site.Owner | %{ [void]$o_arr.Add($_.UserLogin) }
@@ -349,7 +349,7 @@ foreach ($site in Get-SPSite)
 	| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 	| Out-Splunk
 
-	foreach ($spweb in Get-SPWeb $site.Url)
+	foreach ($spweb in Get-SPWeb -Site $site -Limit All)
 	{
 		$spweb `
 		| Select-Object Id, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
