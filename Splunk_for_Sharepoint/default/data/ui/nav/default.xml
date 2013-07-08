@@ -19,6 +19,7 @@
   <collection label="Lookup Generators">
    <saved name="Lookup - SPContentDatabase"/>
    <saved name="Lookup - SPFarm"/>
+   <saved name="Lookup - SPList" />
    <saved name="Lookup - SPServer"/>
    <saved name="Lookup - SPSite"/>
    <saved name="Lookup - SPWeb"/>

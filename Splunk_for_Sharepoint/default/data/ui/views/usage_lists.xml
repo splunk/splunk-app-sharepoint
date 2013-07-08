@@ -21,4 +21,14 @@
    <searchName>Lists - Most Updated</searchName>
   </table>
  </row>
+ <row>
+  <table>
+   <title>Most Popular Lists (Access Count)</title>
+   <searchName>Lists - Popular by Access Count</searchName>
+  </table>
+  <table>
+   <title>Most Popular Lists (User Count)</title>
+   <searchName>Lists - Popular by Unique Users</searchName>
+  </table>
+ </row>
 </dashboard>
