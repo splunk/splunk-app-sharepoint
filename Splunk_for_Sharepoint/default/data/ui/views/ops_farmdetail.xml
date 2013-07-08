@@ -55,7 +55,7 @@ eventtype=mssharepoint-iis
 | lookup OSVersion OSBaseVersion OUTPUTNEW OSVersionName
 | table Name,OSVersionName
 | rename OSVersionName as "OS Version"
-| join Name [search eventtype=sql-perfmon-objects | chart avg(Value) by host,counter | rename "Avg. Disk sec/Transfer" AS D, "Page life expectancy" as M, "% Processor Time" as P, host as Name | eval D=round(D*1000,2) | eval M=round(M,2) | eval P=round(P,2) | rename T as "Disk Latency (ms)",M as "Page Life (s)", P as "% Processor Time" ]
+| join Name [search eventtype=sql-perfmon-objects | chart avg(Value) by host,counter | rename "Avg. Disk sec/Transfer" AS D, "Page life expectancy" as M, "% Processor Time" as P, host as Name | eval D=round(D*1000,2) | eval M=round(M,2) | eval P=round(P,2) | rename D as "Disk Latency (ms)",M as "Page Life (s)", P as "% Processor Time" ]
    ]]></searchTemplate>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
