@@ -1,0 +1,19 @@
+<dashboard>
+ <label>Farm Errors</label>
+ 
+ <row>
+  <html>
+<p>This dashboard shows any errors that were encountered during the inventory gathering.  The most common error
+will be permission denied, which indicates that the user that is running the inventory script is not allowed to
+access specific content.  The error message provides the detail necessary to correct the problem.</p>
+  </html>
+ </row>
+ <row>
+  <table>
+   <searchName>SharePoint Inventory Errors</searchName>
+   <drilldown>
+    <link>/app/Splunk_for_Sharepoint/ops_farmdetail?form.Id=$row.FarmId$</link>
+   </drilldown>
+  </table>
+ </row>
+</dashboard>

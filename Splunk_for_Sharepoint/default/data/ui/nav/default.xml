@@ -6,6 +6,8 @@
   <divider/>
   <view name="ops_farm"/>
   <view name="ops_services"/>
+  <divider/>
+  <view name="ops_farmerrors"/>
  </collection>
  <collection label="Usage">
   <view name="usage_webs"/>
