@@ -14,6 +14,9 @@
   <view name="usage_webs"/>
   <view name="usage_sites"/>
   <view name="usage_lists"/>
+  <view name="usage_documents"/>
+  <divider/>
+  <view name="usage_byuser"/>
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">

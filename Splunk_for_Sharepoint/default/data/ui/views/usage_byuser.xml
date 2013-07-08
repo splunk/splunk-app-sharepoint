@@ -1,0 +1,65 @@
+<form>
+ <label>User Tracking</label>
+ 
+ <fieldset autoRun="false" submitButton="true">
+   <input type="dropdown" token="username">
+    <label>Username</label>
+    <populatingSearch fieldForValue="vLoginName" fieldForLabel="LoginName" earliest="-1m" latest="now">
+| inputlookup SPUser
+| search IsDomainGroup="False"
+| stats count by LoginName
+| eval vLoginName=replace(LoginName,"\\\\","\\\\")
+| sort - LoginName
+    </populatingSearch>
+   </input>
+   <input type="time">
+    <default>Last 24 hours</default>
+   </input>
+ </fieldset>
+ 
+  <row>
+   <table>
+    <title>Basic Information</title>
+	<searchString>
+| inputlookup SPUser
+| search LoginName="$username$"
+| dedup Sid
+| join type=outer LoginName [search eventtype=mssharepoint-iis cs_username="$username$"|stats latest(_time) as lastLoginTime by cs_username|rename cs_username as LoginName]
+| eval lastLoginTime=strftime(lastLoginTime,"%c")
+| table LoginName, DisplayName, Sid, lastLoginTime
+| rename lastLoginTime as "Last Login Time"
+| transpose
+    </searchString>
+   </table>
+   <table>
+    <title>Site Permissions</title>
+	<searchString>
+| inputlookup SPUser
+| search LoginName="$username$"
+| lookup SPWeb Id as WebId OUTPUT Title
+| table Title, IsSiteAdmin, IsSiteAuditor
+    </searchString>
+   </table>
+  </row>
+  <row>
+   <chart>
+    <title>Access History</title>
+	<searchString>
+eventtype=mssharepoint-iis cs_username="$username$" sc_status=200
+| eval pages=1
+| timechart per_minute(pages) as "Pages/Min" 
+	</searchString>
+	<option name="charting.chart">area</option>
+	<option name="height">200px</option>
+   </chart>
+   <table>
+    <title>Document Access History</title>
+	<searchString>
+eventtype=mssharepoint-audit UserName="$username$" ItemType=1 DocLocation!="*/_catalogs/*" DocLocation!="*.css"
+| lookup SPAuditEventType Event OUTPUT EventType 
+| dedup consecutive=t DocLocation,EventType 
+| table _time,EventType,DocLocation
+    </searchString>
+   </table>
+  </row>
+</form>
