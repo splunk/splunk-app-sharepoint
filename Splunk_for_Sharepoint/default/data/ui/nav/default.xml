@@ -13,6 +13,7 @@
  <collection label="Usage">
   <view name="usage_webs"/>
   <view name="usage_sites"/>
+  <view name="usage_lists"/>
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">

@@ -1,0 +1,24 @@
+<dashboard>
+ <label>List Usage</label>
+ 
+  <row>
+   <table>
+    <title>Largest Lists - # Items</title>
+	<searchName>Lists - Top by Item Count</searchName>
+  </table>
+  <table>
+   <title>Largest Lists - Total Size</title>
+   <searchName>Lists - Top by Item Size</searchName>
+  </table>
+ </row>
+ <row>
+  <table>
+   <title>Empty Lists</title>
+   <searchName>Lists - Empty</searchName>
+  </table>
+  <table>
+   <title>Most Updated Lists (Last 7 days)</title>
+   <searchName>Lists - Most Updated</searchName>
+  </table>
+ </row>
+</dashboard>
