@@ -1,0 +1,25 @@
+<dashboard>
+  <label>Documents</label>
+  
+  <row>
+   <table>
+    <title>Most Read Documents (by Downloads)</title>
+	<searchName>Documents - Most Read by Downloads</searchName>
+   </table>
+   <table>
+    <title>Most Read Documents (by Unique Users)</title>
+	<searchName>Documents - Most Read by Distinct Users</searchName>
+   </table>
+  </row>
+  
+  <row>
+   <table>
+    <title>Most Updated Documents</title>
+	<searchName>Documents - Most Updated</searchName>
+   </table>
+   <table>
+    <title>Recently Deleted Documents</title>
+	<searchName>Documents - Recently Deleted</searchName>
+   </table>
+  </row>
+</dashboard>
