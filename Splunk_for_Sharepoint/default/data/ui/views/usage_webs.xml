@@ -1,5 +1,5 @@
 <dashboard>
- <label>Web Usage</label>
+ <label>Sites</label>
  <row>
   <chart>
    <title>Page Impressions by SPWeb (Last 24 hours)</title>
