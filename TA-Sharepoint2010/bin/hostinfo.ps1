@@ -20,6 +20,20 @@ function Out-Splunk
 	}
 }
 
+function Get-LocalIPAddress
+{
+    $AdapterSet = Get-WmiObject -Class Win32_NetworkAdapterConfiguration
+    $IPAddressSet = @()
+    foreach ($adapter in $AdapterSet) {
+	    if ($adapter.IPAddress -ne $null) {
+			foreach ($ipaddress in $adapter.IPAddress) {
+				$IPAddressSet = $IPAddressSet + $ipaddress
+			}
+		}
+    }
+    $IPAddressSet
+} 
+
 function Get-HostInformation {
     [CmdletBinding()]
     Param (
@@ -42,6 +56,9 @@ function Get-HostInformation {
 		
 		$sharedver = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Shared Tools\Web Server Extensions\14.0").Version
 		$HostInfo | Add-Member -MemberType NoteProperty -Name SharedToolsVersion -Value $sharedver
+		
+		$ipaddrs = (Get-LocalIPAddress) -join ","
+		$HostInfo | Add-Member -MemberType NoteProperty -Name IPAddressList -Value $ipaddrs
 		
 		$HostInfo
 	}
