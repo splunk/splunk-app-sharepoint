@@ -79,5 +79,19 @@ eventtype=mssharepoint-iis
    </drilldown>
   </table>
  </row>
-
+ <row>
+  <table>
+   <title>Peak Network Latency (ms) Between Servers (last 24 hours)</title>
+   <searchTemplate><![CDATA[
+eventtype=mssharepoint-netlatency
+| lookup SPServer Name as host OUTPUT FarmId
+| search FarmId="$FarmId$"
+| lookup SPIPAddress IPAddress as Address OUTPUT ComputerName 
+| where isnotnull(ComputerName) AND ComputerName!=host 
+| chart max(ResponseTime) by host,ComputerName
+   ]]></searchTemplate>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
+  </table>
+ </row>
 </form>
