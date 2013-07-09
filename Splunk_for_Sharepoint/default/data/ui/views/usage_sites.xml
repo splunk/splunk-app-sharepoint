@@ -47,4 +47,14 @@
    <option name="showPager">true</option>
   </table>
  </row>
+ <row>
+  <table>
+   <title>Largest Sites as Percentage of Quota</title>
+   <searchName>Usage - Largest Sites as Percentage of Quota</searchName>
+  </table>
+  <table>
+   <title>Sites with Quota Issues</title>
+   <searchName>Usage - Sites with Quota Issues</searchName>
+  </table>
+ </row>
 </dashboard>
