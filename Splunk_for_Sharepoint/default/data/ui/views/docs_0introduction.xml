@@ -1,0 +1,38 @@
+<dashboard>
+ <label>Introduction</label>
+  
+  <row>
+   <html>
+<h1>Welcome to the Splunk App for Microsoft SharePoint 2010</h1>
+
+<p>This app is designed to provide comprehensive data collection and field extraction from Microsoft SharePoint 2010 and
+a set of starting dashboards covering health, audit and usage.  The data collection includes the following:</p>
+<ul>
+ <li>SharePoint Object Inventory</li>
+ <li>Service and Performance Information</li>
+ <li>Network Latency Information</li>
+ <li>IIS Logs</li>
+ <li>ULS Logs</li>
+ <li>SharePoint Audit Logs</li>
+</ul>
+
+<p>This app will not work until all installation is completed.  The installation process will take some time and some adjustment 
+to the permissions structures that govern the SharePoint farm.</p>
+
+<h2>System Requirements</h2>
+
+<p>The "central Splunk instance" (consisting of search heads and indexers) can be any operating system.  You must be running
+Splunk v5.0.3 or later on all Splunk servers within the central Splunk instance.  Splunk v6.0 is not supported at this time.</p>
+
+<p>Splunk App for Microsoft SharePoint 2010 supports:</p>
+
+<ul>
+<li>Microsoft SharePoint 2010 running on Windows Server 2008R2</li>
+<li>SQL Server 2008R2 running on Windows Server 2008R2</li>
+<li>SQL Server 2012 running on Windows Server 2012</li>
+</ul>
+
+<p>To start, click on <a href="docs_1install">Installation</a>.</p>
+   </html>
+  </row>
+ </dashboard>

@@ -1,8 +1,8 @@
 <nav>
- <view name="flashtimeline" default="view"/>
+ <view name="flashtimeline"/>
 
  <collection label="Health">
-  <view name="ops_overview"/>
+  <view name="ops_overview" default="true"/>
   <divider/>
   <view name="ops_farm"/>
   <view name="ops_services"/>
@@ -17,6 +17,9 @@
   <view name="usage_documents"/>
   <divider/>
   <view name="usage_byuser"/>
+ </collection>
+ <collection label="Documentation">
+  <view source="unclassified" match="docs_"/>
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
@@ -33,7 +36,7 @@
    <saved name="Lookup - Host Information"/>
     <saved name="Lookup - SPIPAddress"/>
   </collection>
-  <collection label="Saved Searches">
+   <collection label="Saved Searches">
    <saved source="unclassified"/>
   </collection>
   <collection label="Dashboards">

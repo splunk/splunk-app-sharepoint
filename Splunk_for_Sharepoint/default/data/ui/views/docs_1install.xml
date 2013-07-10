@@ -1,0 +1,110 @@
+<dashboard>
+ <label>Installation</label>
+ <row>
+   <html>
+<h2>Step 1: Install the Splunk App for SQL Server on all Content Servers</h2>
+
+<p>The backend storage for SharePoint is SQL Server.  Install the Splunk App for SQL Server, which is available on Splunkbase,
+prior to commencing work on SharePoint.  Ensure that audit data for access and database operations are flowing into Splunk
+and that all SQL Server health and performance data is being recorded and showing in the dashboards for that app prior to
+commencing the Splunk App for SharePoint installation.  Installation Documentation for the Splunk App for SQL Server is
+available with that app.</p>
+
+<p>At least Splunk App for SQL Server v0.1.6 is required.</p>
+
+<h2>Step 2: Prepare the Splunk Indexers</h2>
+
+<p>Create the following indices in the Splunk Indexers:</p>
+<ul>
+<li>perfmon</li>
+<li>mssharepoint</li>
+</ul>
+
+<p>In addition, you must deploy the TA-Sharepoint2010 app to the Indexers.  This app is contained within the appserver/addons
+area of the Splunk App for SharePoint 2010.  You will need to restart the splunkd process to register this app on each indexer.  You
+can disable the inputs within this app as they are not necessary. </p>
+
+<p>The TA-Sharepoint2010 handles augmented line breaking and data fixing of the ULS logs so that each transaction is available as
+a single event instead of multiple events.  This is required for exception reporting within the dashboards.</p>
+
+<h2>Step 3: Designate an Inventory and Audit Reader</h2>
+
+<p>One of your SharePoint servers must be designated as an inventory and audit reader.  This server will be used to gather the
+inventory information and to read the audit log within SharePoint.  The Universal Forwarder that is installed on this SharePoint 
+server will need special handling.</p>
+
+<p>If you have multiple farms, then you must designate an Inventory and Audit Reader in each farm.</p>
+
+<h2>Step 4: Install Splunk on the other SharePoint servers</h2>
+
+<p>Each SharePoint server that is not the Inventory and Audit Reader host can get a standard "Local System" type install of
+the latest Splunk Universal Forwarder (version v5.0.3 or later).  It should be linked to a Splunk Deployment Server so that you
+can easily push updated apps to the Universal Forwarder.  It should be sending data to the central Splunk instance.</p>
+
+<h2>Step 5: Install Splunk on the Inventory and Audit Reader</h2>
+
+<p>The Splunk Universal Forwarder that is running on the Inventory and Audit Reader must be running as a domain account.
+The domain accounts must have the following characteristics:</p>
+
+<ul>
+<li>Local Administrator</li>
+<li>SharePoint Farm Administrator</li>
+<li>PowerShell Administrator</li>
+<li>sysadmin on each Content Database Server</li>
+<li>Secondary Owner on every site collection</li>
+</ul>
+
+<p>These are wide-ranging permissions, which is why they are limited to just one machine.  The "inventory" task requires that
+the user executing the script be a SharePoint PowerShell administrator and the "sharepoint audit log" reader requires access
+to every single database on the content database server as the audit log is spread across multiple databases.</p>
+
+<p>If you have multiple farms, then the user involved may be different for each farm.</p>
+
+<h2>Step 6: Deploy Add-ons to the SharePoint servers</h2>
+
+<p>The following add-ons need to be deployed to each server:</p>
+
+<ul>
+<li>Splunk_TA_windows (Splunk Technology Add-on for Microsoft Windows, available from Splunkbase) v4.6 or later</li>
+<li>TA-Sharepoint2010 (provided with the app in appserver/addons)</li>
+<li>TA-Windows2008R2-IIS (provided with the app in appserver/addons)</li>
+</ul>
+
+<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint2010-Audit add-on, which is provided with the
+app in appserver/addons.</p>
+
+<h2>Step 7: Configure the Host Mapping file</h2>
+
+<p>SharePoint needs a little assistance to provide the mapping from host/port to URL.  Create a file in Splunk_for_Sharepoint/lookups 
+called HostMapping.csv.  An example file looks like this:</p>
+
+<pre>host,s_port,Url
+SP-APP01,80,http://sharepoint.contoso.com
+SP-WEB01,80,http://sharepoint.contoso.com</pre>
+
+<p>There should be an entry for every SharePoint host.</p>
+
+<h2>Step 8: Wait 24 hours</h2>
+
+<p>We need some data from the inventory and this is gathered on a regular basis at night.  Since it is impactful to the Inventory
+and Audit Reader, we have limited its scope to once a day.</p>
+
+<h2>Step 9: Regenerate Lookup Files</h2>
+
+<p>Each lookup has an associated entry under Searches &amp; Reports -> Lookup Generators.  Run each search in turn and ensure 
+they produce data.  The app as a whole will not work without the functioning lookups.</p>
+
+<h2>Step 10: Check Errors</h2>
+
+<p>Log into Splunk and open the Splunk App for SharePoint.  Select Health -> Farm Errors.  All errors in this report are significant.</p>
+
+<p>If you see errors like the following:</p>
+
+<pre>Inventory cannot access site http://sharepoint.bd.splunk.com/sites/windows - BD\SP_service is not listed as Owner or SecondaryContact</pre>
+
+<p>This is indicative that a site collection has not been configured with the proper permissions.  See Step 5 above, add the listed user
+as a Secondary Owner on that site collection.</p>
+
+   </html>
+  </row>
+</dashboard>
