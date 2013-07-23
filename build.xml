@@ -12,20 +12,26 @@
  <!-- Various build directories for our apps -->
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="addon.dir" value="${mainapp.dir}/appserver/addons"/>
- <property name="sharepointaudit.src" value="${vsprojects.dir}/SP10Audit"/>
+ <property name="sp10audit.src" value="${vsprojects.dir}/SP10Audit"/>
  
  <!-- Compilation Directives for C#.NET -->
  <property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
  <property name="msbuild.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\msbuild.exe"/>
  <property name="vsconfig" value="Debug"/>
- <property name="targetinfo" value="/p:Configuration=${vsconfig};Platform=Any CPU;TargetFrameworkVersion=v3.5"/>
+ <property name="sp10targetinfo" value="/p:Configuration=${vsconfig};Platform=Any CPU;TargetFrameworkVersion=v3.5"/>
+ <property name="sp13targetinfo" value="/p:Configuration=${vsconfig};Platform=Any CPU;TargetFrameworkVersion=v4.0"/>
  
  <target name="clean">
   <delete dir="${build.dir}"/>
-  <exec executable="${msbuild.exe}" dir="${sharepointaudit.src}">
+  <exec executable="${msbuild.exe}" dir="${sp10audit.src}">
    <arg value="/t:Clean"/>
-   <arg value="${targetinfo}"/>
+   <arg value="${sp10targetinfo}"/>
   </exec>
+  <exec executable="${msbuild.exe}" dir="${sp13audit.src}">
+   <arg value="/t:Clean"/>
+   <arg value="${sp13targtinfo}"/>
+  </exec>
+  
  </target>  
 
  <target name="mainapp">
@@ -86,11 +92,17 @@
  
  <!-- Creates the sharepointaudit executable -->
  <target name="SP10Audit">
-	<exec executable="${msbuild.exe}" dir="${sharepointaudit.src}">
-	 <arg value="${targetinfo}"/>
+	<exec executable="${msbuild.exe}" dir="${sp10audit.src}">
+	 <arg value="${sp10targetinfo}"/>
 	</exec>
  </target>
  
+ <target name="SP13Audit">
+	<exec executable="${msbuild.exe}" dir="${sp13audit.src}">
+	 <arg value="${sp13targetinfo}"/>
+	</exec>
+ </target>
+
  <!-- Creates the TA-Sharepoint2010 area -->
  <target name="TA-Sharepoint2010">
   <mkdir dir="${addon.dir}/TA-Sharepoint2010"/>
@@ -106,7 +118,7 @@
  <!-- Ceates the TA-Sharepoint2013 area -->
  <target name="TA-Sharepoint2013">
   <mkdir dir="${addon.dir}/TA-Sharepoint2013"/>
-  <copy todit="${addon.dir}/TA-Sharepoint2013">
+  <copy todir="${addon.dir}/TA-Sharepoint2013">
    <fileset dir="TA-Sharepoint2013"/>
    <filterset>
     <filter token="VERSION" value="${build.version}"/>
@@ -129,6 +141,21 @@
   <copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${vsconfig}/SP10Audit.exe"/>
  </target>
  
+ <!-- Creates the TA-Sharepoint2010-Audit area -->
+ <target name="TA-Sharepoint2013-Audit" depends="SP13Audit">
+  <mkdir dir="${addon.dir}/TA-Sharepoint2013-Audit"/>
+  <!-- Copy the main files into the build area, replacing VERSION where possible -->
+  <copy todir="${addon.dir}/TA-Sharepoint2013-Audit">
+   <fileset dir="TA-Sharepoint2013-Audit"/>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>  
+  <!-- Copy the required files into the TA-Sharepoint2010-Audit area -->
+  <copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
+  <copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${vsconfig}/SP13Audit.exe"/>
+ </target>
+
  <!-- Creates the TA-Windows2008R2-IIS area -->
  <target name="TA-Windows2008R2-IIS">
   <mkdir dir="${addon.dir}/TA-Windows2008R2-IIS"/>
@@ -143,7 +170,7 @@
  </target>
  
  <!-- Packages the whole app together into something that can be uploaded to Splunkbase -->
- <target name="package" depends="mainapp,TA-Sharepoint2010,TA-Sharepoint2013,TA-Sharepoint2010-Audit,TA-Windows2008R2-IIS">
+ <target name="package" depends="mainapp,TA-Sharepoint2010,TA-Sharepoint2013,TA-Sharepoint2010-Audit,TA-Sharepoint2013-Audit,TA-Windows2008R2-IIS">
   <mkdir dir="${build.dir}/dist"/>
   <tar destfile="${dist.file}" longfile="gnu" compression="gzip">
    <tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">

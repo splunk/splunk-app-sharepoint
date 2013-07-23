@@ -5,11 +5,14 @@
 build
 .project
 .pydevproject
+
 #
 # Visual Studio OBJ and BIN Directories
 #
 VSProjects/SP10Audit/bin
 VSProjects/SP10Audit/obj
+VSProjects/SP13Audit/bin
+VSProjects/SP13Audit/obj
 
 #
 # OS generated files
