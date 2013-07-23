@@ -13,6 +13,7 @@
  <property name="mainapp.dir" value="${build.dir}/Splunk_for_Sharepoint"/>
  <property name="addon.dir" value="${mainapp.dir}/appserver/addons"/>
  <property name="sp10audit.src" value="${vsprojects.dir}/SP10Audit"/>
+ <property name="sp13audit.src" value="${vsprojects.dir}/SP13Audit"/>
  
  <!-- Compilation Directives for C#.NET -->
  <property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
