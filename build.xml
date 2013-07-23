@@ -102,6 +102,17 @@
    </filterset>
   </copy>  
  </target>
+
+ <!-- Ceates the TA-Sharepoint2013 area -->
+ <target name="TA-Sharepoint2013">
+  <mkdir dir="${addon.dir}/TA-Sharepoint2013"/>
+  <copy todit="${addon.dir}/TA-Sharepoint2013">
+   <fileset dir="TA-Sharepoint2013"/>
+   <filterset>
+    <filter token="VERSION" value="${build.version}"/>
+   </filterset>
+  </copy>
+ </target>
  
  <!-- Creates the TA-Sharepoint2010-Audit area -->
  <target name="TA-Sharepoint2010-Audit" depends="SP10Audit">
@@ -132,7 +143,7 @@
  </target>
  
  <!-- Packages the whole app together into something that can be uploaded to Splunkbase -->
- <target name="package" depends="mainapp,TA-Sharepoint2010,TA-Sharepoint2010-Audit,TA-Windows2008R2-IIS">
+ <target name="package" depends="mainapp,TA-Sharepoint2010,TA-Sharepoint2013,TA-Sharepoint2010-Audit,TA-Windows2008R2-IIS">
   <mkdir dir="${build.dir}/dist"/>
   <tar destfile="${dist.file}" longfile="gnu" compression="gzip">
    <tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
