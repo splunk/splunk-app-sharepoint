@@ -1,1 +1,0 @@
-C:\Users\ahall\Documents\GitHub\splunk-app-sharepoint\VSProjects\SP13Audit\bin\Debug\SP13Audit.exe.config
