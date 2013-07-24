@@ -20,11 +20,12 @@ available with that app.</p>
 <li>mssharepoint</li>
 </ul>
 
-<p>In addition, you must deploy the TA-Sharepoint2010 app to the Indexers.  This app is contained within the appserver/addons
-area of the Splunk App for SharePoint 2010.  You will need to restart the splunkd process to register this app on each indexer.  You
-can disable the inputs within this app as they are not necessary. </p>
+<p>In addition, you must deploy the TA-Sharepoint20XX app to the Indexers.  This app is contained within the appserver/addons
+area of the Splunk App for SharePoint.  There is a different app for SharePoint 2010 and SharePoint 2013.  Only one version
+of the app is needed (and the data is common to both versions of SharePoint, so either one will work).  You will need to restart 
+the splunkd process to register this app on each indexer.  You can disable the inputs within this app as they are not necessary. </p>
 
-<p>The TA-Sharepoint2010 handles augmented line breaking and data fixing of the ULS logs so that each transaction is available as
+<p>The TA-Sharepoint20XX handles augmented line breaking and data fixing of the ULS logs so that each transaction is available as
 a single event instead of multiple events.  This is required for exception reporting within the dashboards.</p>
 
 <h2>Step 3: Designate an Inventory and Audit Reader</h2>
@@ -66,23 +67,30 @@ to every single database on the content database server as the audit log is spre
 
 <ul>
 <li>Splunk_TA_windows (Splunk Technology Add-on for Microsoft Windows, available from Splunkbase) v4.6 or later</li>
-<li>TA-Sharepoint2010 (provided with the app in appserver/addons)</li>
+<li>TA-Sharepoint20XX (provided with the app in appserver/addons - XX is 10 or 13, depending on your SharePoint version)</li>
 <li>TA-Windows2008R2-IIS (provided with the app in appserver/addons)</li>
 </ul>
 
-<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint2010-Audit add-on, which is provided with the
+<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint20XX-Audit add-on, which is provided with the
 app in appserver/addons.</p>
 
-<h2>Step 7: Configure the Host Mapping file</h2>
+<h2>Step 7: Add cs-host to the SharePoint site logging</h2>
 
-<p>SharePoint needs a little assistance to provide the mapping from host/port to URL.  Create a file in Splunk_for_Sharepoint/lookups 
-called HostMapping.csv.  An example file looks like this:</p>
+<p>Normally, the full URL that the user types in is not available in the logs.  You need to adjust the logging specification
+for each web site in IIS as follows:</p>
 
-<pre>host,s_port,Url
-SP-APP01,80,http://sharepoint.contoso.com
-SP-WEB01,80,http://sharepoint.contoso.com</pre>
+<ol>
+<li>Open up the IIS Manager</li>
+<li>Select the SharePoint Site</li>
+<li>Select Logging</li>
+<li>Click on Select Fields</li>
+<li>Check the box next to cs-host</li>
+<li>Click on OK</li>
+<li>Under Actions, click on Apply</li>
+<li>Repeat steps 2-7 for each additional SharePoint site and host</li>
+</ol>
 
-<p>There should be an entry for every SharePoint host.</p>
+<p>This needs to be completed on each SharePoint host that answers IIS queries (which is generally all of them).</p>
 
 <h2>Step 8: Wait 24 hours</h2>
 
