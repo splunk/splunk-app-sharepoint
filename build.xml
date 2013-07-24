@@ -5,7 +5,7 @@
 	
 	<property name="build.dir" value="build" />
 	<property name="vsprojects.dir" value="VSProjects"/>
-	<property name="dist.file" value="${build.dir}/dist/${APP}.tar.gz" />
+	<property name="dist.file" value="${build.dir}/dist/${APP}-${VERSION}.tar.gz" />
 
 	<property name="app.dir" value="${build.dir}/${APP}" />
 	<property name="addon.dir" value="${app.dir}/appserver/addons" />
