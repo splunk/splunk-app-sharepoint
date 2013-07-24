@@ -312,23 +312,8 @@ foreach ($site in Get-SPSite -Limit All)
 	$site.SecondaryContact | %{ [void]$o_arr.Add($_.UserLogin) }
 	$SecondaryContact = $o_arr -join ","
 
-	#
-	# Permission check - if we are not the owner or secondary contact of this site, then we
-	# skip it and move on
-	#
 	$myID = "{0}\{1}" -f $env:USERDOMAIN, $env:USERNAME
-	$foundMe = $false
-	$site.Owner | %{ if ($_.UserLogin -eq $myID) { $foundMe = $true } }
-	$site.SecondaryContact | %{ if ($_.UserLogin -eq $myID) { $foundMe = $true } }
-	if ($foundMe -eq $false) {
-		New-Object PSObject `
-		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Error" `
-		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-		| Add-Member -PassThru -MemberType NoteProperty -Name Exception -Value "Permission Denied" `
-		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Inventory cannot access site $($site.Url) - $myID is not listed as Owner or SecondaryContact" `
-		| Out-Splunk
-		continue
-	}
+
 			
 	$site `
 	| Select-Object Id, Url, AdministrationSiteType, AllowDesigner, AllowMasterPageEditing, `
@@ -349,60 +334,68 @@ foreach ($site in Get-SPSite -Limit All)
 	| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 	| Out-Splunk
 
-	foreach ($spweb in Get-SPWeb -Site $site -Limit All)
-	{
-		$spweb `
-		| Select-Object Id, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
-				AllowRssFeeds, AllowUnsafeUpdates, AllWebTemplatesAllowed, AlternateCssUrl, `
-				AlternateHeader, ASPXPageIndexer, ASPXPageIndexMode, Audit, AuthenticationMode, `
-				Author, ClientTag, Configuration, Created, CurrencyLocaleID, CustomJavaScriptFileUrl, `
-				CustomMasterUrl, CustomUploadPage, EffectivePresenceEnabled, EmailInsertsEnabled, `
-				EventHandlersEnabled, ExecuteUrl, Exists, HasExternalSecurityProvider, `
-				HasUniquePerm, HasUniqueRoleAssignments, HasUniqueRoleDefinitions, `
-				IncludeSupportingFolders, IsADAccountCreationMode, IsADEmailEnabled, `
-				IsMultiLingual, IsRootWeb, Language, LastItemModifiedDate, Locale, `
-				MasterPageReferenceEnabled, MasterUrl, NoCrawl, OverwriteTranslationsOnChange, `
-				ParentWeb, ParserEnabled, PortalMember, PortalName, PortalSubscriptionUrl, `
-				PortalUrl, PresenceEnabled, Provisioned, PublicFolderRootUrl, QuickLaunchEnabled, `
-				RecycleBinEnabled, RequestAccessEmail, RequestAccessEnabled, RootFolder, `
-				ServerRelativeUrl, SiteLogoUrl, SyndicationEnabled, Theme, ThemeCssUrl, `
-				ThemeCssFolderUrl, TreeViewEnabled, UIVersion, UIVersionConfigurationEnabled, `
-				WebTemplate, WebTemplateId `
-		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Web" `
-		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-		| Out-Splunk
-
-		$spweb.AllUsers `
-		| Select-Object Id, LoginName, Email, Sid, DisplayName, RequireRequestToken, `
-				IsSiteAdmin, IsSiteAuditor, IsDomainGroup, IsApplicationPrincipal `
-		| Add-Member -PassThru -MemberType NoteProperty -Name WebId -Value $spweb.Id `
-		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "User" `
-		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-		| Out-Splunk
-
-		
-		foreach ($list in $spweb.Lists)
+	try {
+		foreach ($spweb in Get-SPWeb -Site $site -Limit All)
 		{
-			$size = 0
-			$list.Items.GetDataTable() | %{ $size += $_.FileSizeDisplay }
-
-			$list | Select-Object Id, Title, ItemCount, Hidden, EmailAlias, Audit, Author, Created, `
-				EmailInsertsFolder, EnableAssignToEmail, EnableAttachments, EnableDeployingList, `
-				EnableDeployWithDependentList, EnableFolderCreation, EnableMinorVersions, `
-				EnableModeration, EnablePeopleSelector, EnableResourceSelector, `
-				EnableSchemaCaching, EnableSyndication, EnableThrottling, EnableVersioning, `
-				EnforceDataValidation, ExcludeFromOfflineClient, ExcludeFromTemplate, `
-				ForceCheckout, HasExternalDataSource, ImageUrl, IrmEnabled, IrmExpire, IrmReject, `
-				IsApplicationList, IsCatalog, IsSiteAssetsLibrary, IsThrottled, `
-				LastItemDeletedDate, LastItemModifiedDate, NoCrawl, OnQuickLaunch, Ordered, `
-				ParentWeb, ReadSecurity, RequestAccessEnabled, RootWebOnly, SendToLocationName, `
-				SendToLocationUrl, ShowUser, Version, WriteSecurity `
-			| Add-Member -PassThru -MemberType NoteProperty -Name ItemSize -Value $size `
-			| Add-Member -PassThru -MemberType NoteProperty -Name WebId -Value $spweb.Id `
-			| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "List" `
-			| Add-Member -PAssThru -MemberType NoteProperty -Name FarmId -Value $farmId `
+			$spweb `
+			| Select-Object Id, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
+					AllowRssFeeds, AllowUnsafeUpdates, AllWebTemplatesAllowed, AlternateCssUrl, `
+					AlternateHeader, ASPXPageIndexer, ASPXPageIndexMode, Audit, AuthenticationMode, `
+					Author, ClientTag, Configuration, Created, CurrencyLocaleID, CustomJavaScriptFileUrl, `
+					CustomMasterUrl, CustomUploadPage, EffectivePresenceEnabled, EmailInsertsEnabled, `
+					EventHandlersEnabled, ExecuteUrl, Exists, HasExternalSecurityProvider, `
+					HasUniquePerm, HasUniqueRoleAssignments, HasUniqueRoleDefinitions, `
+					IncludeSupportingFolders, IsADAccountCreationMode, IsADEmailEnabled, `
+					IsMultiLingual, IsRootWeb, Language, LastItemModifiedDate, Locale, `
+					MasterPageReferenceEnabled, MasterUrl, NoCrawl, OverwriteTranslationsOnChange, `
+					ParentWeb, ParserEnabled, PortalMember, PortalName, PortalSubscriptionUrl, `
+					PortalUrl, PresenceEnabled, Provisioned, PublicFolderRootUrl, QuickLaunchEnabled, `
+					RecycleBinEnabled, RequestAccessEmail, RequestAccessEnabled, RootFolder, `
+					ServerRelativeUrl, SiteLogoUrl, SyndicationEnabled, Theme, ThemeCssUrl, `
+					ThemeCssFolderUrl, TreeViewEnabled, UIVersion, UIVersionConfigurationEnabled, `
+					WebTemplate, WebTemplateId `
+			| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Web" `
+			| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 			| Out-Splunk
-		}
 
+			$spweb.AllUsers `
+			| Select-Object Id, LoginName, Email, Sid, DisplayName, RequireRequestToken, `
+					IsSiteAdmin, IsSiteAuditor, IsDomainGroup, IsApplicationPrincipal `
+			| Add-Member -PassThru -MemberType NoteProperty -Name WebId -Value $spweb.Id `
+			| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "User" `
+			| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
+			| Out-Splunk
+
+			
+			foreach ($list in $spweb.Lists)
+			{
+				$size = 0
+				$list.Items.GetDataTable() | %{ $size += $_.FileSizeDisplay }
+
+				$list | Select-Object Id, Title, ItemCount, Hidden, EmailAlias, Audit, Author, Created, `
+					EmailInsertsFolder, EnableAssignToEmail, EnableAttachments, EnableDeployingList, `
+					EnableDeployWithDependentList, EnableFolderCreation, EnableMinorVersions, `
+					EnableModeration, EnablePeopleSelector, EnableResourceSelector, `
+					EnableSchemaCaching, EnableSyndication, EnableThrottling, EnableVersioning, `
+					EnforceDataValidation, ExcludeFromOfflineClient, ExcludeFromTemplate, `
+					ForceCheckout, HasExternalDataSource, ImageUrl, IrmEnabled, IrmExpire, IrmReject, `
+					IsApplicationList, IsCatalog, IsSiteAssetsLibrary, IsThrottled, `
+					LastItemDeletedDate, LastItemModifiedDate, NoCrawl, OnQuickLaunch, Ordered, `
+					ParentWeb, ReadSecurity, RequestAccessEnabled, RootWebOnly, SendToLocationName, `
+					SendToLocationUrl, ShowUser, Version, WriteSecurity `
+				| Add-Member -PassThru -MemberType NoteProperty -Name ItemSize -Value $size `
+				| Add-Member -PassThru -MemberType NoteProperty -Name WebId -Value $spweb.Id `
+				| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "List" `
+				| Add-Member -PAssThru -MemberType NoteProperty -Name FarmId -Value $farmId `
+				| Out-Splunk
+			}
+		}
+	} catch [Exception] {
+		New-Object PSObject `
+		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Error" `
+		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
+		| Add-Member -PassThru -MemberType NoteProperty -Name Exception -Value $_.Exception.GetType() `
+		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Error processing $($site.Url) with $myID: $($_.Exception.Message)" `
+		| Out-Splunk
 	}
 }
