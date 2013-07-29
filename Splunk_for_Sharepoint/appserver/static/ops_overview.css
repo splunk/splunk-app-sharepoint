@@ -3,6 +3,9 @@ div.MSSP_Ops_Farm {
 	width: 100%;
 	height: 125px;
 	cursor: pointer;
+	margin: 0;
+	padding-top: 24px;
+	line-height: 70px;
 	text-align: center;
 }
 
