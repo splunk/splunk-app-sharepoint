@@ -1,4 +1,4 @@
-<dashboard>
+<dashboard script="ops_overview.js" stylesheet="ops_overview.css">
  <label>Health Overview</label>
  <row>
   <single>
