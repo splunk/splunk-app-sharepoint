@@ -4,9 +4,12 @@
 ** a page.  This is unfortunately replicated in Splunk 6.0.x.  This 
 ** code fixed that issue.
 */
-document.addEventHandler("ready", function() {
-	var dFarmSingleValue = document.querySelector("div.MSSP_Ops_Farm");
-	dFarmSingleValue.addEventHandler("click", function() {
+require([ 
+	'jquery',
+	'splunkjs/mvc',
+	'splunkjs/mvc/simplexml/ready!' 
+], function($, mvc) {
+	$("#element1").on("click", ".MSSP_Ops_Farm", function(event) {
 		document.location.href = "/app/Splunk_for_Sharepoint/ops_farm";
 	});
 });

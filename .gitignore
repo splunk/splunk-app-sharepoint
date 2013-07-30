@@ -14,6 +14,9 @@ VSProjects/SP10Audit/obj
 VSProjects/SP13Audit/bin
 VSProjects/SP13Audit/obj
 
+# Anything named local* is local to this box
+local*
+
 #
 # OS generated files
 #
