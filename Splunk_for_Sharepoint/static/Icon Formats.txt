@@ -1,0 +1,27 @@
+File Format: PNG, 24-bit transparency
+
+appIcon.png		36px x 36px
+	Used on Home Page app list for standard resolution displays
+	(Light on Dark)
+
+appIcon_2x.png		72px x 72px
+	used on Home Page app list for high resolution displays
+	(Light on Dark)
+
+appIconAlt.png		36px x 36px
+	used in app menu and search bar on standard resolution displays
+	(Dark on Light)
+
+appIconAlt_2x.png	72px x 72px
+	used in app menu and search bar on high resolution displays
+	(Dark on Light)
+
+appLogo.png
+	160px by 40px (use less than 20px height)
+	App Bar for standard resolution displays
+	(Light on Dark)
+
+appLogo_2x.png
+	320px by 80px (use less than 40px height)
+	App Bar for high resolution displays
+	(Light on Dark)
