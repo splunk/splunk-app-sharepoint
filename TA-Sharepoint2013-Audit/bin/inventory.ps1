@@ -135,67 +135,6 @@ Load-PsSnapIn Microsoft.SharePoint.PowerShell
 $farmId = (Get-SPFarm).Id
 
 #
-# SPFarm
-#
-Get-SPFarm `
-| Select-Object TypeName, Id, Name, DisplayName, Status, Version, BuildVersion, `
-		DiskSizeRequired, PersistedFileChunkSize, CEIPEnabled, DefaultServiceAccount, 
-		DownloadErrorReportingUpdates, ErrorReportingAutomaticUpload, ErrorReportingEnabled, `
-		IsBackwardsCompatible, PasswordChangeEmailAddress, PassswordChangeGuardTime, `
-		PasswordChangeMaximumTries, DaysBeforePasswordExpirationToSendEmail `
-| Out-Splunk
-
-#
-# SPAlternateUrl
-#
-(Get-SPFarm).AlternateUrlCollections `
-| Select-Object Uri, Zone, IncomingUrl, PublicUrl `
-| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "AlternateUrl" `
-| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-| Out-Splunk
-
-#
-# SPServer
-#
-Get-SPServer `
-| Select-Object TypeName, Id, Name, DisplayName, Status, Version, Role `
-| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-| Out-Splunk
-
-#
-# SPServiceInstance
-#
-Get-SPServiceInstance `
-| Select-Object Id, DisplayName, TypeName, Status, Version, Hidden, Instance, Roles, Server, Service, SystemService `
-| Foreach-Object { $_ | Add-Member -PassThru -MemberType NoteProperty -Name Name -Value $_.TypeName } `
-| Select-Object Id, DisplayName, Name, Status, Version, Hidden, Instance, Roles, Server, Service, SystemService `
-| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "ServiceInstance" `
-| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-| Out-Splunk
-
-# 
-# SPDiagnosticProvider
-#
-Get-SPDiagnosticsProvider `
-| Select-Object Id, Name, DisplayName, Title, TableName, LastRunTime, MaxTotalSizeInBytes, `
-		RetentionPeriod, LockType, Schedule, Retry, IsDisabled, VerboseTracingEnabled, `
-		EnableBackup, DiskSizeRequired, Status, Version, Retention, Enabled `
-| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "DiagnosticsProvider" `
-| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-| Out-Splunk
-
-#
-# SPFeatureDefinition
-#
-Get-SPFeature -Limit All `
-| Select-Object Id, Name, DisplayName, ActivateOnDefault, AlwaysForceInstall, `
-		AutoActivateInCentralAdmin, Hidden, ReceiverAssembly, ReceiverClass, RequireResources, `
-		RootDirectory, Scope, SolutionId, Status, UIVersion, Version `
-| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "FeatureDefinition" `
-| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
-| Out-Splunk
-
-#
 # SPWebTemplate
 #
 Get-SPWebTemplate `
@@ -395,7 +334,7 @@ foreach ($site in Get-SPSite -Limit All)
 		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Error" `
 		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 		| Add-Member -PassThru -MemberType NoteProperty -Name Exception -Value $_.Exception.GetType() `
-		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Error processing $($site.Url) with $myID: $($_.Exception.Message)" `
+		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Error processing $($site.Url) with ${myID}: $($_.Exception.Message)" `
 		| Out-Splunk
 	}
 }
