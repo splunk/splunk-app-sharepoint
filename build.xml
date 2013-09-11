@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Splunk_for_Sharepoint">
 	<property name="APP" value="Splunk_for_Sharepoint" />
+	<property name="DATAGENAPP" value="SA-eventgen-sharepoint" />
 	<property name="VERSION" value="0.1.1" />
 	
 	<property name="build.dir" value="build" />
 	<property name="vsprojects.dir" value="VSProjects"/>
 	<property name="dist.file" value="${build.dir}/dist/${APP}-${VERSION}.tar.gz" />
+	
+	<property name="datagen.file" value="${build.dir}/dist/SA-eventgen-sharepoint-${VERSION}.tar.gz" />
+	<property name="datagen.dir" value="${build.dir}/${DATAGENAPP}" />
 
 	<property name="app.dir" value="${build.dir}/${APP}" />
 	<property name="addon.dir" value="${app.dir}/appserver/addons" />
@@ -31,6 +35,32 @@
 		<tar destfile="${dist.file}" longfile="gnu" compression="gzip">
 			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
 				<include name="${APP}/**"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="datagen">
+		<mkdir dir="${build.dir}/dist"/>
+		
+		<copy todir="${datagen.dir}" filtering="off" verbose="on">
+			<fileset dir="${DATAGENAPP}">
+				<exclude name="**/.*" />
+				<exclude name="local/**" />
+				<exclude name="**/*-gist" />
+				<exclude name="**/*.xcf" />
+				<exclude name="**/*.d/**" />
+				<exclude name="default/app.conf" />
+			</fileset>
+		</copy>		
+		<copy todir="${datagen.dir}/default" file="${DATAGENAPP}/default/app.conf" verbose="on">
+			<filterset>
+				<filter token="VERSION" value="${VERSION}" />
+			</filterset>
+		</copy>		
+		
+		<tar destfile="${datagen.file}" longfile="gnu" compression="gzip">
+			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
+				<include name="${DATAGENAPP}/**" />
 			</tarfileset>
 		</tar>
 	</target>
