@@ -335,7 +335,7 @@ foreach ($site in Get-SPSite -Limit All)
 	| Out-Splunk
 
 	try {
-		foreach ($spweb in Get-SPWeb -Site $site -Limit All)
+		foreach ($spweb in Get-SPWeb -ErrorAction Stop -Site $site -Limit All)
 		{
 			$spweb `
 			| Select-Object Id, Title, Site, AllowAnonymousAccess, AllowAutomaticASPXPageIndexing, `
