@@ -395,7 +395,7 @@ foreach ($site in Get-SPSite -Limit All)
 		| Add-Member -PassThru -MemberType NoteProperty -Name TypeName -Value "Error" `
 		| Add-Member -PassThru -MemberType NoteProperty -Name FarmId -Value $farmId `
 		| Add-Member -PassThru -MemberType NoteProperty -Name Exception -Value $_.Exception.GetType() `
-		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Error processing $($site.Url) with $myID: $($_.Exception.Message)" `
+		| Add-Member -PassThru -MemberType NoteProperty -Name Message -Value "Error processing $($site.Url) with ${myID}: $($_.Exception.Message)" `
 		| Out-Splunk
 	}
 }
