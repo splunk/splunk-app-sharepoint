@@ -1,3 +1,2 @@
 index,host,source,sourcetype,"_raw"
-mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:HostInformation","2013-09-10T09:12:39-07:00 OSBuildNumber=""9200"" OSVersion=""6.2.9200"" OSSerialNumber=""00184-70311-25416-AA212"" ComputerName=""SP-APP01"" ComputerDomain=""bd.splunk.com"" TotalPhysicalMemory=""8589463552"" SharedToolsVersion="""" IPAddressList=""10.160.203.51,fe80::c81b:308c:cec1:6a16"""
 mssharepoint,"SP-WEB01",Powershell,"MSSharePoint:2013:HostInformation","2013-09-10T09:13:37-07:00 OSBuildNumber=""9200"" OSVersion=""6.2.9200"" OSSerialNumber=""00184-70311-25416-AA212"" ComputerName=""SP-WEB01"" ComputerDomain=""bd.splunk.com"" TotalPhysicalMemory=""8589463552"" SharedToolsVersion="""" IPAddressList=""10.160.203.56,fe80::cd9c:48a0:9f18:5f0c"""
