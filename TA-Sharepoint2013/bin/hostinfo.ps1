@@ -54,7 +54,7 @@ function Get-HostInformation {
 		$HostInfo | Add-Member -MemberType NoteProperty -Name ComputerDomain -Value $sysinfo.Domain
 		$HostInfo | Add-Member -MemberType NoteProperty -Name TotalPhysicalMemory -Value $sysinfo.TotalPhysicalMemory
 		
-		$sharedver = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Shared Tools\Web Server Extensions\14.0").Version
+		$sharedver = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Shared Tools\Web Server Extensions\15.0").Version
 		$HostInfo | Add-Member -MemberType NoteProperty -Name SharedToolsVersion -Value $sharedver
 		
 		$ipaddrs = (Get-LocalIPAddress) -join ","
