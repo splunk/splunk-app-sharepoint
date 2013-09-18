@@ -1,2 +1,2 @@
 index,host,source,sourcetype,"_raw"
-mssharepoint,"SP-WEB01",Powershell,"MSSharePoint:2013:HostInformation","2013-09-10T09:13:37-07:00 OSBuildNumber=""9200"" OSVersion=""6.2.9200"" OSSerialNumber=""00184-70311-25416-AA212"" ComputerName=""SP-WEB01"" ComputerDomain=""spl.com"" TotalPhysicalMemory=""8589463552"" SharedToolsVersion="""" IPAddressList=""10.160.203.56,fe80::cd9c:48a0:9f18:5f0c"""
+mssharepoint,"SP-WEB01",Powershell,"MSSharePoint:2013:HostInformation","2013-09-10T09:13:37-07:00 OSBuildNumber=""9200"" OSVersion=""6.2.9200"" OSSerialNumber=""00184-70311-25416-AA212"" ComputerName=""SP-WEB01"" ComputerDomain=""spl.com"" TotalPhysicalMemory=""8589463552"" SharedToolsVersion=""15.0.0.4420"" IPAddressList=""10.160.203.56,fe80::cd9c:48a0:9f18:5f0c"""
