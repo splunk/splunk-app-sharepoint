@@ -23,6 +23,9 @@
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
+   <saved name="Lookup - Host Information"/>
+   <saved name="Lookup - IP Address"/>
+   <saved name="Lookup - SharepointGuid"/>
    <saved name="Lookup - SPContentDatabase"/>
    <saved name="Lookup - SPFarm"/>
    <saved name="Lookup - SPList" />
@@ -32,9 +35,6 @@
    <saved name="Lookup - SPWebApplication"/>
    <saved name="Lookup - SPWebTemplate"/>
    <saved name="Lookup - SPUser"/>
-   <saved name="Lookup - SharepointGuid"/>
-   <saved name="Lookup - Host Information"/>
-    <saved name="Lookup - SPIPAddress"/>
   </collection>
    <collection label="Saved Searches">
    <saved source="unclassified"/>
