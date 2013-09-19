@@ -8,8 +8,9 @@
 | inputlookup SPUser
 | search IsDomainGroup="False"
 | stats count by LoginName
+| eval LoginName=replace(LoginName,".*\|","")
 | eval vLoginName=replace(LoginName,"\\\\","\\\\")
-| sort - LoginName
+| sort LoginName
     </populatingSearch>
    </input>
    <input type="time">
@@ -21,21 +22,18 @@
    <table>
     <title>Basic Information</title>
 	<searchString>
-| inputlookup SPUser
-| search LoginName="$username$"
-| dedup Sid
-| join type=outer LoginName [search eventtype=mssharepoint-iis cs_username="$username$"|stats latest(_time) as lastLoginTime by cs_username|rename cs_username as LoginName]
-| eval lastLoginTime=strftime(lastLoginTime,"%c")
-| table LoginName, DisplayName, Sid, lastLoginTime
-| rename lastLoginTime as "Last Login Time"
-| transpose
+| inputlookup SPUser  
+| search LoginName="*$username$"  
+| dedup Sid  | table LoginName, DisplayName, Sid  
+| transpose 
+| append [search eventtype=mssharepoint-iis cs_username="*$username$"|stats latest(_time) as lastLoginTime by cs_username|eval "row 1"=strftime(lastLoginTime,"%c") | eval column="Last Login Time" | table column,"row 1"] 
     </searchString>
    </table>
    <table>
     <title>Site Permissions</title>
 	<searchString>
 | inputlookup SPUser
-| search LoginName="$username$"
+| search LoginName="*$username$"
 | lookup SPWeb Id as WebId OUTPUT Title
 | eval Title=if(isnull(Title),WebId,Title)
 | table Title, IsSiteAdmin, IsSiteAuditor
@@ -46,7 +44,7 @@
    <chart>
     <title>Access History</title>
 	<searchString>
-eventtype=mssharepoint-iis cs_username="$username$" sc_status=200
+eventtype=mssharepoint-iis cs_username="*$username$" sc_status=200
 | eval pages=1
 | timechart per_minute(pages) as "Pages/Min" 
 	</searchString>
@@ -56,7 +54,7 @@ eventtype=mssharepoint-iis cs_username="$username$" sc_status=200
    <table>
     <title>Document Access History</title>
 	<searchString>
-eventtype=mssharepoint-audit UserName="$username$" ItemType=1 DocLocation!="*/_catalogs/*" DocLocation!="*.css"
+eventtype=mssharepoint-audit UserName="*$username$" ItemType=1 DocLocation!="*/_catalogs/*" DocLocation!="*.css"
 | lookup SPAuditEventType Event OUTPUT EventType 
 | dedup consecutive=t DocLocation,EventType 
 | table _time,EventType,DocLocation
