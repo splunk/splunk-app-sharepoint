@@ -1,8 +1,8 @@
 index,host,source,sourcetype,"_raw"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET @CSURL@/SitePages/DevHome.aspx AjaxDelta=1&isStartPlt1=1378942156182 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ @WEBURL@/_layouts/15/start.aspx#/SitePages/DevHome.aspx sp-web01 200 0 0 233"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET @CSURL@/SitePages/DevHome.aspx AjaxDelta=1&isStartPlt1=1378942156182 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ @WEBURL@/_layouts/15/start.aspx sp-web01 200 0 0 249"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET /_layouts/15/start.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ @WEBURL@/SitePages/DevHome.aspx sp-web01 200 0 0 109"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 POST @CSURL@/SitePages/DevHome.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ @WEBURL@/SitePages/DevHome.aspx sp-web01 302 0 0 951"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET @CSURL@/SitePages/DevHome.aspx AjaxDelta=1&isStartPlt1=1378942156182 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 233"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET @CSURL@/SitePages/DevHome.aspx AjaxDelta=1&isStartPlt1=1378942156182 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 249"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 GET /_layouts/15/start.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 109"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-11 23:22:02 10.160.203.56 POST @CSURL@/SitePages/DevHome.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 951"
 mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Wed, 11 Sep 2013 23:22:02 GMT
 CheckSum=-1655672985
 FarmId=b64c54bb-6682-484c-949f-782b7b147853
