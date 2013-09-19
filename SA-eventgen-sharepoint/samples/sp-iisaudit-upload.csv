@@ -1,6 +1,6 @@
 index,host,source,sourcetype,"_raw"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:22:34 10.160.203.56 GET /_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 542"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:22:34 10.160.203.56 GET @CSURL@/_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 - @SRCIP@ @USERAGENT@ sharepoint 1 2148074254 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:22:34 10.160.203.56 GET /_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 542"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:22:34 10.160.203.56 GET @CSURL@/_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 - @SRCIP@ @USERAGENT@ sharepoint 401 2148074254 77"
 mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 16:22:35 GMT
 CheckSum=-1258995636
 FarmId=b64c54bb-6682-484c-949f-782b7b147853
@@ -49,10 +49,10 @@ SourceName=""""
 EventData=""""
 UserName=""i:0#.w|@SRCUSER@""
 "
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/defaultcss.ashx ctag=0 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 917"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET @CSURL@/_layouts/15/defaultcss.ashx ctag=0 80 - @SRCIP@ @USERAGENT@ sharepoint 1 2148074254 77"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/styles/dlgframe.css - 80 - @SRCIP@ @USERAGENT@ sharepoint 0 0 77"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:41 10.160.203.56 GET /_layouts/15/1033/styles/corev15app.css rev=lhjTtG3PhNgW2c%2FlVFBkuA%3D%3D 80 - @SRCIP@ @USERAGENT@ sharepoint 0 0 279"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/defaultcss.ashx ctag=0 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 917"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET @CSURL@/_layouts/15/defaultcss.ashx ctag=0 80 - @SRCIP@ @USERAGENT@ sharepoint 401 2148074254 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/styles/dlgframe.css - 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:41 10.160.203.56 GET /_layouts/15/1033/styles/corev15app.css rev=lhjTtG3PhNgW2c%2FlVFBkuA%3D%3D 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 279"
 mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 16:23:44 GMT
 CheckSum=-830344951
 FarmId=b64c54bb-6682-484c-949f-782b7b147853
@@ -85,6 +85,6 @@ SourceName=""""
 EventData=""""
 UserName=""i:0#.w|@SRCUSER@""
 "
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 GET /_layouts/15/images/ic@DOCEXT@.png - 80 - @SRCIP@ @USERAGENT@ sharepoint 0 0 108"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 POST @CSURL@/Sales+Documents/Forms/AllItems.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 528"
-iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 POST /_layouts/15/UploadEx.aspx List=%7bBF570BA9-38F9-470F-B7C2-8767F52A4DED%7d&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 0 0 @DOCLENGTH@"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 GET /_layouts/15/images/ic@DOCEXT@.png - 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 POST @CSURL@/Sales+Documents/Forms/AllItems.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 528"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","MSWindows:2012:IIS","2013-09-13 16:23:45 10.160.203.56 POST /_layouts/15/UploadEx.aspx List=%7bBF570BA9-38F9-470F-B7C2-8767F52A4DED%7d&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 @DOCLENGTH@"
