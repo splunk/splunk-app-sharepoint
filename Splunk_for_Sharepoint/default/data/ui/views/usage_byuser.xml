@@ -37,6 +37,7 @@
 | inputlookup SPUser
 | search LoginName="$username$"
 | lookup SPWeb Id as WebId OUTPUT Title
+| eval Title=if(isnull(Title),WebId,Title)
 | table Title, IsSiteAdmin, IsSiteAuditor
     </searchString>
    </table>
