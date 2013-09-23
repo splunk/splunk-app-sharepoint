@@ -28,6 +28,7 @@ BuildNumber,BuildDescription
 14.0.7102.5000,SharePoint 2010 6/13 CU Mark 1
 14.0.7102.5004,SharePoint 2010 6/13 CU Mark 2
 14.0.7015.1000,SharePoint 2010 SP2
+14.0.7106.5000,SharePoint 2010 8/13 CU
 15.0.4128.1014,SharePoint 2013 Beta
 15.0.4420.1017,SharePoint 2013 RTM
 15.0.4433.1506,SharePoint 2013 12/12 Hotfix
@@ -35,3 +36,4 @@ BuildNumber,BuildDescription
 15.0.4505.1002,SharePoint 2013 4/13 CU
 15.0.4505.1005,SharePoint 2013 4/13 CU
 15.0.4517.1003,SharePoint 2013 6/13 CU
+15.0.4435.1002,SharePoint 2013 8/13 CU
