@@ -5,10 +5,18 @@
    <table>
     <title>Most Read Documents (by Downloads)</title>
 	<searchName>Documents - Most Read by Downloads</searchName>
+	<fields>Url, DocLocation, "# Reads"</fields>
+	<drilldown>
+		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
+	</drilldown>
    </table>
    <table>
     <title>Most Read Documents (by Unique Users)</title>
 	<searchName>Documents - Most Read by Distinct Users</searchName>
+	<fields>Url, DocLocation, "# Users"</fields>
+	<drilldown>
+		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
+	</drilldown>
    </table>
   </row>
   
@@ -16,10 +24,18 @@
    <table>
     <title>Most Updated Documents</title>
 	<searchName>Documents - Most Updated</searchName>
+	<fields>Url, DocLocation, "# Updates"</fields>
+	<drilldown>
+		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
+	</drilldown>
    </table>
    <table>
     <title>Recently Deleted Documents</title>
 	<searchName>Documents - Recently Deleted</searchName>
+	<fields>_time, Url, DocLocation</fields>
+	<drilldown>
+		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
+	</drilldown>
    </table>
   </row>
 </dashboard>

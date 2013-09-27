@@ -17,6 +17,7 @@
   <view name="usage_documents"/>
   <divider/>
   <view name="usage_byuser"/>
+  <view name="usage_bydocument"/>
  </collection>
  <collection label="Documentation">
   <view source="unclassified" match="docs_"/>
