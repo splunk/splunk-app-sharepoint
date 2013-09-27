@@ -54,7 +54,8 @@ eventtype=mssharepoint-iis cs_username="*$username$" sc_status=200
    <table>
     <title>Document Access History</title>
 	<searchString>
-eventtype=mssharepoint-audit UserName="*$username$" ItemType=1 DocLocation!="*/_catalogs/*" DocLocation!="*.css"
+eventtype=mssharepoint-audit UserName="*$username$" ItemType=1 
+| `IgnoreExtensions`
 | lookup SPAuditEventType Event OUTPUT EventType 
 | dedup consecutive=t DocLocation,EventType 
 | table _time,EventType,DocLocation
