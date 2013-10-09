@@ -6,14 +6,14 @@
    <title>Exceptions by Area</title>
    <searchName>SharePoint Exception - By Area</searchName>
    <drilldown>
-    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Area=$row.Area$&earliest=-24h&latest=now]]></link>
+    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Area="$row.Area$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
    <title>Exceptions by Category</title>
    <searchName>SharePoint Exception - By Category</searchName>
    <drilldown>
-    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Category=$row.Category$&earliest=-24h&latest=now]]></link>
+    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Category="$row.Category$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
  </row>
@@ -24,14 +24,14 @@
    <title>Exceptions by Level</title>
    <searchName>SharePoint Exception - By Level</searchName>
    <drilldown>
-    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Level=$row.Level$&earliest=-24h&latest=now]]></link>
+    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Level="$row.Level$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
    <title>Exceptions by Process</title>
    <searchName>SharePoint Exception - By Process</searchName>
    <drilldown>
-    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Process=$row.Process$&earliest=-24h&latest=now]]></link>
+    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Process="$row.Process$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
  </row>
@@ -41,7 +41,7 @@
    <title>Exceptions by Host</title>
    <searchName>SharePoint Exception - By host</searchName>
    <drilldown>
-    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception host=$row.host$&earliest=-24h&latest=now]]></link>
+    <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception host="$row.host$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
