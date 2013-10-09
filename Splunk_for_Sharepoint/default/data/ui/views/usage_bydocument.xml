@@ -73,6 +73,8 @@ eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=
 | join type=outer src_user [search eventtype=mssharepoint-audit SiteId="$Url$" $Document$ | stats latest(_time) as tt by src_user]
 | where isnull(tt)
 | table src_user,DisplayName
+| lookup SPSystemAccounts src_user OUTPUT isSystemAccount
+| where isnull(isSystemAccount)
 | eval modUsername=replace(src_user,"\\\\","\\\\")
 | sort src_user
 | rename src_user as Username
