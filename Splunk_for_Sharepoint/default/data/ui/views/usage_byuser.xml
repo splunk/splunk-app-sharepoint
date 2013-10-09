@@ -4,13 +4,12 @@
  <fieldset autoRun="false" submitButton="true">
    <input type="dropdown" token="username">
     <label>Username</label>
-    <populatingSearch fieldForValue="vLoginName" fieldForLabel="LoginName" earliest="-1m" latest="now">
+    <populatingSearch fieldForValue="vLoginName" fieldForLabel="src_user" earliest="-1m" latest="now">
 | inputlookup SPUser
 | search IsDomainGroup="False"
-| stats count by LoginName
-| eval LoginName=replace(LoginName,".*\|","")
-| eval vLoginName=replace(LoginName,"\\\\","\\\\")
-| sort LoginName
+| stats count by src_user
+| eval vLoginName=replace(src_user,"\\\\","\\\\")
+| sort src_user
     </populatingSearch>
    </input>
    <input type="time">
@@ -23,17 +22,17 @@
     <title>Basic Information</title>
 	<searchString>
 | inputlookup SPUser  
-| search LoginName="*$username$"  
+| search src_user="$username$"  
 | dedup Sid  | table LoginName, DisplayName, Sid  
 | transpose 
-| append [search eventtype=mssharepoint-iis cs_username="*$username$"|stats latest(_time) as lastLoginTime by cs_username|eval "row 1"=strftime(lastLoginTime,"%c") | eval column="Last Login Time" | table column,"row 1"] 
+| append [search eventtype=mssharepoint-iis src_user="$username$"|stats latest(_time) as lastLoginTime by src_user|eval "row 1"=strftime(lastLoginTime,"%c") | eval column="Last Login Time" | table column,"row 1"] 
     </searchString>
    </table>
    <table>
     <title>Site Permissions</title>
 	<searchString>
 | inputlookup SPUser
-| search LoginName="*$username$"
+| search src_user="$username$"
 | lookup SPWeb Id as WebId OUTPUT Title
 | eval Title=if(isnull(Title),WebId,Title)
 | table Title, IsSiteAdmin, IsSiteAuditor
@@ -44,7 +43,7 @@
    <chart>
     <title>Access History</title>
 	<searchString>
-eventtype=mssharepoint-iis cs_username="*$username$" sc_status=200
+eventtype=mssharepoint-iis src_user="$username$" sc_status=200
 | eval pages=1
 | timechart per_minute(pages) as "Pages/Min" 
 	</searchString>
@@ -54,7 +53,7 @@ eventtype=mssharepoint-iis cs_username="*$username$" sc_status=200
    <table>
     <title>Document Access History</title>
 	<searchString>
-eventtype=mssharepoint-audit UserName="*$username$" ItemType=1 
+eventtype=mssharepoint-audit src_user="$username$" ItemType=1 
 | `IgnoreExtensions`
 | lookup SPAuditEventType Event OUTPUT EventType 
 | dedup consecutive=t DocLocation,EventType 

@@ -29,11 +29,12 @@
   <table>
    <title>Top Visitors (Last 24 hours)</title>
    <searchName>Usage - Top Visitors</searchName>
+   <fields>Username,"Page Impressions",percent</fields>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">false</option>
    <drilldown>
-	<link><![CDATA[/app/Splunk_for_Sharepoint/usage_byuser?form.username=$row.Username$]]></link>
+	<link><![CDATA[/app/Splunk_for_Sharepoint/usage_byuser?form.username=$row.modUsername$]]></link>
    </drilldown>
   </table>
   <table>

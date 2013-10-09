@@ -37,32 +37,50 @@ eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
     <title>Document Views by User</title>
     <searchString>
 eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
-| stats latest(_time) as _time by UserName
-| table _time, UserName
+| stats latest(_time) as _time by src_user
+| table _time, src_user
+| eval modUsername=replace(src_user,"\\\\","\\\\")
+| rename src_user as Username
 | sort _time
     </searchString>
+    <fields>_time,Username</fields>
+    <drilldown>
+	    <link><![CDATA[/app/Splunk_for_Sharepoint/usage_byuser?form.username=$row.modUsername$]]></link>
+    </drilldown>
    </table>
   </row>
   <row>
    <table>
     <title>Document Updates by User</title>
     <searchString>
-eventtype=mssharepoint-audit ItemType=1  (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14) SiteId="$Url$" $Document$
+eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14) SiteId="$Url$" $Document$
+| table _time, src_user
+| eval modUsername=replace(src_user,"\\\\","\\\\")
+| rename src_user as Username
 | sort _time
-| table _time, UserName
     </searchString>
+    <fields>_time,Username</fields>
+    <drilldown>
+	    <link><![CDATA[/app/Splunk_for_Sharepoint/usage_byuser?form.username=$row.modUsername$]]></link>
+    </drilldown>
    </table>
    <table>
     <title>Users who have not read Document</title>
     <searchString>
-|inputlookup SPUser 
+| inputlookup SPUser 
 | lookup SPWeb Id as WebId OUTPUT SiteId 
 | where SiteId="$Url$"
-| join type=outer LoginName [search eventtype=mssharepoint-audit SiteId="$Url$" $Document$ | stats latest(_time) as tt by UserName | rename UserName as LoginName]
+| join type=outer src_user [search eventtype=mssharepoint-audit SiteId="$Url$" $Document$ | stats latest(_time) as tt by src_user]
 | where isnull(tt)
-| table LoginName,DisplayName
-| sort LoginName
+| table src_user,DisplayName
+| eval modUsername=replace(src_user,"\\\\","\\\\")
+| sort src_user
+| rename src_user as Username
     </searchString>
+    <fields>Username,DisplayName</fields>
+    <drilldown>
+	    <link><![CDATA[/app/Splunk_for_Sharepoint/usage_byuser?form.username=$row.modUsername$]]></link>
+    </drilldown>
    </table>
   </row>
 </form>
