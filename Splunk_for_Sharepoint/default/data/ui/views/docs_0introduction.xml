@@ -22,7 +22,7 @@ to the permissions structures that govern the SharePoint farm.</p>
 <h2>System Requirements</h2>
 
 <p>The "central Splunk instance" (consisting of search heads and indexers) can be any operating system.  You must be running
-Splunk v5.0.3 or later on all Splunk servers within the central Splunk instance.  Splunk v6.0 is not supported at this time.</p>
+Splunk v6.0 or later on all Splunk servers within the central Splunk instance.  Splunk v5.0 is no longer supported.</p>
 
 <p>Splunk App for Microsoft SharePoint supports:</p>
 
@@ -40,6 +40,7 @@ Splunk v5.0.3 or later on all Splunk servers within the central Splunk instance.
 <p>In this version, we have done the following:</p>
 
 <ul>
+	<li>Converted all services to use Splunk 6.0 techniques.</li>
 	<li>Reduced the permissions required to run the Audit and Inventory service - please refer to the installation instructions.</li>
 	<li>Removed the need for the TA-Windows-* from the Universal Forwarder.  You should remove this add-on from your SharePoint servers.</li>
 	<li>Removed the dependence on specific indices.  Ensure all users who access the Splunk App for SharePoint search the relevant indices by default.  A role has been added to make this easier.</li>

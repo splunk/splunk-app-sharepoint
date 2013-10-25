@@ -29,7 +29,7 @@
 
 <h2>Step 4: Install Splunk on the other SharePoint servers</h2>
 
-<p>Each SharePoint server that is not the Inventory and Audit Reader host can get a standard "Local System" type install of the latest Splunk Universal Forwarder (version v5.0.3 or later).  It should be linked to a Splunk Deployment Server so that you can easily push updated apps to the Universal Forwarder.  It should be sending data to the central Splunk instance.</p>
+<p>Each SharePoint server that is not the Inventory and Audit Reader host can get a standard "Local System" type install of the latest Splunk Universal Forwarder (version v6.0 or later).  It should be linked to a Splunk Deployment Server so that you can easily push updated apps to the Universal Forwarder.  It should be sending data to the central Splunk instance.</p>
 
 <h2>Step 5: Install Splunk on the Inventory and Audit Reader</h2>
 
