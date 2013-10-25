@@ -51,13 +51,12 @@ The domain accounts must have the following characteristics:</p>
 <li>Local Administrator</li>
 <li>SharePoint Farm Administrator</li>
 <li>PowerShell Administrator</li>
-<li>sysadmin on each Content Database Server</li>
-<li>Secondary Owner on every site collection</li>
+<li>Super Auditor for each Web Application</li>
 </ul>
 
-<p>These are wide-ranging permissions, which is why they are limited to just one machine.  The "inventory" task requires that
-the user executing the script be a SharePoint PowerShell administrator and the "sharepoint audit log" reader requires access
-to every single database on the content database server as the audit log is spread across multiple databases.</p>
+<p>If you wish the audit log reader to automaticallyu enable audit, it needs to run as a Super Admin for each Web Application.  You can find more information about the Super Auditor and Super Admin roles at <a href"http://technet.microsoft.com/en-us/library/ff608071.aspx">TechNet</a>.
+
+<p>These are wide-ranging permissions, which is why they are limited to just one machine.  We are working towards limiting the security requirements and expect these will be reduced in upcoming versions.</p>
 
 <p>If you have multiple farms, then the user involved may be different for each farm.</p>
 
