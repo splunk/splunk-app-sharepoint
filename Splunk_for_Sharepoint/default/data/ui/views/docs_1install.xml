@@ -6,13 +6,14 @@
 
 <p>The backend storage for SharePoint is SQL Server.  Install the Splunk App for SQL Server, which is available on Splunkbase, prior to commencing work on SharePoint.  Ensure that audit data for access and database operations are flowing into Splunk and that all SQL Server health and performance data is being recorded and showing in the dashboards for that app prior to commencing the Splunk App for SharePoint installation.  Installation Documentation for the Splunk App for SQL Server is available with that app.</p>
 
-<p>At least Splunk App for SQL Server v0.1.6 is required.</p>
+<p>At least Splunk App for SQL Server v0.1.8 is required.</p>
 
 <h2>Step 2: Prepare the Splunk Indexers</h2>
 
 <p>Create the following indices in the Splunk Indexers:</p>
 <ul>
 <li>perfmon</li>
+<li>iis</li>
 <li>mssharepoint</li>
 </ul>
 
@@ -54,7 +55,6 @@
 <ul>
 <li>Splunk_TA_windows (Splunk Technology Add-on for Microsoft Windows, available from Splunkbase) v4.6 or later</li>
 <li>TA-Sharepoint20XX (provided with the app in appserver/addons - XX is 10 or 13, depending on your SharePoint version)</li>
-<li>TA-Windows2008R2-IIS (provided with the app in appserver/addons)</li>
 </ul>
 
 <p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint20XX-Audit add-on, which is provided with the

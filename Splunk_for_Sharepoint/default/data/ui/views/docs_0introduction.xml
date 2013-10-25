@@ -34,6 +34,17 @@ Splunk v5.0.3 or later on all Splunk servers within the central Splunk instance.
 </ul>
 
 <p>To start, click on <a href="docs_1install">Installation</a>.</p>
+
+<h2>New In This Version<h2>
+
+<p>In this version, we have done the following:</p>
+
+<ul>
+	<li>Reduced the permissions required to run the Audit and Inventory service - please refer to the installation instructions.</li>
+	<li>Removed the need for the TA-Windows-* from the Universal Forwarder.  You should remove this add-on from your SharePoint servers.</li>
+	<li>Removed the dependence on specific indices.  Ensure all users who access the Splunk App for SharePoint search the relevant indices by default.  A role has been added to make this easier.</li>
+</ul>
+
    </html>
   </row>
  </dashboard>
