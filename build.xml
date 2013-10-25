@@ -66,10 +66,9 @@
 	</target>
 
 	<!-- EXPANSION OF ADDONS IN BUILD -->
-	<target name="addons" depends="sp10-addons,sp13-addons,iis-addons"/>
+	<target name="addons" depends="sp10-addons,sp13-addons"/>
 	<target name="sp10-addons" depends="TA-Sharepoint2010,TA-Sharepoint2010-Audit"/>
 	<target name="sp13-addons" depends="TA-Sharepoint2013,TA-Sharepoint2013-Audit"/>
-	<target name="iis-addons" depends="TA-Windows2008R2-IIS,TA-Windows2012-IIS"/>
 
 	<!-- INDIVIDUAL CLEAN RECORDS -->
 	<target name="clean-sp10-audit">
@@ -200,26 +199,4 @@
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${vsconfig}/SP13Audit.exe"/>
 	</target>
- 
- 	<target name="TA-Windows2008R2-IIS">
-		<mkdir dir="${addon.dir}/TA-Windows2008R2-IIS"/>
-
-		<copy todir="${addon.dir}/TA-Windows2008R2-IIS">
-			<fileset dir="TA-Windows2008R2-IIS"/>
-			<filterset>
-				<filter token="VERSION" value="${VERSION}"/>
-			</filterset>
-		</copy>
-	</target>
-	
-	 <target name="TA-Windows2012-IIS">
-		<mkdir dir="${addon.dir}/TA-Windows2012-IIS"/>
-
-		<copy todir="${addon.dir}/TA-Windows2012-IIS">
-			<fileset dir="TA-Windows2012-IIS"/>
-			<filterset>
-				<filter token="VERSION" value="${VERSION}"/>
-			</filterset>
-		</copy>
-	</target>
-</project>
+ </project>
