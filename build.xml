@@ -22,7 +22,7 @@
 	
 	
 	<!-- BASE ANT COMMANDS - CLEAN, BUILD, PACKAGE -->
-	<target name="clean" depends="clean-sp10-audit,clean-sp13-audit">
+	<target name="clean" depends="clean-sp10-audit,clean-sp13-audit,clean-sp13-inventory">
 		<delete dir="${build.dir}" />
 	</target>
 
@@ -89,6 +89,15 @@
 		<delete dir="${vsprojects.dir}/SP13Audit/obj" />
 	</target>
 	
+	<target name="clean-sp13-inventory">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory/SP13Inventory">
+			<arg value="/t:Clean" />
+			<arg value="/P:${dotnet4}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin" />
+		<delete dir="${vsprojects.dir}/SP13Inventory/SP13Inventory/obj" />
+	</target>
+
 	<!-- INDIVIDUAL BUILD RECORDS -->
 	<target name="app">
 		<mkdir dir="${app.dir}" />
@@ -195,8 +204,13 @@
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Audit">
 			<arg value="/p:${dotnet4}" />
 		</exec>
+
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory/SP13Inventory">
+			<arg value="/p:${dotnet4}" />
+		</exec>
 		
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${vsconfig}/SP13Audit.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin/${vsconfig}/SP13Inventory.exe"/>
 	</target>
  </project>
