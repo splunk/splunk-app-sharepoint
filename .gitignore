@@ -13,6 +13,8 @@ VSProjects/SP10Audit/bin
 VSProjects/SP10Audit/obj
 VSProjects/SP13Audit/bin
 VSProjects/SP13Audit/obj
+VSProjects/SP13Inventory/SP13Inventory/bin
+VSProjects/SP13Inventory/SP13Inventory/obj
 
 # Anything named local* is local to this box
 local*
