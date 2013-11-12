@@ -63,10 +63,10 @@ namespace Splunk.SharePoint2013.Inventory
                     {
                         Arguments = new List<Argument> {
                             new Argument {
-                                Name = "interval",
+                                Name = "poll_interval",
                                 Description = "Number of seconds to wait between checks of the Inventory (default: 86400)",
                                 DataType = DataType.Number,
-                                Validation = "is_pos_int('interval')",
+                                Validation = "is_pos_int('poll_interval')",
                                 RequiredOnCreate = false,
                                 RequiredOnEdit = false
                             },
@@ -83,7 +83,7 @@ namespace Splunk.SharePoint2013.Inventory
         /// <param name="inputDefinition">The Input Definition Object</param>
         public override void StreamEvents(InputDefinition inputDefinition)
         {
-            Interval = Utility.GetParameter(inputDefinition.Stanza, "interval", 86400);
+            Interval = Utility.GetParameter(inputDefinition.Stanza, "poll_interval", 86400);
             CheckpointDirectory = Utility.CheckpointDirectory(inputDefinition);
 
             Cache = new SplunkCache(CheckpointDirectory, "inventory.txt");

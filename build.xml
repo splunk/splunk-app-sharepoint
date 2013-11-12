@@ -17,8 +17,9 @@
 	<property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
 	<property name="msbuild.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\msbuild.exe"/>
 	<property name="vsconfig" value="Debug"/>
-	<property name="dotnet2" value="Configuration=${vsconfig};TargetFrameworkVersion=v3.5"/>
-	<property name="dotnet4" value="Configuration=${vsconfig};TargetFrameworkVersion=v4.0"/>
+	<property name="platform" value="x64"/>
+	<property name="dotnet2" value="Configuration=${vsconfig};Platform=${platform};TargetFrameworkVersion=v3.5"/>
+	<property name="dotnet4" value="Configuration=${vsconfig};Platform=${platform};TargetFrameworkVersion=v4.0"/>
 	
 	
 	<!-- BASE ANT COMMANDS - CLEAN, BUILD, PACKAGE -->
@@ -188,7 +189,7 @@
 		</exec>
 		
 		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${vsconfig}/SP10Audit.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
 	</target>
 	
 	<target name="TA-Sharepoint2013-Audit">
@@ -210,7 +211,7 @@
 		</exec>
 		
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${vsconfig}/SP13Audit.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin/${vsconfig}/SP13Inventory.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
 	</target>
  </project>

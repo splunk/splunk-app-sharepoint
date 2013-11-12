@@ -73,10 +73,10 @@ namespace Splunk.SharePoint2013.Audit
                     {
                         Arguments = new List<Argument> {
                             new Argument {
-                                Name = "interval",
+                                Name = "poll_interval",
                                 Description = "Number of seconds to wait between polls of the SharePoint Audit Log (default: 15)",
                                 DataType = DataType.Number,
-                                Validation = "is_pos_int('interval')",
+                                Validation = "is_pos_int('poll_interval')",
                                 RequiredOnCreate = false,
                                 RequiredOnEdit = false
                             },
@@ -102,7 +102,7 @@ namespace Splunk.SharePoint2013.Audit
         public override void StreamEvents(InputDefinition inputDefinition)
         {
             // Initialize the parameters we need
-            Interval            = Utility.GetParameter(inputDefinition.Stanza, "interval", 15) * 1000;
+            Interval            = Utility.GetParameter(inputDefinition.Stanza, "poll_interval", 15) * 1000;
             AutoEnable          = Utility.GetParameter(inputDefinition.Stanza, "autoenable", false);
             CheckpointDirectory = Utility.CheckpointDirectory(inputDefinition);
 
