@@ -37,20 +37,17 @@
 
 <ul>
 <li>Local Administrator</li>
-<li>SharePoint Farm Administrator</li>
 <li>Add-SPShellAdmin (PowerShell Farm Administrator)</li>
-<li>Super Auditor for each Web Application</li>
 </ul>
 
-<p>To add the database permissions properly, ensure you run the following command using machine administrator from a farm administrator account that has shell admin privileges to SharePoint_Config:</p>
+<p>To add the database permissions properly, ensure you run the following command using machine administrator from a farm administrator account that has shell admin privileges 
+to SharePoint_Config:</p>
 
 <pre>Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
 
 <p>Where DOMAIN\user is the username of the user running the Splunk Universal Forwarder.</p>
 
-<p>If you wish the audit log reader to automatically enable audit, it needs to run as a Super Admin for each Web Application.  You can find more information about the Super Auditor and Super Admin roles at <a href="http://technet.microsoft.com/en-us/library/ff608071.aspx">TechNet</a>.</p>
-
-<p>If you have multiple farms, then the user involved may be different for each farm.</p>
+<p>If you have multiple farms, then the user involved is probably different for each farm.  Each farm will need their own Inventory and Audit Reader.</p>
 
 <h2>Step 6: Deploy Add-ons to the SharePoint servers</h2>
 
@@ -86,9 +83,9 @@ for each web site in IIS as follows:</p>
 
 <p>Part of the app install will also enable a sharepoint role.  Add users that will view the SharePoint data to the sharepoint role.  Without this step, they may not be able to see the relevant data.  As an alternative to this process, you can also edit the eventtypes supplied with the app to indicate which index the data resides in.</p>
 
-<h2>Step 8: Wait 24 hours</h2>
+<h2>Step 8: Wait 1 hour</h2>
 
-<p>We need some data from the inventory and this is gathered on a regular basis at night.  Since it is impactful to the Inventory and Audit Reader, we have limited its scope to once a day.</p>
+<p>We need some data from the inventory and this is gathered on a regular basis.  In general, this data is collected within the first hour of operation.</p>
 
 <h2>Step 9: Regenerate Lookup Files</h2>
 
@@ -98,17 +95,12 @@ for each web site in IIS as follows:</p>
 
 <p>Log into Splunk and open the Splunk App for SharePoint.  Select Health -> Farm Errors.  All errors in this report are significant.</p>
 
-<p>If you see errors like the following:</p>
-
-<pre>Inventory cannot access site http://sharepoint.bd.splunk.com/sites/windows - BD\SP_service is not listed as Owner or SecondaryContact</pre>
-
-<p>This is indicative that a site collection has not been configured with the proper permissions.  See Step 5 above, add the listed user as a Secondary Owner on that site collection.</p>
-
 <h2>Errors</h2>
 
-<p>If the modular inputs show errors, they will show up in the splunkd.log file.  The most common will be something to the effect "SPFarm.Local == null", which would indicate 
-a permissions problem.  Specifically, the user that is being used to run the Splunk Universal Forwarder on the Audit and Inventory reader has not been added to the SPShellAdmin 
-list with Add-SPShellAdmin.</p>
+<p>If the modular inputs show errors, they will show up in the splunkd.log file.  The most common will be something to the 
+effect "SPFarm.Local == null", which would indicate a permissions problem.  Specifically, the user that is being used to run 
+the Splunk Universal Forwarder on the Audit and Inventory reader has not been added to the SPShellAdmin list with 
+Add-SPShellAdmin.</p>
 
 <p>If you get Farm Errors showing an SqlException 80131904, then it is likely that you have not provided access to all the
 databases.  Log on to the Central Administration host as a farm administrator with shell admin rights on SharePoint_Config;
