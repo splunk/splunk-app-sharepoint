@@ -42,6 +42,12 @@
 <li>Super Auditor for each Web Application</li>
 </ul>
 
+<p>To add the database permissions properly, ensure you run the following command using machine administrator from a farm administrator account that has shell admin privileges to SharePoint_Config:</p>
+
+<pre>Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
+
+<p>Where DOMAIN\user is the username of the user running the Splunk Universal Forwarder.</p>
+
 <p>If you wish the audit log reader to automatically enable audit, it needs to run as a Super Admin for each Web Application.  You can find more information about the Super Auditor and Super Admin roles at <a href="http://technet.microsoft.com/en-us/library/ff608071.aspx">TechNet</a>.</p>
 
 <p>If you have multiple farms, then the user involved may be different for each farm.</p>
@@ -103,6 +109,15 @@ for each web site in IIS as follows:</p>
 <p>If the modular inputs show errors, they will show up in the splunkd.log file.  The most common will be something to the effect "SPFarm.Local == null", which would indicate 
 a permissions problem.  Specifically, the user that is being used to run the Splunk Universal Forwarder on the Audit and Inventory reader has not been added to the SPShellAdmin 
 list with Add-SPShellAdmin.</p>
+
+<p>If you get Farm Errors showing an SqlException 80131904, then it is likely that you have not provided access to all the
+databases.  Log on to the Central Administration host as a farm administrator with shell admin rights on SharePoint_Config;
+bring up a PowerShell host using "Run as Administrator", and type the following:</p>
+
+<pre>Add-PsSnapIn Microsoft.SharePoint.PowerShell
+Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
+
+<p>Replace the DOMAIN\user with the username of the user running the Splunk Universal Forwarder.</p>
 
    </html>
   </row>
