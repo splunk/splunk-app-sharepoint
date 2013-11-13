@@ -38,12 +38,11 @@
 <ul>
 <li>Local Administrator</li>
 <li>SharePoint Farm Administrator</li>
+<li>Add-SPShellAdmin (PowerShell Farm Administrator)</li>
 <li>Super Auditor for each Web Application</li>
 </ul>
 
-<p>If you wish the audit log reader to automaticallyu enable audit, it needs to run as a Super Admin for each Web Application.  You can find more information about the Super Auditor and Super Admin roles at <a href="http://technet.microsoft.com/en-us/library/ff608071.aspx">TechNet</a>.</p>
-
-<p>These are wide-ranging permissions, which is why they are limited to just one machine.  We are working towards limiting the security requirements and expect these will be reduced in upcoming versions.</p>
+<p>If you wish the audit log reader to automatically enable audit, it needs to run as a Super Admin for each Web Application.  You can find more information about the Super Auditor and Super Admin roles at <a href="http://technet.microsoft.com/en-us/library/ff608071.aspx">TechNet</a>.</p>
 
 <p>If you have multiple farms, then the user involved may be different for each farm.</p>
 
@@ -98,6 +97,12 @@ for each web site in IIS as follows:</p>
 <pre>Inventory cannot access site http://sharepoint.bd.splunk.com/sites/windows - BD\SP_service is not listed as Owner or SecondaryContact</pre>
 
 <p>This is indicative that a site collection has not been configured with the proper permissions.  See Step 5 above, add the listed user as a Secondary Owner on that site collection.</p>
+
+<h2>Errors</h2>
+
+<p>If the modular inputs show errors, they will show up in the splunkd.log file.  The most common will be something to the effect "SPFarm.Local == null", which would indicate 
+a permissions problem.  Specifically, the user that is being used to run the Splunk Universal Forwarder on the Audit and Inventory reader has not been added to the SPShellAdmin 
+list with Add-SPShellAdmin.</p>
 
    </html>
   </row>

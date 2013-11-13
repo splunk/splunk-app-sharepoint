@@ -73,5 +73,15 @@ namespace Splunk.SharePoint2013.Inventory
         {
             return o == null ? "" : o.ToString();
         }
+
+        /// <summary>
+        /// Returns a string that can be placed on a single line Splunk event
+        /// </summary>
+        /// <param name="s">the string</param>
+        /// <returns>the new string</returns>
+        internal static string Quotable(string s)
+        {
+            return s.Replace('"', '\'').Replace('\n', ' ').Replace('\r', ' ');
+        }
     }
 }

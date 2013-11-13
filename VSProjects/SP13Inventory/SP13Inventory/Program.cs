@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Diagnostics;
 
@@ -46,6 +47,12 @@ namespace Splunk.SharePoint2013.Inventory
         /// Parameter for storing the cache object
         /// </summary>
         public SplunkCache Cache { get; set; }
+
+        /// <summary>
+        /// Number of errors in this run.
+        /// </summary>
+        public int ErrorCount { get; set; }
+
 
         /// <summary>
         /// Returns the introspection scheme for this modular input (required function
@@ -97,7 +104,7 @@ namespace Splunk.SharePoint2013.Inventory
                     {
                         if (SPFarm.Local == null)
                         {
-                            SystemLogger.Write(LogLevel.Fatal, "SPFarm.Local is null");
+                            SystemLogger.Write(LogLevel.Fatal, "SPFarm.Local is null - try adding the user to the SPShellAdmin list");
                             System.Environment.Exit(42);
                         }
 
@@ -147,21 +154,38 @@ namespace Splunk.SharePoint2013.Inventory
 
                                     foreach (SPSite site in webApplication.Sites)
                                     {
-                                        foreach (SPWebTemplate webTemplate in site.RootWeb.GetAvailableWebTemplates((uint)site.RootWeb.Locale.LCID))
+                                        try
                                         {
-                                            webTemplates[webTemplate.Name] = webTemplate;
-                                        }
+                                            foreach (SPWebTemplate webTemplate in site.RootWeb.GetAvailableWebTemplates((uint)site.RootWeb.Locale.LCID))
+                                            {
+                                                webTemplates[webTemplate.Name] = webTemplate;
+                                            }
 
-                                        EmitSiteWebs(writer, SPFarm.Local, webApplication.Id, site.ID, site.AllWebs);
-                                        foreach (SPWeb web in site.AllWebs)
+                                            EmitSiteWebs(writer, SPFarm.Local, webApplication.Id, site.ID, site.AllWebs);
+                                            foreach (SPWeb web in site.AllWebs)
+                                            {
+                                                EmitWebUsers(writer, SPFarm.Local, webApplication.Id, site.ID, web.ID, web.AllUsers);
+                                                EmitWebLists(writer, SPFarm.Local, webApplication.Id, site.ID, web, web.Lists);
+                                            }
+                                        }
+                                        catch (SqlException sqlException)
                                         {
-                                            EmitWebUsers(writer, SPFarm.Local, webApplication.Id, site.ID, web.ID, web.AllUsers);
-                                            EmitWebLists(writer, SPFarm.Local, webApplication.Id, site.ID, web, web.Lists);
+                                            SplunkEmitter emitter = new SplunkEmitter { CacheType = CacheType.Error, Timestamp = DateTime.Now };
+                                            emitter.Add("Location", "Site");
+                                            emitter.Add("SiteId", site.ID.ToString());
+                                            emitter.Add("WebApplicationId", webApplication.Id.ToString());
+                                            emitter.Add("FarmId", SPFarm.Local.Id.ToString());
+                                            emitter.Add("Exception", sqlException.GetType().FullName);
+                                            emitter.Add("Code", sqlException.ErrorCode.ToString("X"));
+                                            emitter.Add("Message", Utility.Quotable(sqlException.Message));
+                                            writer.Write(emitter.ToEmitter());
+                                            ErrorCount++;
                                         }
                                     }
                                 }
                             }
                         }
+
                         EmitWebTemplates(writer, SPFarm.Local, webTemplates);
                         EmitWebApplications(writer, SPFarm.Local, webApplications);
                         EmitApplicationPools(writer, SPFarm.Local, applicationPools);
@@ -187,6 +211,7 @@ namespace Splunk.SharePoint2013.Inventory
             debugInfo.Add(string.Format("mem={0} bytes", Process.GetCurrentProcess().PrivateMemorySize64));
             debugInfo.Add(string.Format("time={0} ms", timeTaken));
             debugInfo.Add(string.Format("cache={0} objects", Cache.Count));
+            debugInfo.Add(string.Format("errors={0}", ErrorCount));
             SystemLogger.Write(LogLevel.Debug, string.Join(",",debugInfo));
         }
 
@@ -893,25 +918,42 @@ namespace Splunk.SharePoint2013.Inventory
 
             foreach (SPSite site in sites)
             {
-                var hash = Converter.ToHash(webAppId, site);
                 var id = site.ID.ToString();
                 var cacheId = string.Format("{0}#{1}", webAppId.ToString(), id);
-                var chk = Converter.ToChecksum(hash);
 
-                if (!Cache.IsUpdated(type, cacheId, chk))
-                    return;
-
-                SplunkEmitter emitter = new SplunkEmitter { CacheType = type, Timestamp = DateTime.Now };
-                emitter.Add("Action", Cache.IsNew(type, cacheId) ? "Add" : "Update");
-                foreach (var pair in hash)
+                try
                 {
-                    emitter.Add(pair.Key, pair.Value);
-                }
-                emitter.Add("FarmId", localFarm.Id.ToString());
-                writer.Write(emitter.ToEmitter());
+                    var hash = Converter.ToHash(webAppId, site);
+                    var chk = Converter.ToChecksum(hash);
 
-                var newCache = new CacheObject { Type = type, Id = cacheId, LastUpdated = DateTime.Now, Checksum = chk };
-                Cache[newCache.Type, newCache.Id] = newCache;
+                    if (!Cache.IsUpdated(type, cacheId, chk))
+                        return;
+
+                    SplunkEmitter emitter = new SplunkEmitter { CacheType = type, Timestamp = DateTime.Now };
+                    emitter.Add("Action", Cache.IsNew(type, cacheId) ? "Add" : "Update");
+                    foreach (var pair in hash)
+                    {
+                        emitter.Add(pair.Key, pair.Value);
+                    }
+                    emitter.Add("FarmId", localFarm.Id.ToString());
+                    writer.Write(emitter.ToEmitter());
+
+                    var newCache = new CacheObject { Type = type, Id = cacheId, LastUpdated = DateTime.Now, Checksum = chk };
+                    Cache[newCache.Type, newCache.Id] = newCache;
+                }
+                catch (SqlException sqlException)
+                {
+                    SplunkEmitter emitter = new SplunkEmitter { CacheType = CacheType.Error, Timestamp = DateTime.Now };
+                    emitter.Add("Location", "Site");
+                    emitter.Add("SiteId", site.ID.ToString());
+                    emitter.Add("WebApplicationId", webAppId.ToString());
+                    emitter.Add("FarmId", localFarm.Id.ToString());
+                    emitter.Add("Exception", sqlException.GetType().FullName);
+                    emitter.Add("Code", sqlException.ErrorCode.ToString("X"));
+                    emitter.Add("Message", Utility.Quotable(sqlException.Message));
+                    writer.Write(emitter.ToEmitter());
+                    ErrorCount++;
+                }
 
                 current.Add(id.ToString());
             }

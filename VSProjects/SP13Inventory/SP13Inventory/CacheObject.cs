@@ -134,6 +134,7 @@ namespace Splunk.SharePoint2013.Inventory
     internal enum CacheType
     {
         Unknown,
+        Error,
         AlternateUrl,
         ApplicationPool,
         ContentDatabase,
