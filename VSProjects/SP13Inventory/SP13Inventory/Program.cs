@@ -172,7 +172,8 @@ namespace Splunk.SharePoint2013.Inventory
                                         {
                                             SplunkEmitter emitter = new SplunkEmitter { CacheType = CacheType.Error, Timestamp = DateTime.Now };
                                             emitter.Add("Location", "Site");
-                                            emitter.Add("SiteId", site.ID.ToString());
+                                            emitter.Add("Id", site.ID.ToString());
+                                            emitter.Add("Url", site.Url);
                                             emitter.Add("WebApplicationId", webApplication.Id.ToString());
                                             emitter.Add("FarmId", SPFarm.Local.Id.ToString());
                                             emitter.Add("Exception", sqlException.GetType().FullName);
@@ -945,7 +946,8 @@ namespace Splunk.SharePoint2013.Inventory
                 {
                     SplunkEmitter emitter = new SplunkEmitter { CacheType = CacheType.Error, Timestamp = DateTime.Now };
                     emitter.Add("Location", "Site");
-                    emitter.Add("SiteId", site.ID.ToString());
+                    emitter.Add("Id", site.ID.ToString());
+                    emitter.Add("Url", site.Url.ToString());
                     emitter.Add("WebApplicationId", webAppId.ToString());
                     emitter.Add("FarmId", localFarm.Id.ToString());
                     emitter.Add("Exception", sqlException.GetType().FullName);
