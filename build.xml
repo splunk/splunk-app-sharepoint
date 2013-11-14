@@ -2,7 +2,7 @@
 <project name="Splunk_for_Sharepoint">
 	<property name="APP" value="Splunk_for_Sharepoint" />
 	<property name="DATAGENAPP" value="SA-eventgen-sharepoint" />
-	<property name="VERSION" value="0.1.4" />
+	<property name="VERSION" value="0.1.5" />
 	
 	<property name="build.dir" value="build" />
 	<property name="vsprojects.dir" value="SPModInputs"/>
