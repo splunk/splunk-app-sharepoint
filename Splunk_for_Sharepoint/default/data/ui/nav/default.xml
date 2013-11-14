@@ -24,7 +24,7 @@
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
-   <view name="lookup_builder.xml"/>
+   <view name="lookup_builder"/>
    <divider/>
    <saved name="Lookup - Host Information"/>
    <saved name="Lookup - IP Address"/>
@@ -48,4 +48,3 @@
   </collection>
  </collection>
 </nav>
-j

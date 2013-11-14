@@ -16,6 +16,7 @@ require([
 			'Lookup - Host Information',
 			'Lookup - IP Address',
 			'Lookup - SharepointGuid',
+			'Lookup - SPApplicationPool',
 			'Lookup - SPContentDatabase',
 			'Lookup - SPFarm',
 			'Lookup - SPList',

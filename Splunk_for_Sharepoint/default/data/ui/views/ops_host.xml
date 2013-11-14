@@ -29,14 +29,15 @@
   <table>
    <title>Services</title>
    <searchTemplate><![CDATA[
-eventtype=mssharepoint-inventory Type="ServiceInstance" Server="$Server$"
-| stats latest(Status) as SPStatus by Name,Service,Server 
-| where SPStatus!="Disabled" 
+| inputlookup SPServiceInstance
+| search Server="$Server$" Status!="Disabled" 
+| table Name,Server,Service,Status
+| rename Status as SPStatus
 | rex field=Service "Name=(?<SPService>.*)" 
 | eval SPService=if(isnull(SPService),Service,SPService) 
-| join type=outer Server,SPService [search eventtype=mssharepoint-service host="$Server$" | stats latest(Status) as Status by Name,host | rename host as Server,Name as SPService,Status as WinStatus] 
+| join type=outer Server,SPService [search eventtype=mssharepoint-service host="$Server$" | stats latest(State) as WinStatus by Name,host | rename host as Server,Name as SPService] 
 | where isnotnull(WinStatus) 
-| append [search eventtype=mssharepoint-service host="$Server$" | stats latest(Status) as WinStatus by host,Name | lookup CriticalServices Name OUTPUT Required | where Required=="True" | table Name,host,WinStatus | rename host as Server ] 
+| append [search eventtype=mssharepoint-service host="$Server$" | stats latest(State) as WinStatus by host,Name | lookup CriticalServices Name OUTPUT Required | where Required=="True" | table Name,host,WinStatus | rename host as Server ] 
 | table Name,WinStatus 
    ]]></searchTemplate>
    <earliestTime>-24h</earliestTime>
@@ -48,7 +49,7 @@ eventtype=mssharepoint-inventory Type="ServiceInstance" Server="$Server$"
   <table>
    <title>Drives</title>
    <searchTemplate>
-eventtype=perfmon-index host="$Server$" object="LogicalDisk" (counter="% Free Space" OR counter="Disk Transfers/sec") instance!="_Total"
+sourcetype="Perfmon:*" host="$Server$" object="LogicalDisk" (counter="% Free Space" OR counter="Disk Transfers/sec") instance!="_Total"
 | eval Value=round(Value,2)
 | chart latest(Value) as Value by instance,counter
    </searchTemplate>
@@ -64,7 +65,7 @@ eventtype=perfmon-index host="$Server$" object="LogicalDisk" (counter="% Free Sp
   <table>
    <title>Performance (Last 15 minutes)</title>
    <searchTemplate>
-eventtype=perfmon-index host="$Server$" ((object="Memory" counter="% Committed Bytes In Use") OR (object="Processor" counter="% Processor Time" instance="_Total") OR (object="Network Interface" instance!="isatap.*" counter="Bytes Total/sec"))
+sourcetype="Perfmon:*" host="$Server$" ((object="Memory" counter="% Committed Bytes In Use") OR (object="Processor" counter="% Processor Time" instance="_Total") OR (object="Network Interface" instance!="isatap.*" counter="Bytes Total/sec"))
 | eval Value=round(Value,2) 
 | eval counter=if(object=="Network Interface","Net("+instance+")",counter) 
 | stats sparkline(avg(Value)) as History,max(Value) as Peak by counter 
@@ -79,9 +80,12 @@ eventtype=perfmon-index host="$Server$" ((object="Memory" counter="% Committed B
   <table>
    <title>Application Pools</title>
    <searchTemplate>
-eventtype=perfmon-index host="$Server$" object=APP_POOL_WAS counter="Current Application Pool State"
+sourcetype="Perfmon:*" host="$Server$" object=APP_POOL_WAS counter="Current Application Pool State"
 | stats latest(Value) as State by instance
+| lookup SPApplicationPool Name as instance OUTPUT Username,Status
+| where isnotnull(Status)
 | eval State=case(State==3,"Started",State==5,"Stopped",isnotnull(State),"Unknown")
+| table instance,Username,Status,State
 | rename instance as "Application Pool"
    </searchTemplate>
    <earliestTime>-15m</earliestTime>
