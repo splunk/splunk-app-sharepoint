@@ -9,12 +9,12 @@ build
 #
 # Visual Studio OBJ and BIN Directories
 #
-VSProjects/SP10Audit/bin
-VSProjects/SP10Audit/obj
-VSProjects/SP13Audit/bin
-VSProjects/SP13Audit/obj
-VSProjects/SP13Inventory/SP13Inventory/bin
-VSProjects/SP13Inventory/SP13Inventory/obj
+SPModInputs/SP10Audit/bin
+SPModInputs/SP10Audit/obj
+SPModInputs/SP13Audit/bin
+SPModInputs/SP13Audit/obj
+SPModInputs/SP13Inventory/bin
+SPModInputs/SP13Inventory/obj
 
 # Anything named local* is local to this box
 local*
