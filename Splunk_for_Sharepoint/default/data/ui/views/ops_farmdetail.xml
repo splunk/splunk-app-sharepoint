@@ -86,7 +86,7 @@ eventtype=mssharepoint-iis
 eventtype=mssharepoint-netlatency
 | lookup SPServer Name as host OUTPUT FarmId
 | search FarmId="$FarmId$"
-| lookup SPIPAddress IPAddress as Address OUTPUT ComputerName 
+| lookup SPIPAddress IPAddress as Address OUTPUT host as ComputerName 
 | where isnotnull(ComputerName) AND ComputerName!=host 
 | chart max(ResponseTime) by host,ComputerName
    ]]></searchTemplate>
