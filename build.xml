@@ -5,7 +5,7 @@
 	<property name="VERSION" value="0.1.4" />
 	
 	<property name="build.dir" value="build" />
-	<property name="vsprojects.dir" value="VSProjects"/>
+	<property name="vsprojects.dir" value="SPModInputs"/>
 	<property name="dist.file" value="${build.dir}/dist/${APP}-${VERSION}.tar.gz" />
 	
 	<property name="datagen.file" value="${build.dir}/dist/SA-eventgen-sharepoint-${VERSION}.tar.gz" />
@@ -91,12 +91,12 @@
 	</target>
 	
 	<target name="clean-sp13-inventory">
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory/SP13Inventory">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory">
 			<arg value="/t:Clean" />
 			<arg value="/P:${dotnet4}" />
 		</exec>
-		<delete dir="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin" />
-		<delete dir="${vsprojects.dir}/SP13Inventory/SP13Inventory/obj" />
+		<delete dir="${vsprojects.dir}/SP13Inventory/bin" />
+		<delete dir="${vsprojects.dir}/SP13Inventory/obj" />
 	</target>
 
 	<!-- INDIVIDUAL BUILD RECORDS -->
@@ -206,12 +206,12 @@
 			<arg value="/p:${dotnet4}" />
 		</exec>
 
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory/SP13Inventory">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory">
 			<arg value="/p:${dotnet4}" />
 		</exec>
 		
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SplunkSDK.dll"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
 	</target>
  </project>
