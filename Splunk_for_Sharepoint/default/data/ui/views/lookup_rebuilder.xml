@@ -1,0 +1,28 @@
+<dashboard script="rebuilder.js" stylesheet="rebuilder.js">
+ <label>Lookup Table Rebuilder</label>
+
+ <row>
+  <html>
+   <div class="lookup_comments">
+ Use this page to rebuild the lookup tables.  Once the button below is
+ clicked, the lookup tables will be generated in sequence.  Check the
+ countdown and the completion count.  Do not leave this page until the
+ Incomplete Lookups count is zero.
+   </div>
+  </html>
+ </row>
+ <row>
+  <html>
+   <div class="lookup_title"><h3>Incomplete Lookups</h3></div>
+   <div id="lookups_not_started"></div>
+  </html>
+  <html>
+   <div class="lookup_title"><h3>Lookup In Progress</h3></div>
+   <div id="lookup_in_process"><button id="start_lookups" class="btn btn-primary">Generate Lookups</button></div>
+  </html>
+  <html>
+   <div class="lookup_title"><h3>Completed Lookups</h3></div>
+   <div id="lookups_completed"></div>
+  </html>
+ </row>
+</dashboard>

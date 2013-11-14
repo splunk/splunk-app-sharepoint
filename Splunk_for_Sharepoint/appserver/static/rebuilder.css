@@ -1,0 +1,31 @@
+div.lookup_maintitle {
+	color: #333333;
+	line-height: 1;
+	margin: 0;
+	padding: 12px 15px 10px;
+	text-shadow: 0 1px 0 #ffffff;
+}
+
+div.lookup_comments {
+}
+
+div.lookup_button_div {
+}
+
+div.lookup_title {
+	color: #333333;
+	line-height: 1;
+	margin: 0;
+	padding: 12px 15px 10px;
+	text-shadow: 0 1px 0 #ffffff;
+}
+
+div#lookups_not_started {
+}
+
+div#lookup_in_progress {
+}
+
+div#lookups_completed {
+}
+

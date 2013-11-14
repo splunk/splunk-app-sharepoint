@@ -21,6 +21,7 @@
  </collection>
  <collection label="Documentation">
   <view source="unclassified" match="docs_"/>
+  <view name="lookup_builder.xml"/>
  </collection>
  <collection label="Searches &amp; Reports">
   <collection label="Lookup Generators">
