@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP10Audit", "SP10Audit\SP10
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP13Audit", "SP13Audit\SP13Audit.csproj", "{632A7739-D17F-4788-A68B-8BEB46F20A24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP10Inventory", "SP10Inventory\SP10Inventory.csproj", "{D0954605-E9DF-41FD-9DA4-2B179185F97D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,13 @@ Global
 		{632A7739-D17F-4788-A68B-8BEB46F20A24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{632A7739-D17F-4788-A68B-8BEB46F20A24}.Release|x64.ActiveCfg = Release|x64
 		{632A7739-D17F-4788-A68B-8BEB46F20A24}.Release|x64.Build.0 = Release|x64
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Debug|x64.Build.0 = Debug|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0954605-E9DF-41FD-9DA4-2B179185F97D}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

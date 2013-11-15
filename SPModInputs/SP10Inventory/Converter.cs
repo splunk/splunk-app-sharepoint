@@ -10,7 +10,7 @@ using Microsoft.SharePoint.MobileMessage;
 
 using Splunk.ModularInputs;
 
-namespace Splunk.SharePoint2013.Inventory
+namespace Splunk.SharePoint2010.Inventory
 {
     class Converter
     {
@@ -29,7 +29,7 @@ namespace Splunk.SharePoint2013.Inventory
             }
             builder.Sort();
 
-            return Utility.CalculateMD5Hash(string.Join("\n", builder));
+            return Utility.CalculateMD5Hash(string.Join("\n", builder.ToArray()));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("Version", service.Version.ToString());
             emitter.Add("Hidden", service.Hidden.ToString());
             emitter.Add("Instance", service.Instance.ToString());
-            // Note: Roles is not a valid thing in SharePoint 2013, so make it blank
+            // Note: Roles is not a valid thing in SharePoint 2010, so make it blank
             emitter.Add("Roles", "");
             emitter.Add("Server", service.Server.Name);
             emitter.Add("Service", service.ToString());
@@ -193,14 +193,16 @@ namespace Splunk.SharePoint2013.Inventory
             Dictionary<string, string> emitter = new Dictionary<string, string>();
 
             emitter.Add("AllowGlobalFeatureAssociations", webTemplate.AllowGlobalFeatureAssociations.ToString());
-            emitter.Add("CompatibilityLevel", webTemplate.CompatibilityLevel.ToString());
+            // CompatibilityLevel does not exist in SharePoint 2010
+            emitter.Add("CompatibilityLevel", "");
             emitter.Add("Description", webTemplate.Description);
             emitter.Add("DisplayCategory", webTemplate.DisplayCategory);
             emitter.Add("FilterCategories", webTemplate.FilterCategories);
             emitter.Add("Id", webTemplate.ID.ToString());
             emitter.Add("ImageUrl", webTemplate.ImageUrl);
             emitter.Add("IsCustomTemplate", webTemplate.IsCustomTemplate.ToString());
-            emitter.Add("IsFarmWideTemplate", webTemplate.IsFarmWideTemplate.ToString());
+            // IsFarmWideTemplate does not exist in SharePoint 2010
+            emitter.Add("IsFarmWideTemplate", "True");
             emitter.Add("IsHidden", webTemplate.IsHidden.ToString());
             emitter.Add("IsRootWebOnly", webTemplate.IsRootWebOnly.ToString());
             emitter.Add("IsSubWebOnly", webTemplate.IsSubWebOnly.ToString());
@@ -211,7 +213,8 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("ProvisionData", Utility.Nullable(webTemplate.ProvisionData));
             emitter.Add("SupportsMultilingualUI", webTemplate.SupportsMultilingualUI.ToString());
             emitter.Add("Title", webTemplate.Title.ToString());
-            emitter.Add("UserLicensingId", Utility.Nullable(webTemplate.UserLicensingId));
+            // UserLicensingId does not exist in SharePoint 2010
+            emitter.Add("UserLicensingId", "");
             emitter.Add("VisibilityFeatureDependencyId", webTemplate.VisibilityFeatureDependencyId.ToString());
 
             return emitter;
@@ -232,10 +235,10 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("Status", webApplication.Status.ToString());
             emitter.Add("Version", webApplication.Version.ToString());
             emitter.Add("Url", webApplication.GetResponseUri(SPUrlZone.Default).AbsoluteUri.ToString());
-            // AlertFlags is obsolete in SharePoint 2013
+            // AlertFlags is obsolete in SharePoint 2010
             emitter.Add("AlertFlags", "");
             emitter.Add("AlertsEnabled", webApplication.AlertsEnabled.ToString());
-            // AlertsEventBatchSize is obsolete in SharePoint 2013
+            // AlertsEventBatchSize is obsolete in SharePoint 2010
             emitter.Add("AlertsEventBatchSize", "");
             emitter.Add("AlertsLimited", webApplication.AlertsLimited.ToString());
             emitter.Add("AlertsMaximum", webApplication.AlertsMaximum.ToString());
@@ -264,10 +267,9 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("DefaultTimeZone", webApplication.DefaultTimeZone.ToString());
             emitter.Add("DisableCoauthoring", webApplication.DisableCoauthoring.ToString());
             emitter.Add("DiskSizeRequired", webApplication.DiskSizeRequired.ToString());
-            // DocumentConversionsEnabled is obsolete in SharePoint 2013
-            emitter.Add("DocumentConversionsEnabled", "True");
+            emitter.Add("DocumentConversionsEnabled", webApplication.DocumentConversionsEnabled.ToString());
             emitter.Add("EmailToNoPermissionWorkflowParticipantsEnabled", webApplication.EmailToNoPermissionWorkflowParticipantsEnabled.ToString());
-            // EventHandlersEnabled is obsolete in SharePoint 2013
+            // EventHandlersEnabled is obsolete in SharePoint 2010
             emitter.Add("EventHandlersEnabled", "False");
             emitter.Add("EventLogRetentionPeriod", webApplication.EventLogRetentionPeriod.ToString());
             emitter.Add("ExternalUrlZone", Utility.Nullable(webApplication.ExternalUrlZone));
@@ -278,11 +280,9 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("MaximumFileSize", webApplication.MaximumFileSize.ToString());
             emitter.Add("MaxItemsPerThrottledOperationOverride", webApplication.MaxItemsPerThrottledOperationOverride.ToString());
             emitter.Add("MaxItemsPerThrottledOperationWarningLevel", webApplication.MaxItemsPerThrottledOperationWarningLevel.ToString());
-            // MaxListItemRowStorage is obsolete in SharePoint 2013
-            emitter.Add("MaxListItemRowStorage", "");
+            emitter.Add("MaxListItemRowStorage", webApplication.MaxListItemRowStorage.ToString());
             emitter.Add("MaxQueryLookupFields", webApplication.MaxQueryLookupFields.ToString());
-            // MaxSizePerCellStorageOperation == MaximumFileSize in SharePoint 2013
-            emitter.Add("MaxSizePerCellStorageOperation", webApplication.MaximumFileSize.ToString());
+            emitter.Add("MaxSizePerCellStorageOperation", webApplication.MaxSizePerCellStorageOperation.ToString());
             emitter.Add("MaxUniquePermScopesPerList", webApplication.MaxUniquePermScopesPerList.ToString());
             emitter.Add("OfficialFileUrl", Utility.Nullable(webApplication.OfficialFileUrl));
             emitter.Add("OutboundMailCodePage", webApplication.OutboundMailCodePage.ToString());
@@ -292,7 +292,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("OutboundMmsServiceAccount", Utility.Nullable(MobileMessagingAccountTOJSON(webApplication.OutboundMmsServiceAccount)));
             emitter.Add("OutboundSmsServiceAccount", Utility.Nullable(MobileMessagingAccountTOJSON(webApplication.OutboundSmsServiceAccount)));
             emitter.Add("PresenceEnabled", webApplication.PresenceEnabled.ToString());
-            // E-mail Inserts have been removed in SharePoint 2013
+            // E-mail Inserts have been removed in SharePoint 2010
             emitter.Add("PublicFolderRootUrl", "");
             emitter.Add("RecycleBinEnabled", webApplication.RecycleBinEnabled.ToString());
             emitter.Add("RecycleBinCleanupEnabled", webApplication.RecycleBinCleanupEnabled.ToString());
@@ -421,7 +421,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("DisplayName", policy.DisplayName);
             emitter.Add("IsSystemUser", policy.IsSystemUser.ToString());
             emitter.Add("UserName", policy.UserName);
-            emitter.Add("PolicyRoleBinding", string.Join(",", roles));
+            emitter.Add("PolicyRoleBinding", string.Join(",", roles.ToArray()));
             emitter.Add("WebApplicationId", webAppId.ToString());
 
             return emitter;
@@ -479,7 +479,8 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("LastContentModifiedDate", site.LastContentModifiedDate == null ? "Never" : site.LastContentModifiedDate.ToUniversalTime().ToString("u"));
             emitter.Add("LastSecurityModifiedDate", site.LastSecurityModifiedDate == null ? "Never" : site.LastSecurityModifiedDate.ToUniversalTime().ToString("u"));
             emitter.Add("LockIssue", Utility.Nullable(site.LockIssue));
-            emitter.Add("MaintenanceMode", site.MaintenanceMode.ToString());
+            // MaintenanceMode is not available in SharePoint 2010
+            emitter.Add("MaintenanceMode", "False");
             emitter.Add("Owner", site.Owner == null ? "" : site.Owner.LoginName);
             emitter.Add("Port", site.Port.ToString());
             emitter.Add("PortalName", Utility.Nullable(site.PortalName));
@@ -495,7 +496,8 @@ namespace Splunk.SharePoint2013.Inventory
                 emitter.Add("UserCodeWarningLevel", site.Quota.UserCodeWarningLevel.ToString());
             }
             // END: QUOTA
-            emitter.Add("ReadLocked", site.IsReadLocked.ToString());
+            // IsReadLocked is not available in SharePoint 2010
+            emitter.Add("ReadLocked", "False");
             emitter.Add("ReadOnly", site.ReadOnly.ToString());
             emitter.Add("ResourceQuotaExceeded", site.ResourceQuotaExceeded.ToString());
             emitter.Add("ResourceQuotaExceededNotificationSent", site.ResourceQuotaExceededNotificationSent.ToString());
@@ -507,8 +509,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("SystemAccount", site.SystemAccount == null ? "" : site.SystemAccount.LoginName);
             emitter.Add("SyndicationEnabled", site.SyndicationEnabled.ToString());
             emitter.Add("TrimAuditLog", site.TrimAuditLog.ToString());
-            // UIVersionConfigurationEnabled is obsolete in SharePoint 2013
-            emitter.Add("UIVersionConfigurationEnabled", "False");
+            emitter.Add("UIVersionConfigurationEnabled", site.UIVersionConfigurationEnabled.ToString());
             // BEGIN: USAGE
             emitter.Add("Bandwidth", site.Usage.Bandwidth.ToString());
             emitter.Add("DiscussionStorage", site.Usage.DiscussionStorage.ToString());
@@ -516,7 +517,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("Storage", site.Usage.Storage.ToString());
             emitter.Add("Visits", site.Usage.Visits.ToString());
             // END: USAGE
-            // UserAccountDirectoryPath is obsolete in SharePoint 2013
+            // UserAccountDirectoryPath is obsolete in SharePoint 2010
             emitter.Add("UserAccountDirectoryPath", "");
             emitter.Add("UserCodeEnabled", site.UserCodeEnabled.ToString());
             emitter.Add("UserDefinedWorkflowsEnabled", site.UserDefinedWorkflowsEnabled.ToString());
@@ -550,7 +551,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("ASPXPageIndexed", web.ASPXPageIndexed.ToString());
             emitter.Add("ASPXPageIndexMode", web.ASPXPageIndexMode.ToString());
             emitter.Add("Audit", web.Audit == null ? "0" : ((int)web.Audit.AuditFlags).ToString("X"));
-            // AuthenticationMode is always Windows in SharePoint 2013
+            // AuthenticationMode is always Windows in SharePoint 2010
             emitter.Add("AuthenticationMode", "Windows");
             emitter.Add("Author", web.Author == null ? "" : web.Author.LoginName);
             emitter.Add("ClientTag", web.ClientTag.ToString());
@@ -561,15 +562,15 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("CustomMasterUrl", Utility.Nullable(web.CustomMasterUrl));
             emitter.Add("CustomUploadPage", Utility.Nullable(web.CustomUploadPage));
             emitter.Add("EffectivePresenceEnabled", web.EffectivePresenceEnabled.ToString());
-            // EmailInsertsEnabled is obsolete in SharePoint 2013
+            // EmailInsertsEnabled is obsolete in SharePoint 2010
             emitter.Add("EmailInsertsEnabled", "False");
-            // EventHandlersEnabled is obsolete in SharePoint 2013
+            // EventHandlersEnabled is obsolete in SharePoint 2010
             emitter.Add("EventHandlersEnabled", "False");
             emitter.Add("ExecuteUrl", Utility.Nullable(web.ExecuteUrl));
             emitter.Add("Exists", web.Exists.ToString());
-            // HasExternalSecurityProvider is obsolete in SharePoint 2013
+            // HasExternalSecurityProvider is obsolete in SharePoint 2010
             emitter.Add("HasExternalSecurityProvider", "False");
-            // HasUniquePerm is obsolete in SharePoint 2013
+            // HasUniquePerm is obsolete in SharePoint 2010
             emitter.Add("HasUniquePerm", "True");
             emitter.Add("HasUniqueRoleAssignments", web.HasUniqueRoleAssignments.ToString());
             emitter.Add("HasUniqueRoleDefinitions", web.HasUniqueRoleDefinitions.ToString());
@@ -593,7 +594,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("PortalUrl", Utility.Nullable(web.PortalUrl));
             emitter.Add("PresenceEnabled", web.PresenceEnabled.ToString());
             emitter.Add("Provisioned", web.Provisioned.ToString());
-            // PublicFolderRootUrl is obsolete in SharePoint 2013
+            // PublicFolderRootUrl is obsolete in SharePoint 2010
             emitter.Add("PublicFolderRootUrl", "");
             emitter.Add("QuickLaunchEnabled", web.QuickLaunchEnabled.ToString());
             emitter.Add("RecycleBinEnabled", web.RecycleBinEnabled.ToString());
@@ -603,14 +604,12 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("ServerRelativeUrl", Utility.Nullable(web.ServerRelativeUrl));
             emitter.Add("SiteLogoUrl", Utility.Nullable(web.SiteLogoUrl));
             emitter.Add("SyndicationEnabled", web.SyndicationEnabled.ToString());
-            // Theme is obsolete in SharePoint 2013
-            emitter.Add("Theme", "");
-            emitter.Add("ThemeCssUrl", "");
-            emitter.Add("ThemeCssFolderUrl", "");
+            emitter.Add("Theme", Utility.Nullable(web.Theme));
+            emitter.Add("ThemeCssUrl", Utility.Nullable(web.ThemeCssUrl));
+            emitter.Add("ThemeCssFolderUrl", Utility.Nullable(web.ThemedCssFolderUrl));
             emitter.Add("TreeViewEnabled", web.TreeViewEnabled.ToString());
             emitter.Add("UIVersion", web.UIVersion.ToString());
-            // UIVersionConfigurationEnabled is obsolete in SharePoint 2013
-            emitter.Add("UIVersionConfigurationEnabled", "False");
+            emitter.Add("UIVersionConfigurationEnabled", web.UIVersionConfigurationEnabled.ToString());
             emitter.Add("WebTemplate", Utility.Nullable(web.WebTemplate));
             emitter.Add("WebTemplateId", web.WebTemplateId.ToString());
             emitter.Add("WebApplicationId", webAppId.ToString());
@@ -669,7 +668,7 @@ namespace Splunk.SharePoint2013.Inventory
             emitter.Add("Author", list.Author == null ? "" : list.Author.LoginName);
             emitter.Add("Created", list.Created.ToUniversalTime().ToString("u"));
             emitter.Add("EnableAttachments", list.EnableAttachments.ToString());
-            // EnableDeployingList is deprecated in SharePoint 2013
+            // EnableDeployingList is deprecated in SharePoint 2010
             emitter.Add("EnableDeployingList", "False");
             emitter.Add("EnableDeployWithDependentList", list.EnableDeployWithDependentList.ToString());
             emitter.Add("EnableFolderCreation", list.EnableFolderCreation.ToString());

@@ -10,8 +10,7 @@ using Microsoft.SharePoint.Diagnostics;
 using Microsoft.SharePoint.MobileMessage;
 
 using Splunk.ModularInputs;
-
-namespace Splunk.SharePoint2013.Inventory
+namespace Splunk.SharePoint2010.Inventory
 {
     internal class Program : Script
     {
@@ -60,7 +59,8 @@ namespace Splunk.SharePoint2013.Inventory
         /// </summary>
         public override Scheme Scheme
         {
-            get {
+            get
+            {
                 return new Scheme
                 {
                     Title = "SharePOint 2013 Inventory Reporter",
@@ -94,7 +94,7 @@ namespace Splunk.SharePoint2013.Inventory
             CheckpointDirectory = Utility.CheckpointDirectory(inputDefinition);
 
             Cache = new SplunkCache(CheckpointDirectory, "inventory.txt");
-            
+
             using (EventStreamWriter writer = new EventStreamWriter())
             {
                 while (true)
@@ -110,7 +110,7 @@ namespace Splunk.SharePoint2013.Inventory
 
                         // SPFarm
                         EmitFarm(writer, SPFarm.Local);
-    
+
                         // SPAlternateUrlCollectionManager
                         EmitAlternateUrlCollectionManager(writer, SPFarm.Local, SPFarm.Local.AlternateUrlCollections);
 
@@ -131,7 +131,7 @@ namespace Splunk.SharePoint2013.Inventory
 
                         // In SharePoint 2010, the SPWebTemplate objects are not contained within a specific site.
                         // In SharePoint 2013, they are, so we must iterate over the Web Sites to get the list
-                        Dictionary<string,SPWebTemplate> webTemplates = new Dictionary<string,SPWebTemplate>();
+                        Dictionary<string, SPWebTemplate> webTemplates = new Dictionary<string, SPWebTemplate>();
                         List<SPWebApplication> webApplications = new List<SPWebApplication>();
                         Dictionary<Guid, SPApplicationPool> applicationPools = new Dictionary<Guid, SPApplicationPool>();
                         foreach (var service in SPFarm.Local.Services)
@@ -193,7 +193,7 @@ namespace Splunk.SharePoint2013.Inventory
                     });
                     Int64 endTime = DateTime.Now.Ticks;
                     Cache.Save();
-                    EmitDebugInformation((endTime - startTime)/10000);  // ticks is # 100ns chunks, 10000 per ms
+                    EmitDebugInformation((endTime - startTime) / 10000);  // ticks is # 100ns chunks, 10000 per ms
                     Thread.Sleep(Interval * 1000);
                 }
             }
@@ -213,7 +213,7 @@ namespace Splunk.SharePoint2013.Inventory
             debugInfo.Add(string.Format("time={0} ms", timeTaken));
             debugInfo.Add(string.Format("cache={0} objects", Cache.Count));
             debugInfo.Add(string.Format("errors={0}", ErrorCount));
-            SystemLogger.Write(LogLevel.Debug, string.Join(",",debugInfo));
+            SystemLogger.Write(LogLevel.Debug, string.Join(",", debugInfo.ToArray()));
         }
 
         #region SPFarm
@@ -224,14 +224,14 @@ namespace Splunk.SharePoint2013.Inventory
         /// <param name="localFarm">The local farm</param>
         private void EmitFarm(EventStreamWriter writer, SPFarm localFarm)
         {
-            var id   = localFarm.Id.ToString();
+            var id = localFarm.Id.ToString();
             var hash = Converter.ToHash(localFarm);
-            var chk  = Converter.ToChecksum(hash);
+            var chk = Converter.ToChecksum(hash);
             var type = CacheType.Farm;
 
             if (!Cache.IsUpdated(type, id, chk))
                 return;
-            
+
             SplunkEmitter emitter = new SplunkEmitter { CacheType = type, Timestamp = DateTime.Now };
             emitter.Add("Action", Cache.IsNew(type, id) ? "Add" : "Update");
             foreach (var pair in hash)
@@ -520,7 +520,7 @@ namespace Splunk.SharePoint2013.Inventory
         /// <param name="writer">The event stream</param>
         /// <param name="localFarm">The local farm</param>
         /// <param name="webTemplates">The unique list of web templates</param>
-        private void EmitWebTemplates(EventStreamWriter writer, SPFarm localFarm, Dictionary<string,SPWebTemplate> webTemplates)
+        private void EmitWebTemplates(EventStreamWriter writer, SPFarm localFarm, Dictionary<string, SPWebTemplate> webTemplates)
         {
             List<string> current = new List<string>();
             var type = CacheType.WebTemplate;
@@ -707,7 +707,7 @@ namespace Splunk.SharePoint2013.Inventory
 
                 var newCache = new CacheObject { Type = type, Id = cacheId, LastUpdated = DateTime.Now, Checksum = chk };
                 Cache[newCache.Type, newCache.Id] = newCache;
-                
+
                 current.Add(database.Id.ToString());
             }
 
@@ -900,7 +900,7 @@ namespace Splunk.SharePoint2013.Inventory
                     writer.Write(emitter.ToEmitter());
                     Cache.Remove(type, old);
                 }
-            } 
+            }
         }
         #endregion
 

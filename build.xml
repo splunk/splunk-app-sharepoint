@@ -23,7 +23,7 @@
 	
 	
 	<!-- BASE ANT COMMANDS - CLEAN, BUILD, PACKAGE -->
-	<target name="clean" depends="clean-sp10-audit,clean-sp13-audit,clean-sp13-inventory">
+	<target name="clean" depends="clean-sp10-audit,clean-sp13-audit,clean-sp10-inventory,clean-sp13-inventory">
 		<delete dir="${build.dir}" />
 	</target>
 
@@ -88,6 +88,15 @@
 		</exec>
 		<delete dir="${vsprojects.dir}/SP13Audit/bin" />
 		<delete dir="${vsprojects.dir}/SP13Audit/obj" />
+	</target>
+
+	<target name="clean-sp10-inventory">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
+			<arg value="/t:Clean" />
+			<arg value="/p:${dotnet2}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP10Inventory/bin" />
+		<delete dir="${vsprojects.dir}/SP10Inventory/obj" />
 	</target>
 	
 	<target name="clean-sp13-inventory">
@@ -188,7 +197,11 @@
 			<arg value="/p:${dotnet2}" />
 		</exec>
 		
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
+			<arg value="/p:${dotnet2}" />
+		</exec>		
 		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
 	</target>
 	

@@ -4,7 +4,7 @@ using System.Text;
 
 using Splunk.ModularInputs;
 
-namespace Splunk.SharePoint2013.Inventory
+namespace Splunk.SharePoint2010.Inventory
 {
     /// <summary>
     /// Emits a SP13Inventory event
@@ -51,7 +51,7 @@ namespace Splunk.SharePoint2013.Inventory
                 x.Add(string.Format("{0}=\"{1}\"", p.Key, p.Value));
             }
 
-            return new EventElement { Data=string.Join("\n", x), Time=Timestamp };
+            return new EventElement { Data=string.Join("\n", x.ToArray()), Time=Timestamp };
         }
 
         /// <summary>
