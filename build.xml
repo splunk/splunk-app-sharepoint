@@ -185,7 +185,8 @@
 	
 	<target name="TA-Sharepoint2010-Audit">
 		<mkdir dir="${addon.dir}/TA-Sharepoint2010-Audit"/>
-
+		<mkdir dir="${addon.dir}/TA-Sharepoint2010-Audit/bin"/>
+		
 		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit">
 			<fileset dir="TA-Sharepoint2010-Audit"/>
 			<filterset>
@@ -207,6 +208,7 @@
 	
 	<target name="TA-Sharepoint2013-Audit">
 		<mkdir dir="${addon.dir}/TA-Sharepoint2013-Audit"/>
+		<mkdir dir="${addon.dir}/TA-Sharepoint2013-Audit/bin"/>
 
 		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit">
 			<fileset dir="TA-Sharepoint2013-Audit"/>
