@@ -229,9 +229,7 @@ namespace Splunk.SharePoint2010.Inventory
             var chk = Converter.ToChecksum(hash);
             var type = CacheType.Farm;
 
-            if (!Cache.IsUpdated(type, id, chk))
-                return;
-
+            // Note: Per MSSHRPT-213, we need to dump out the Farm every poll interval
             SplunkEmitter emitter = new SplunkEmitter { CacheType = type, Timestamp = DateTime.Now };
             emitter.Add("Action", Cache.IsNew(type, id) ? "Add" : "Update");
             foreach (var pair in hash)
