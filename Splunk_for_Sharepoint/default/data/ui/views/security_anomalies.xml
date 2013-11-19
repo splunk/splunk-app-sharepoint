@@ -6,5 +6,9 @@
 			<title>Logons via VPN and non-VPN</title>
 			<searchName>Security - Concurrent VPN Access</searchName>
 		</table>
+		<table>
+			<title>Logons from multiple locations</title>
+			<searchName>Security - Concurrent Locations</searchName>
+		</table>
 	</row>
 </dashboard>
