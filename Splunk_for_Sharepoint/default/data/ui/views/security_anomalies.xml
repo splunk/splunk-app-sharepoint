@@ -1,0 +1,10 @@
+<dashboard>
+	<label>Anomalous Activity</label>
+	
+	<row>
+		<table>
+			<title>Logons via VPN and non-VPN</title>
+			<searchName>Security - Concurrent VPN Access</searchName>
+		</table>
+	</row>
+</dashboard>
