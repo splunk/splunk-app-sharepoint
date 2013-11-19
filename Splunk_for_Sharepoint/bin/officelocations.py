@@ -6,12 +6,12 @@ fLookups = os.path.join(os.environ['SPLUNK_HOME'], 'etc', 'apps', 'Splunk_for_Sh
 fOffices = os.path.join(fLookups, "OfficeLocations.csv")
 
 def load_csv(fName):
-	ll = dict()
+	ll = list()
 	
 	with open(fName, 'rb') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
-			ll[row['c_ip']] = row['office'];
+			ll.append(row)
 	return ll
 
 def lookup_csv(lookup, field):
@@ -20,11 +20,11 @@ def lookup_csv(lookup, field):
 	except ValueError:
 		return None
 		
-	for v in lookup.keys():
+	for v in lookup:
 		try:
-			network = ipaddr.ip_network(v)
+			network = ipaddr.ip_network(v['c_ip'])
 			if address in network:
-				return lookup[v]
+				return v
 		except ValueError:
 			pass
 	return None
@@ -42,5 +42,7 @@ if __name__ == '__main__':
 		if (ipAddr is not None):
 			office = lookup_csv(offices, ipAddr)
 			if (office is not None):
-				row['office'] = office
+				row['office'] = office['office']
+				row['office_lat'] = office['office_lat']
+				row['office_lon'] = office['office_lon']
 		writer.writerow(row)

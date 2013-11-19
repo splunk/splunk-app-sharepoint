@@ -6,5 +6,10 @@
 			<title>Logons via VPN</title>
 			<searchName>Security - VPN Access</searchName>
 		</table>
+		<map>
+			<title>Logons by Location</title>
+			<searchName>Security - GeoIP Logons</searchName>
+			<option name="height">400px</option>
+		</map>
 	</row>
 </dashboard>
