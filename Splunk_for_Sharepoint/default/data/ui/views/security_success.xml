@@ -1,0 +1,10 @@
+<dashboard>
+	<label>Successful Logons</label>
+	
+	<row>
+		<table>
+			<title>Logons via VPN</title>
+			<searchName>Security - VPN Access</searchName>
+		</table>
+	</row>
+</dashboard>

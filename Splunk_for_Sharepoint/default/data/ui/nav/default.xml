@@ -22,6 +22,7 @@
  <collection label="Security">
   <view name="security_failed"/>
   <view name="security_anomalies"/>
+  <view name="security_success"/>
  </collection>
  <collection label="Documentation">
   <view source="unclassified" match="docs_"/>
