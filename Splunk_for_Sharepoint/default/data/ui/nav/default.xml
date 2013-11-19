@@ -19,6 +19,9 @@
   <view name="usage_byuser"/>
   <view name="usage_bydocument"/>
  </collection>
+ <collection label="Security">
+  <view name="security_failed"/>
+ </collection>
  <collection label="Documentation">
   <view source="unclassified" match="docs_"/>
  </collection>

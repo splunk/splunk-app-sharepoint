@@ -1,0 +1,4 @@
+c_ip,office
+10.160.202.0/22,San Jose DataCenter
+10.160.204.0/22,Training Center
+10.160.255.0/24,VPN

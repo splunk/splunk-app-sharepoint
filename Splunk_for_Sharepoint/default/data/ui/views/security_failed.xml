@@ -1,0 +1,14 @@
+<dashboard>
+	<label>Failed Logins</label>
+	
+	<row>
+		<table>
+			<title>Failed Logins by IP Address</title>
+			<searchName>Security - Failed Logins by IP</searchName>
+		</table>
+		<table>
+			<title>Failed Logins by Location</title>
+			<searchName>Security - Failed Logins by Location</searchName>
+		</table>
+	</row>
+</dashboard>
