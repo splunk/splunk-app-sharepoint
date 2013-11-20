@@ -4,9 +4,14 @@
    <html>
 <h2>Step 1: Install the Splunk App for SQL Server on all Content Servers</h2>
 
-<p>The backend storage for SharePoint is SQL Server.  Install the Splunk App for SQL Server, which is available on Splunkbase, prior to commencing work on SharePoint.  Ensure that audit data for access and database operations are flowing into Splunk and that all SQL Server health and performance data is being recorded and showing in the dashboards for that app prior to commencing the Splunk App for SharePoint installation.  Installation Documentation for the Splunk App for SQL Server is available with that app.</p>
-
-<p>At least Splunk App for SQL Server v0.1.8 is required.</p>
+<p>The backend storage for SharePoint is SQL Server. Install the Splunk App for 
+SQL Server, which is available on Splunkbase, prior to commencing work on SharePoint. 
+Ensure that audit data fordatabase operations and perfmon data are flowing into 
+Splunk and that all SQL Server health and performance data is being recorded and 
+showing in the dashboards for that app prior to commencing the Splunk App for 
+SharePoint installation. You do not need to provide the query audit for the 
+database. Installation Documentation for the Splunk App for SQL Server is 
+available with that app. At least Splunk App for SQL Server v0.1.8 is required.</p>
 
 <h2>Step 2: Prepare the Splunk Indexers</h2>
 
@@ -17,54 +22,75 @@
 <li>mssharepoint</li>
 </ul>
 
-<p>In addition, you must deploy the TA-Sharepoint20XX app to the Indexers.  This app is contained within the appserver/addons area of the Splunk App for SharePoint.  There is a different app for SharePoint 2010 and SharePoint 2013.  Only one version of the app is needed (and the data is common to both versions of SharePoint, so either one will work).  You will need to restart the splunkd process to register this app on each indexer.  You can disable the inputs within this app as they are not necessary. </p> 
+<p>In addition, you must deploy the TA-Sharepoint20XX app to the Indexers.  This 
+app is contained within the appserver/addons area of the Splunk App for SharePoint.  
+There is a different app for SharePoint 2010 and SharePoint 2013.  Only one version 
+of the app is needed (and the data is common to both versions of SharePoint, so 
+either one will work).  You will need to restart the splunkd process to register 
+this app on each indexer.  You can disable the inputs within this app as they are 
+not necessary. </p> 
 
-<p>The TA-Sharepoint20XX handles augmented line breaking and data fixing of the ULS logs so that each transaction is available as a single event instead of multiple events.  This is required for exception reporting within the dashboards.</p>
+<p>The TA-Sharepoint20XX handles augmented line breaking and data fixing of the 
+ULS logs so that each transaction is available as a single event instead of 
+multiple events.  This is required for exception reporting within the dashboards.</p>
 
 <h2>Step 3: Designate an Inventory and Audit Reader</h2>
 
-<p>One of your SharePoint servers must be designated as an inventory and audit reader.  This server will be used to gather the inventory information and to read the audit log within SharePoint.  The Universal Forwarder that is installed on this SharePoint server will need special handling.</p>
+<p>One of your SharePoint servers must be designated as an inventory and audit 
+reader.  This server will be used to gather the inventory information and to read 
+the audit log within SharePoint.  The Universal Forwarder that is installed on this 
+SharePoint server will need special handling.</p>
 
-<p>If you have multiple farms, then you must designate an Inventory and Audit Reader in each farm.</p>
+<p>If you have multiple farms, then you must designate an Inventory and Audit Reader 
+in each farm.</p>
 
 <h2>Step 4: Install Splunk on the other SharePoint servers</h2>
 
-<p>Each SharePoint server that is not the Inventory and Audit Reader host can get a standard "Local System" type install of the latest Splunk Universal Forwarder (version v6.0 or later).  It should be linked to a Splunk Deployment Server so that you can easily push updated apps to the Universal Forwarder.  It should be sending data to the central Splunk instance.</p>
+<p>Each SharePoint server that is not the Inventory and Audit Reader host can get 
+a standard "Local System" type install of the latest Splunk Universal Forwarder 
+(version v6.0 or later).  It should be linked to a Splunk Deployment Server so 
+that you can easily push updated apps to the Universal Forwarder.  It should be 
+sending data to the central Splunk instance.</p>
 
 <h2>Step 5: Install Splunk on the Inventory and Audit Reader</h2>
 
-<p>The Splunk Universal Forwarder that is running on the Inventory and Audit Reader must be running as a domain account.  The domain accounts must have the following characteristics:</p>
+<p>The Splunk Universal Forwarder that is running on the Inventory and Audit 
+Reader must be running as a domain account.  The domain accounts must have the 
+following characteristics:</p>
 
 <ul>
 <li>Local Administrator</li>
 <li>Add-SPShellAdmin (PowerShell Farm Administrator)</li>
 </ul>
 
-<p>To add the database permissions properly, ensure you run the following command using machine administrator from a farm administrator account that has shell admin privileges 
-to SharePoint_Config:</p>
+<p>To add the database permissions properly, ensure you run the following command 
+using machine administrator from a farm administrator account that has shell admin 
+privileges to SharePoint_Config:</p>
 
 <pre>Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
 
-<p>Where DOMAIN\user is the username of the user running the Splunk Universal Forwarder.</p>
+<p>Where DOMAIN\user is the username of the user running the Splunk Universal 
+Forwarder.</p>
 
-<p>If you have multiple farms, then the user involved is probably different for each farm.  Each farm will need their own Inventory and Audit Reader.</p>
+<p>If you have multiple farms, then the user involved is probably different for 
+each farm.  Each farm will need their own Inventory and Audit Reader.</p>
 
 <h2>Step 6: Deploy Add-ons to the SharePoint servers</h2>
 
 <p>The following add-ons need to be deployed to each server:</p>
 
 <ul>
-<li>Splunk_TA_windows (Splunk Technology Add-on for Microsoft Windows, available from Splunkbase) v4.6 or later</li>
-<li>TA-Sharepoint20XX (provided with the app in appserver/addons - XX is 10 or 13, depending on your SharePoint version)</li>
+<li>Splunk_TA_windows v4.6.4 or later</li>
+<li>TA-Sharepoint20XX (provided with the app in appserver/addons)</li>
 </ul>
 
-<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint20XX-Audit add-on, which is provided with the
-app in appserver/addons.</p>
+<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint20XX-Audit 
+add-on, which is provided with the app in appserver/addons.</p>
 
 <h2>Step 7: Add cs-host to the SharePoint site logging</h2>
 
-<p>Normally, the full URL that the user types in is not available in the logs.  You need to adjust the logging specification
-for each web site in IIS as follows:</p>
+<p>Normally, the full URL that the user types in is not available in the logs.  
+You need to adjust the logging specification for each web site in IIS as follows:</p>
 
 <ol>
 <li>Open up the IIS Manager</li>
@@ -77,23 +103,31 @@ for each web site in IIS as follows:</p>
 <li>Repeat steps 2-7 for each additional SharePoint site and host</li>
 </ol>
 
-<p>This needs to be completed on each SharePoint host that answers IIS queries (which is generally all of them).</p>
+<p>This needs to be completed on each SharePoint host that answers IIS queries 
+(which is generally all of them).</p>
 
 <h2>Step 8: Add Users to the SharePoint role</h2>
 
-<p>Part of the app install will also enable a sharepoint role.  Add users that will view the SharePoint data to the sharepoint role.  Without this step, they may not be able to see the relevant data.  As an alternative to this process, you can also edit the eventtypes supplied with the app to indicate which index the data resides in.</p>
+<p>Part of the app install will also enable a sharepoint role.  Add users that will 
+view the SharePoint data to the sharepoint role.  Without this step, they may not 
+be able to see the relevant data.  As an alternative to this process, you can also 
+edit the eventtypes supplied with the app to indicate which index the data resides 
+in.</p>
 
 <h2>Step 8: Wait 1 hour</h2>
 
-<p>We need some data from the inventory and this is gathered on a regular basis.  In general, this data is collected within the first hour of operation.</p>
+<p>We need some data from the inventory and this is gathered on a regular basis.  
+In general, this data is collected within the first hour of operation.</p>
 
 <h2>Step 9: Regenerate Lookup Files</h2>
 
-<p>Each lookup has an associated entry under Searches &amp; Reports -> Lookup Generators.  Run each search in turn and ensure they produce data.  The app as a whole will not work without the functioning lookups.</p>
+<p>There is a dashboard under Searches and Reports -> Lookup Generators called 
+the Lookup Table Builder. Use it to generate all the lookup tables.</p>
 
 <h2>Step 10: Check Errors</h2>
 
-<p>Log into Splunk and open the Splunk App for SharePoint.  Select Health -> Farm Errors.  All errors in this report are significant.</p>
+<p>Log into Splunk and open the Splunk App for SharePoint.  Select 
+Health -> Farm Errors.  All errors in this report are significant.</p>
 
 <h2>Errors</h2>
 

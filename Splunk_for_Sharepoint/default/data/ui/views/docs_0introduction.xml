@@ -28,7 +28,7 @@ Splunk v6.0 or later on all Splunk servers within the central Splunk instance.  
 
 <ul>
 <li>Microsoft SharePoint 2010 running on Windows Server 2008R2</li>
-<li>Microsoft SharePoint 2013 running on Windows Server 2008R2</li>
+<li>Microsoft SharePoint 2013 running on Windows Server 2012e</li>
 <li>SQL Server 2008R2 running on Windows Server 2008R2</li>
 <li>SQL Server 2012 running on Windows Server 2012</li>
 </ul>
