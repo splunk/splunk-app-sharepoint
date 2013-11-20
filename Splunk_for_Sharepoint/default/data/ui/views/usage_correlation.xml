@@ -1,0 +1,22 @@
+<form>
+	<label>Correlation ID Search</label>
+	<fieldset autoRun="true" submitButton="true">
+		<input type="text" token="id">
+			<label>Correlation ID</label>
+		</input>
+		<input type="time">
+			<default>Last 24 hours</default>
+		</input>
+	</fieldset>
+	
+	<row>
+		<event>
+			<title>ULS Events</title>
+			<searchString><![CDATA[eventtype=mssharepoint-uls Correlation="$id$"]]></searchString>
+			<option name="showPager">true</option>
+			<option name="count">20</option>
+			<option name="displayRowNumbers">true</option>
+			<option name="link">true</option>
+		</event>
+	</row>
+</form>

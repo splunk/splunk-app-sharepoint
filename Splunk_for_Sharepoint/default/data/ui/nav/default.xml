@@ -1,6 +1,4 @@
 <nav color="#0072C6" search_view="search">
- <view name="flashtimeline"/>
-
  <collection label="Health">
   <view name="ops_overview" default="true"/>
   <divider/>
@@ -18,6 +16,8 @@
   <divider/>
   <view name="usage_byuser"/>
   <view name="usage_bydocument"/>
+  <divider/>
+  <view name="usage_correlation"/>
  </collection>
  <collection label="Security">
   <view name="security_failed"/>
