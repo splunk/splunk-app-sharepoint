@@ -135,7 +135,7 @@ namespace Splunk.SharePoint2013.Audit
                                         }
                                         catch (Exception ex)
                                         {
-                                            SystemLogger.Write(LogLevel.Error, string.Format("Unable to access Site {0}: {1} {3}", site.ID.ToString(), ex.GetType().FullName, ex.ToString()));
+                                            SystemLogger.Write(LogLevel.Error, string.Format("Unable to access Site {0}: {1} {2}", site.ID.ToString(), ex.GetType().FullName, ex.ToString()));
                                         }
                                     }
                                 }

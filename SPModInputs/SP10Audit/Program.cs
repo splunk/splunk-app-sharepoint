@@ -125,11 +125,18 @@ namespace Splunk.SharePoint2010.Audit
                                 {
                                     foreach (SPSite site in webApp.Sites)
                                     {
-                                        if (AutoEnable && site.Audit.AuditFlags == SPAuditMaskType.None)
+                                        try
                                         {
-                                            AutoEnableSiteAudit(site, localFarm);
+                                            if (AutoEnable && site.Audit.AuditFlags == SPAuditMaskType.None)
+                                            {
+                                                AutoEnableSiteAudit(site, localFarm);
+                                            }
+                                            ProcessSiteCollection(writer, site, localFarm);
                                         }
-                                        ProcessSiteCollection(writer, site, localFarm);
+                                        catch (Exception ex)
+                                        {
+                                            SystemLogger.Write(LogLevel.Error, string.Format("Unable to access Site {0}: {1} {2}", site.ID.ToString(), ex.GetType().FullName, ex.ToString()));
+                                        }
                                     }
                                 }
                             }
