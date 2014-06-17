@@ -23,7 +23,7 @@ available with that app. At least Splunk App for SQL Server v0.1.8 is required.<
 </ul>
 
 <p>In addition, you must deploy the TA-Sharepoint20XX app to the Indexers.  This 
-app is contained within the appserver/addons area of the Splunk App for SharePoint.  
+app is separately downloaded from <a href="http://apps.splunk.com">apps.splunk.com</a>.  
 There is a different app for SharePoint 2010 and SharePoint 2013.  Only one version 
 of the app is needed (and the data is common to both versions of SharePoint, so 
 either one will work).  You will need to restart the splunkd process to register 
@@ -80,12 +80,14 @@ each farm.  Each farm will need their own Inventory and Audit Reader.</p>
 <p>The following add-ons need to be deployed to each server:</p>
 
 <ul>
-<li>Splunk_TA_windows v4.6.4 or later</li>
+<li>Splunk_TA_windows v4.6.6 or later</li>
 <li>TA-Sharepoint20XX (provided with the app in appserver/addons)</li>
 </ul>
 
-<p>In addition, the Inventory and Audit Reader must have the TA-Sharepoint20XX-Audit 
-add-on, which is provided with the app in appserver/addons.</p>
+<p>Note that Technology Addons are distributed with data inputs disabled.  Ensure
+you enable the data inputs appropriate to the function.  Only enable the sp1Xaudit
+and sp1Xinventory on your Inventory and Audit Reader.  Enable all other inputs
+on all machines.</p>
 
 <h2>Step 7: Add cs-host to the SharePoint site logging</h2>
 
@@ -143,7 +145,8 @@ bring up a PowerShell host using "Run as Administrator", and type the following:
 <pre>Add-PsSnapIn Microsoft.SharePoint.PowerShell
 Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
 
-<p>Replace the DOMAIN\user with the username of the user running the Splunk Universal Forwarder.</p>
+<p>Replace the DOMAIN\user with the username of the user running the Splunk Universal Forwarder on the Inventory and Audit
+Reader.</p>
 
    </html>
   </row>
