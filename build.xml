@@ -67,9 +67,7 @@
 	</target>
 
 	<!-- EXPANSION OF ADDONS IN BUILD -->
-	<target name="addons" depends="sp10-addons,sp13-addons"/>
-	<target name="sp10-addons" depends="TA-Sharepoint2010,TA-Sharepoint2010-Audit"/>
-	<target name="sp13-addons" depends="TA-Sharepoint2013,TA-Sharepoint2013-Audit"/>
+	<target name="addons" depends="TA-Sharepoint2010,TA-Sharepoint2013"/>
 
 	<!-- INDIVIDUAL CLEAN RECORDS -->
 	<target name="clean-sp10-audit">
@@ -163,6 +161,7 @@
 	
 	<target name="TA-Sharepoint2010">
 		<mkdir dir="${addon.dir}/TA-Sharepoint2010"/>
+		<mkdir dir="${addon.dir}/TA-Sharepoint2010/bin"/>
 
 		<copy todir="${addon.dir}/TA-Sharepoint2010">
 			<fileset dir="TA-Sharepoint2010"/>
@@ -170,29 +169,6 @@
 				<filter token="VERSION" value="${VERSION}"/>
 			</filterset>
 		</copy>  
-	</target>
-	
-	<target name="TA-Sharepoint2013">
-		<mkdir dir="${addon.dir}/TA-Sharepoint2013"/>
-
-		<copy todir="${addon.dir}/TA-Sharepoint2013">
-			<fileset dir="TA-Sharepoint2013"/>
-			<filterset>
-				<filter token="VERSION" value="${VERSION}"/>
-			</filterset>
-		</copy>  
-	</target>
-	
-	<target name="TA-Sharepoint2010-Audit">
-		<mkdir dir="${addon.dir}/TA-Sharepoint2010-Audit"/>
-		<mkdir dir="${addon.dir}/TA-Sharepoint2010-Audit/bin"/>
-		
-		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit">
-			<fileset dir="TA-Sharepoint2010-Audit"/>
-			<filterset>
-				<filter token="VERSION" value="${VERSION}"/>
-			</filterset>
-		</copy> 
 
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Audit">
 			<arg value="/p:${dotnet2}" />
@@ -201,21 +177,21 @@
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
 			<arg value="/p:${dotnet2}" />
 		</exec>		
-		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2010-Audit/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
 	</target>
 	
-	<target name="TA-Sharepoint2013-Audit">
-		<mkdir dir="${addon.dir}/TA-Sharepoint2013-Audit"/>
-		<mkdir dir="${addon.dir}/TA-Sharepoint2013-Audit/bin"/>
+	<target name="TA-Sharepoint2013">
+		<mkdir dir="${addon.dir}/TA-Sharepoint2013"/>
+		<mkdir dir="${addon.dir}/TA-Sharepoint2013/bin"/>
 
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit">
-			<fileset dir="TA-Sharepoint2013-Audit"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013">
+			<fileset dir="TA-Sharepoint2013"/>
 			<filterset>
 				<filter token="VERSION" value="${VERSION}"/>
 			</filterset>
-		</copy> 
+		</copy>  
 
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Audit">
 			<arg value="/p:${dotnet4}" />
@@ -225,8 +201,8 @@
 			<arg value="/p:${dotnet4}" />
 		</exec>
 		
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013-Audit/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
+		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
 	</target>
- </project>
+</project>
