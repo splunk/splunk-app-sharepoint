@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Splunk_for_Sharepoint">
-	<property name="APP" value="Splunk_for_Sharepoint" />
-	<property name="DATAGENAPP" value="SA-eventgen-sharepoint" />
-	<property name="VERSION" value="0.1.7" />
+	<property name="VERSION" value="0.2.0" />
 	
 	<property name="build.dir" value="build" />
-	<property name="vsprojects.dir" value="SPModInputs"/>
-	<property name="dist.file" value="${build.dir}/dist/${APP}-${VERSION}.tar.gz" />
+	<property name="dist.dir" value="${build.dir}/dist" />
 	
-	<property name="datagen.file" value="${build.dir}/dist/SA-eventgen-sharepoint-${VERSION}.tar.gz" />
-	<property name="datagen.dir" value="${build.dir}/${DATAGENAPP}" />
-
-	<property name="app.dir" value="${build.dir}/${APP}" />
-	<property name="addon.dir" value="${app.dir}/appserver/addons" />
+	<property name="vsprojects.dir" value="SPModInputs"/>
 	
 	<property name="csc.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\csc.exe"/>
 	<property name="msbuild.exe" value="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\msbuild.exe"/>
@@ -21,149 +14,43 @@
 	<property name="dotnet2" value="Configuration=${vsconfig};Platform=${platform};TargetFrameworkVersion=v3.5"/>
 	<property name="dotnet4" value="Configuration=${vsconfig};Platform=${platform};TargetFrameworkVersion=v4.0"/>
 	
-	
 	<!-- BASE ANT COMMANDS - CLEAN, BUILD, PACKAGE -->
-	<target name="clean" depends="clean-sp10-audit,clean-sp13-audit,clean-sp10-inventory,clean-sp13-inventory">
-		<delete dir="${build.dir}" />
+	<target name="build" depends="build-Splunk_for_Sharepoint,build-TA-Sharepoint2010,build-TA-Sharepoint2013">
 	</target>
 
-	<target name="build" depends="app,addons">
+	<target name="dist"  depends="dist-Splunk_for_Sharepoint,dist-TA-Sharepoint2010,dist-TA-Sharepoint2013">
 	</target>
+	
+	<target name="clean" depends="clean-Splunk_for_Sharepoint,clean-TA-Sharepoint2010,clean-TA-Sharepoint2013">
+		<delete dir="${build.dir}" />
+	</target>	
 
 	<target name="package" depends="build">
 		<mkdir dir="${build.dir}/dist"/>
 		
 		<tar destfile="${dist.file}" longfile="gnu" compression="gzip">
 			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
-				<include name="${APP}/**"/>
+				<include name="Splunk_for_Sharepoint/**"/>
 			</tarfileset>
 		</tar>
 	</target>
-	
-	<target name="datagen">
-		<mkdir dir="${build.dir}/dist"/>
+
+	<!-- TA-Sharepoint2010 Build and Clean Targets -->
+	<target name="dist-TA-Sharepoint2010" depends="build-TA-Sharepoint2010">
+		<mkdir dir="${dist.dir}"/>
 		
-		<copy todir="${datagen.dir}" filtering="off" verbose="on">
-			<fileset dir="${DATAGENAPP}">
-				<exclude name="**/.*" />
-				<exclude name="local/**" />
-				<exclude name="**/*-gist" />
-				<exclude name="**/*.xcf" />
-				<exclude name="**/*.d/**" />
-				<exclude name="default/app.conf" />
-			</fileset>
-		</copy>		
-		<copy todir="${datagen.dir}/default" file="${DATAGENAPP}/default/app.conf" verbose="on">
-			<filterset>
-				<filter token="VERSION" value="${VERSION}" />
-			</filterset>
-		</copy>		
-		
-		<tar destfile="${datagen.file}" longfile="gnu" compression="gzip">
+		<tar destfile="${dist.dir}/TA-Sharepoint2010-${VERSION}.tar.gz" longfile="gnu" compression="gzip">
 			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
-				<include name="${DATAGENAPP}/**" />
+				<include name="TA-Sharepoint2010/**"/>
 			</tarfileset>
 		</tar>
 	</target>
-
-	<!-- EXPANSION OF ADDONS IN BUILD -->
-	<target name="addons" depends="TA-Sharepoint2010,TA-Sharepoint2013"/>
-
-	<!-- INDIVIDUAL CLEAN RECORDS -->
-	<target name="clean-sp10-audit">
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Audit">
-			<arg value="/t:Clean" />
-			<arg value="/p:${dotnet2}" />
-		</exec>
-		<delete dir="${vsprojects.dir}/SP10Audit/bin" />
-		<delete dir="${vsprojects.dir}/SP10Audit/obj" />
-	</target>
 	
-	<target name="clean-sp13-audit">
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Audit">
-			<arg value="/t:Clean" />
-			<arg value="/P:${dotnet4}" />
-		</exec>
-		<delete dir="${vsprojects.dir}/SP13Audit/bin" />
-		<delete dir="${vsprojects.dir}/SP13Audit/obj" />
-	</target>
+	<target name="build-TA-Sharepoint2010">
+		<mkdir dir="${build.dir}/TA-Sharepoint2010"/>
+		<mkdir dir="${build.dir}/TA-Sharepoint2010/bin"/>
 
-	<target name="clean-sp10-inventory">
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
-			<arg value="/t:Clean" />
-			<arg value="/p:${dotnet2}" />
-		</exec>
-		<delete dir="${vsprojects.dir}/SP10Inventory/bin" />
-		<delete dir="${vsprojects.dir}/SP10Inventory/obj" />
-	</target>
-	
-	<target name="clean-sp13-inventory">
-		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory">
-			<arg value="/t:Clean" />
-			<arg value="/P:${dotnet4}" />
-		</exec>
-		<delete dir="${vsprojects.dir}/SP13Inventory/bin" />
-		<delete dir="${vsprojects.dir}/SP13Inventory/obj" />
-	</target>
-
-	<!-- INDIVIDUAL BUILD RECORDS -->
-	<target name="app">
-		<mkdir dir="${app.dir}" />
-		
-		<copy todir="${app.dir}" filtering="off" verbose="on">
-			<fileset dir="${APP}">
-				<exclude name="**/.*" />
-				<exclude name="local/**" />
-				<exclude name="**/*-gist" />
-				<exclude name="**/*.xcf" />
-				<exclude name="**/*.d/**" />
-				<exclude name="default/app.conf" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${app.dir}/default" file="${APP}/default/app.conf" verbose="on">
-			<filterset>
-				<filter token="VERSION" value="${VERSION}" />
-			</filterset>
-		</copy>
-		
-		<concat destfile="${app.dir}/default/eventtypes.conf" fixlastline="yes">
-			<fileset dir="${APP}/default/eventtypes.d" includes="*.conf"/>
-		</concat>
-		<echo>[concat] Created ${app.dir}/default/eventtypes.conf</echo>
-
-		<concat destfile="${app.dir}/default/macros.conf" fixlastline="yes">
-			<fileset dir="${APP}/default/macros.d" includes="*.conf"/>
-		</concat>
-		<echo>[concat] Created ${app.dir}/default/macros.conf</echo>
-
-		<concat destfile="${app.dir}/default/props.conf" fixlastline="yes">
-			<fileset dir="${APP}/default/props.d" includes="*.conf"/>
-		</concat>
-		<echo>[concat] Created ${app.dir}/default/props.conf</echo>
-
-		<concat destfile="${app.dir}/default/transforms.conf" fixlastline="yes">
-			<fileset dir="${APP}/default/transforms.d" includes="*.conf"/>
-		</concat>
-		<echo>[concat] Created ${app.dir}/default/transforms.conf</echo>
-
-		<concat destfile="${app.dir}/default/savedsearches.conf" fixlastline="yes">
-			<fileset dir="${APP}/default/savedsearches.d" includes="*.conf"/>
-			<filterchain>
-				<tokenfilter>
-					<filetokenizer/>
-					<replaceregex flags="gms" pattern="\\\s*[\n\r]+\s*" replace="" />
-				</tokenfilter>
-			</filterchain>
-		</concat>
-		<echo>[concat] Created ${app.dir}/default/savedsearches.conf</echo>
-	</target>
-	
-	<target name="TA-Sharepoint2010">
-		<mkdir dir="${addon.dir}/TA-Sharepoint2010"/>
-		<mkdir dir="${addon.dir}/TA-Sharepoint2010/bin"/>
-
-		<copy todir="${addon.dir}/TA-Sharepoint2010">
+		<copy todir="${build.dir}/TA-Sharepoint2010">
 			<fileset dir="TA-Sharepoint2010"/>
 			<filterset>
 				<filter token="VERSION" value="${VERSION}"/>
@@ -177,15 +64,45 @@
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
 			<arg value="/p:${dotnet2}" />
 		</exec>		
-		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
+		<copy todir="${build.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
+		<copy todir="${build.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
 	</target>
 	
-	<target name="TA-Sharepoint2013">
-		<mkdir dir="${addon.dir}/TA-Sharepoint2013"/>
-		<mkdir dir="${addon.dir}/TA-Sharepoint2013/bin"/>
+	<target name="clean-TA-Sharepoint2010">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Audit">
+			<arg value="/t:Clean" />
+			<arg value="/p:${dotnet2}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP10Audit/bin" />
+		<delete dir="${vsprojects.dir}/SP10Audit/obj" />
+		
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
+			<arg value="/t:Clean" />
+			<arg value="/p:${dotnet2}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP10Inventory/bin" />
+		<delete dir="${vsprojects.dir}/SP10Inventory/obj" />
+		
+		<delete dir="${build.dir}/TA-Sharepoint2010" />
+		<delete file="${dist.dir}/TA-Sharepoint2010-${VERSION}.tar.gz" />
+	</target>
+	
+	<!-- TA-Sharepoint2013 Build and Clean Targets -->
+	<target name="dist-TA-Sharepoint2013" depends="build-TA-Sharepoint2013">
+		<mkdir dir="${dist.dir}"/>
+		
+		<tar destfile="${dist.dir}/TA-Sharepoint2013-${VERSION}.tar.gz" longfile="gnu" compression="gzip">
+			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
+				<include name="TA-Sharepoint2013/**"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="build-TA-Sharepoint2013">
+		<mkdir dir="${build.dir}/TA-Sharepoint2013"/>
+		<mkdir dir="${build.dir}/TA-Sharepoint2013/bin"/>
 
-		<copy todir="${addon.dir}/TA-Sharepoint2013">
+		<copy todir="${build.dir}/TA-Sharepoint2013">
 			<fileset dir="TA-Sharepoint2013"/>
 			<filterset>
 				<filter token="VERSION" value="${VERSION}"/>
@@ -195,12 +112,98 @@
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Audit">
 			<arg value="/p:${dotnet4}" />
 		</exec>
-
+		
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory">
 			<arg value="/p:${dotnet4}" />
-		</exec>
-		
-		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
-		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
+		</exec>		
+		<copy todir="${build.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
+		<copy todir="${build.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
 	</target>
+	
+	<target name="clean-TA-Sharepoint2013">
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Audit">
+			<arg value="/t:Clean" />
+			<arg value="/p:${dotnet4}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP13Audit/bin" />
+		<delete dir="${vsprojects.dir}/SP13Audit/obj" />
+		
+		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP13Inventory">
+			<arg value="/t:Clean" />
+			<arg value="/p:${dotnet4}" />
+		</exec>
+		<delete dir="${vsprojects.dir}/SP13Inventory/bin" />
+		<delete dir="${vsprojects.dir}/SP13Inventory/obj" />
+		
+		<delete dir="${build.dir}/TA-Sharepoint2013" />
+		<delete file="${dist.dir}/TA-Sharepoint2013-${VERSION}.tar.gz" />
+	</target>	
+
+	<!-- Splunk_for_Sharepoint Build and Clean Records -->
+	<target name="dist-Splunk_for_Sharepoint" depends="build-Splunk_for_Sharepoint">
+		<mkdir dir="${dist.dir}"/>
+		
+		<tar destfile="${dist.dir}/Splunk_for_Sharepoint-${VERSION}.tar.gz" longfile="gnu" compression="gzip">
+			<tarfileset dir="${build.dir}" filemode="755" username="splunk" group="splunk">
+				<include name="Splunk_for_Sharepoint/**"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="build-Splunk_for_Sharepoint">
+		<mkdir dir="${build.dir}/Splunk_for_Sharepoint" />
+		
+		<copy todir="${build.dir}/Splunk_for_Sharepoint" filtering="off" verbose="on">
+			<fileset dir="Splunk_for_Sharepoint">
+				<exclude name="**/.*" />
+				<exclude name="local/**" />
+				<exclude name="**/*-gist" />
+				<exclude name="**/*.xcf" />
+				<exclude name="**/*.d/**" />
+				<exclude name="default/app.conf" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dir}/Splunk_for_Sharepoint/default" file="Splunk_for_Sharepoint/default/app.conf" verbose="on">
+			<filterset>
+				<filter token="VERSION" value="${VERSION}" />
+			</filterset>
+		</copy>
+		
+		<concat destfile="${build.dir}/Splunk_for_Sharepoint/default/eventtypes.conf" fixlastline="yes">
+			<fileset dir="Splunk_for_Sharepoint/default/eventtypes.d" includes="*.conf"/>
+		</concat>
+		<echo>[concat] Created ${build.dir}/Splunk_for_Sharepoint/default/eventtypes.conf</echo>
+
+		<concat destfile="${build.dir}/Splunk_for_Sharepoint/default/macros.conf" fixlastline="yes">
+			<fileset dir="Splunk_for_Sharepoint/default/macros.d" includes="*.conf"/>
+		</concat>
+		<echo>[concat] Created ${build.dir}/Splunk_for_Sharepoint/default/macros.conf</echo>
+
+		<concat destfile="${build.dir}/Splunk_for_Sharepoint/default/props.conf" fixlastline="yes">
+			<fileset dir="Splunk_for_Sharepoint/default/props.d" includes="*.conf"/>
+		</concat>
+		<echo>[concat] Created ${build.dir}/Splunk_for_Sharepoint/default/props.conf</echo>
+
+		<concat destfile="${build.dir}/Splunk_for_Sharepoint/default/transforms.conf" fixlastline="yes">
+			<fileset dir="Splunk_for_Sharepoint/default/transforms.d" includes="*.conf"/>
+		</concat>
+		<echo>[concat] Created ${build.dir}/Splunk_for_Sharepoint/default/transforms.conf</echo>
+
+		<concat destfile="${build.dir}/Splunk_for_Sharepoint/default/savedsearches.conf" fixlastline="yes">
+			<fileset dir="Splunk_for_Sharepoint/default/savedsearches.d" includes="*.conf"/>
+			<filterchain>
+				<tokenfilter>
+					<filetokenizer/>
+					<replaceregex flags="gms" pattern="\\\s*[\n\r]+\s*" replace="" />
+				</tokenfilter>
+			</filterchain>
+		</concat>
+		<echo>[concat] Created ${build.dir}/Splunk_for_Sharepoint/default/savedsearches.conf</echo>
+	</target>
+	
+	<target name="clean-Splunk_for_Sharepoint">
+		<delete dir="${build.dir}/Splunk_for_Sharepoint" />
+		<delete file="${dist.dir}/Splunk_for_Sharepoint-${VERSION}.tar.gz" />
+	</target>		
 </project>
