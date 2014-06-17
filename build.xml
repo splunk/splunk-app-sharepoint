@@ -177,7 +177,6 @@
 		<exec executable="${msbuild.exe}" dir="${vsprojects.dir}/SP10Inventory">
 			<arg value="/p:${dotnet2}" />
 		</exec>		
-		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Inventory/bin/${platform}/${vsconfig}/SP10Inventory.exe"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2010/bin" file="${vsprojects.dir}/SP10Audit/bin/${platform}/${vsconfig}/SP10Audit.exe"/>
 	</target>
@@ -201,7 +200,6 @@
 			<arg value="/p:${dotnet4}" />
 		</exec>
 		
-		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/Assemblies/SplunkSDK.dll"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Audit/bin/${platform}/${vsconfig}/SP13Audit.exe"/>
 		<copy todir="${addon.dir}/TA-Sharepoint2013/bin" file="${vsprojects.dir}/SP13Inventory/bin/${platform}/${vsconfig}/SP13Inventory.exe"/>
 	</target>
