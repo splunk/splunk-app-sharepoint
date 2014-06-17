@@ -1,0 +1,8 @@
+index,host,source,sourcetype,"_raw"
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:08-07:00 Address=""fe80::c81b:308c:cec1:6a16"" ResponseTime=""@V1@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:08-07:00 Address=""10.160.203.101"" ResponseTime=""@V2@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:08-07:00 Address=""10.160.203.55"" ResponseTime=""@V3@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:08-07:00 Address=""10.160.203.52"" ResponseTime=""@V4@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:07-07:00 Address=""10.160.203.53"" ResponseTime=""@V5@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:07-07:00 Address=""10.160.203.56"" ResponseTime=""@V6@"""
+mssharepoint,"SP-APP01",Powershell,"MSSharePoint:2013:NetworkLatency","2013-09-17T15:38:07-07:00 Address=""10.160.203.65"" ResponseTime=""@V7@"""

@@ -1,0 +1,234 @@
+index,host,source,sourcetype,"_raw"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:06 10.160.203.56 GET / - 80 - @SRCIP@ @USERAGENT@ sharepoint 401 0 0 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:06 10.160.203.56 GET / - 80 - @SRCIP@ @USERAGENT@ sharepoint 401 1 2148074254 61"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:06 10.160.203.56 GET / - 80 - @SRCIP@ @USERAGENT@ sharepoint 401 1 2148074252 77"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:11 GMT
+CheckSum=-1506077384
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=f6164a42-f58f-44ec-baaf-7395dfcac8ac
+ItemId=0ea22d23-2ff0-4595-8e10-c852d300435f
+ItemType=4
+UserId=@USERID@
+DocLocation=""Pages""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:11 GMT
+CheckSum=-605085132
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=f6164a42-f58f-44ec-baaf-7395dfcac8ac
+ItemId=591f4421-be0a-46bd-8c28-266080667493
+ItemType=1
+UserId=@USERID@
+DocLocation=""Pages/Home.aspx""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>3</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:11 GMT
+CheckSum=-2118605261
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=f6164a42-f58f-44ec-baaf-7395dfcac8ac
+ItemId=bcb8900c-d5fb-4e43-a994-b52136dcff9e
+ItemType=4
+UserId=@USERID@
+DocLocation=""_catalogs/masterpage""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:11 GMT
+CheckSum=650826689
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=f6164a42-f58f-44ec-baaf-7395dfcac8ac
+ItemId=3a02c4dc-2117-49d9-a8af-ea6fbecb8f4d
+ItemType=1
+UserId=@USERID@
+DocLocation=""_catalogs/masterpage/__DeviceChannelMappings.aspx""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:11 10.160.203.56 GET / - 80 - @SRCIP@ @USERAGENT@ sharepoint 401 1 2148074254 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:11 10.160.203.56 GET /Style+Library/en-US/Core+Styles/page-layouts-21.css - 80 - @SRCIP@ @USERAGENT@ sharepoint 1 2148074254 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:11 10.160.203.56 GET /Pages/Home.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 462"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:11 10.160.203.56 GET /Style+Library/en-US/Core+Styles/page-layouts-21.css - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 77"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:14 GMT
+CheckSum=-317139200
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=e05dbff1-39af-46b9-8c95-ffd959d5d2ca
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/SitePages""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:14 GMT
+CheckSum=-614009169
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=35bb4af6-0045-42f1-9a96-08bee05275f8
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/SitePages/Home.aspx""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:14 10.160.203.56 GET @CSURL@ - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 92"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:14 10.160.203.56 GET @CSURL@/SitePages/Home.aspx AjaxDelta=1&isStartPlt1=1379094274610 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 524"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:15 GMT
+CheckSum=-317144384
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=e05dbff1-39af-46b9-8c95-ffd959d5d2ca
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/SitePages""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:15 GMT
+CheckSum=-614014097
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=35bb4af6-0045-42f1-9a96-08bee05275f8
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/SitePages/Home.aspx""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:15 10.160.203.56 GET @CSURL@/SitePages/Home.aspx AjaxDelta=1&isStartPlt1=1379094274610 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 434"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:18 GMT
+CheckSum=263147410
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=bf570ba9-38f9-470f-b7c2-8767f52a4ded
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents/Forms""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:18 GMT
+CheckSum=-1573349706
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=aca65da1-6f8b-4fe2-9368-6d30c7457a56
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents/Forms/AllItems.aspx""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:18 10.160.203.56 GET @CSURL@/Documents/Forms/AllItems.aspx AjaxDelta=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 232"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:24 10.160.203.56 OPTIONS @CSURL@/Documents/ - 80 - @SRCIP@ @DOCAGENT@ sharepoint 200 0 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:24 10.160.203.56 OPTIONS @CSURL@/Documents/ - 80 - @SRCIP@ @DOCAGENT@ sharepoint 401 2148074254 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:24 10.160.203.56 OPTIONS @CSURL@/Documents/ - 80 - @SRCIP@ @DOCAGENT@ sharepoint 401 2148074252 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:33 10.160.203.56 OPTIONS @CSURL@/Documents/ - 80 - @SRCIP@ @DOCAGENT@ sharepoint 401 2148074254 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:33 10.160.203.56 OPTIONS @CSURL@/Documents/ - 80 0#.w|@SRCUSER@ @SRCIP@ @DOCAGENT@ sharepoint 200 0 124"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:33 10.160.203.56 POST @CSURL@/_vti_bin/cellstorage.svc/CellStorageService - 80 - @SRCIP@ @DOCAGENT@ sharepoint 401 2148074254 93"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:35 10.160.203.56 POST /_vti_bin/cellstorage.svc/cellstorageservice - 80 0#.w|@SRCUSER@ @SRCIP@ @DOCAGENT@ sharepoint 200 0 1333"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:36 GMT
+CheckSum=335187327
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=bf570ba9-38f9-470f-b7c2-8767f52a4ded
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:36 GMT
+CheckSum=-170030137
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=@DOCGUID@
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents/@DOCNAME@""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP-APP01","sp13audit://audit","MSSharePoint:2013:Audit","Fri, 13 Sep 2013 17:37:36 GMT
+CheckSum=-170030137
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=@DOCGUID@
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents/@DOCNAME@""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:40 10.160.203.56 POST /_vti_bin/cellstorage.svc/cellstorageservice - 80 0#.w|@SRCUSER@ @SRCIP@ @DOCAGENT@ sharepoint 200 0 4357"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:41 10.160.203.56 POST /_vti_bin/webs.asmx - 80 - @SRCIP@ @DOCSYSAGENT@ sharepoint 200 0 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:41 10.160.203.56 POST /_vti_bin/webs.asmx - 80 - @SRCIP@ @DOCSYSAGENT@ sharepoint 401 2148074254 62"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:41 10.160.203.56 POST /_vti_bin/webs.asmx - 80 - @SRCIP@ @DOCSYSAGENT@ sharepoint 401 2148074252 77"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:47 10.160.203.56 POST /_vti_bin/webs.asmx - 80 - @SRCIP@ @DOCSYSAGENT@ sharepoint 401 2148074254 108"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:47 10.160.203.56 POST /_vti_bin/webs.asmx - 80 0#.w|@SRCUSER@ @SRCIP@ @DOCSYSAGENT@ sharepoint 200 0 682"
+iis,"SP-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 17:37:48 10.160.203.56 POST /_vti_bin/workflow.asmx - 80 0#.w|@SRCUSER@ @SRCIP@ @DOCSYSAGENT@ sharepoint 200 0 372"
