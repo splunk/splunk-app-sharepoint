@@ -73,9 +73,6 @@
     <Reference Include="Microsoft.SharePoint">
       <HintPath>..\Assemblies\SharePoint2010\Microsoft.SharePoint.dll</HintPath>
     </Reference>
-    <Reference Include="SplunkSDK">
-      <HintPath>..\Assemblies\SplunkSDK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -84,6 +81,21 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Splunk-ModInputs\Argument.cs" />
+    <Compile Include="Splunk-ModInputs\ConfigurationItem.cs" />
+    <Compile Include="Splunk-ModInputs\ConfigurationItemBase.cs" />
+    <Compile Include="Splunk-ModInputs\EventElement.cs" />
+    <Compile Include="Splunk-ModInputs\EventStreamWriter.cs" />
+    <Compile Include="Splunk-ModInputs\InputDefinition.cs" />
+    <Compile Include="Splunk-ModInputs\InputDefinitionBase.cs" />
+    <Compile Include="Splunk-ModInputs\MultiValueParameter.cs" />
+    <Compile Include="Splunk-ModInputs\ParameterBase.cs" />
+    <Compile Include="Splunk-ModInputs\Scheme.cs" />
+    <Compile Include="Splunk-ModInputs\Script.cs" />
+    <Compile Include="Splunk-ModInputs\SingleValueParameter.cs" />
+    <Compile Include="Splunk-ModInputs\Stanza.cs" />
+    <Compile Include="Splunk-ModInputs\SystemLogger.cs" />
+    <Compile Include="Splunk-ModInputs\ValidationItems.cs" />
     <Compile Include="SplunkAuditEntry.cs" />
     <Compile Include="SplunkCache.cs" />
     <Compile Include="Utility.cs" />
@@ -103,6 +115,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
