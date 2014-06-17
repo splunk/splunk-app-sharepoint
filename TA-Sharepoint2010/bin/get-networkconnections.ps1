@@ -88,6 +88,5 @@ Get-NetworkConnections `
     | Select-Object -Unique RemoteAddress `
     | Foreach-Object { Test-Connection -Count 1 -ComputerName $_.RemoteAddress -ErrorAction SilentlyContinue } `
     | Select-Object Address,ResponseTime `
-	| Out-Splunk
 
 
