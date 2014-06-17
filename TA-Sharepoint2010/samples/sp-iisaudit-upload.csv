@@ -1,0 +1,90 @@
+index,host,source,sourcetype,"_raw"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:22:34 10.160.203.56 GET /_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 542"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:22:34 10.160.203.56 GET @CSURL@/_layouts/15/Upload.aspx List={BF570BA9-38F9-470F-B7C2-8767F52A4DED}&RootFolder=&IsDlg=1 80 - @SRCIP@ @USERAGENT@ sharepoint 401 2148074254 77"
+mssharepoint,"SP10-APP01","sp10audit://audit","MSSharePoint:2010:Audit","Fri, 13 Sep 2013 16:22:35 GMT
+CheckSum=-1258995636
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=884d3c58-a011-4e34-998a-bd7926c8fbe1
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/_catalogs/masterpage/seattle.master""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""<Version><Major>1</Major><Minor>0</Minor></Version>""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP10-APP01","sp10audit://audit","MSSharePoint:2010:Audit","Fri, 13 Sep 2013 16:22:35 GMT
+CheckSum=1900521018
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=9a08db81-3352-4844-9d28-bf54cb8869aa
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/_catalogs/masterpage""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP10-APP01","sp10audit://audit","MSSharePoint:2010:Audit","Fri, 13 Sep 2013 16:23:39 GMT
+CheckSum=1903752762
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=9a08db81-3352-4844-9d28-bf54cb8869aa
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/_catalogs/masterpage""
+LocationType=0
+Event=3
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/defaultcss.ashx ctag=0 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 917"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:40 10.160.203.56 GET @CSURL@/_layouts/15/defaultcss.ashx ctag=0 80 - @SRCIP@ @USERAGENT@ sharepoint 401 2148074254 77"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:40 10.160.203.56 GET /_layouts/15/styles/dlgframe.css - 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 77"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:41 10.160.203.56 GET /_layouts/15/1033/styles/corev15app.css rev=lhjTtG3PhNgW2c%2FlVFBkuA%3D%3D 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 279"
+mssharepoint,"SP10-APP01","sp10audit://audit","MSSharePoint:2010:Audit","Fri, 13 Sep 2013 16:23:44 GMT
+CheckSum=-830344951
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=@DOCGUID@
+ItemType=4
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents""
+LocationType=0
+Event=5
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""@DOCNAME@""
+UserName=""i:0#.w|@SRCUSER@""
+"
+mssharepoint,"SP10-APP01","sp10audit://audit","MSSharePoint:2010:Audit","Fri, 13 Sep 2013 16:23:44 GMT
+CheckSum=-2072285310
+FarmId=b64c54bb-6682-484c-949f-782b7b147853
+SiteId=@SITEID@
+ItemId=@DOCGUID@
+ItemType=1
+UserId=@USERID@
+DocLocation=""@CSURL@/Documents/@DOCNAME@""
+LocationType=0
+Event=5
+EventName=""""
+EventSource=0
+SourceName=""""
+EventData=""""
+UserName=""i:0#.w|@SRCUSER@""
+"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:45 10.160.203.56 GET /_layouts/15/images/ic@DOCEXT@.png - 80 - @SRCIP@ @USERAGENT@ sharepoint 200 0 108"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:45 10.160.203.56 POST @CSURL@/Sales+Documents/Forms/AllItems.aspx - 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 528"
+iis,"SP10-WEB01","C:\inetpub\logs\LogFiles\W3SVC473258155\u_ex.log","iis","2013-09-13 16:23:45 10.160.203.56 POST /_layouts/15/UploadEx.aspx List=%7bBF570BA9-38F9-470F-B7C2-8767F52A4DED%7d&RootFolder=&IsDlg=1 80 0#.w|@SRCUSER@ @SRCIP@ @USERAGENT@ sharepoint 200 0 @DOCLENGTH@"
