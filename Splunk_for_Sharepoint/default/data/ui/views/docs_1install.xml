@@ -2,11 +2,11 @@
  <label>Installation</label>
  <row>
    <html>
-<h2>Step 1: Install the Splunk App for SQL Server on all Content Servers</h2>
+<h2>Step 1: Install the Splunk App for SQL Server on all Content SQL Servers</h2>
 
 <p>The backend storage for SharePoint is SQL Server. Install the Splunk App for 
 SQL Server, which is available on Splunkbase, prior to commencing work on SharePoint. 
-Ensure that audit data fordatabase operations and perfmon data are flowing into 
+Ensure that audit data for database operations and perfmon data are flowing into 
 Splunk and that all SQL Server health and performance data is being recorded and 
 showing in the dashboards for that app prior to commencing the Splunk App for 
 SharePoint installation. You do not need to provide the query audit for the 
@@ -15,65 +15,24 @@ available with that app. At least Splunk App for SQL Server v0.1.8 is required.<
 
 <h2>Step 2: Prepare the Splunk Indexers</h2>
 
-<p>Create the following indices in the Splunk Indexers:</p>
-<ul>
-<li>perfmon</li>
-<li>iis</li>
-<li>mssharepoint</li>
-</ul>
+<p>Install the appropriate TA-Sharepoint20XX on the indexers and restart them. These
+add-ons are available on <a href="http://apps.splunk.com">apps.splunk.com</a> and must
+be configured separately.</p>
 
-<p>In addition, you must deploy the TA-Sharepoint20XX app to the Indexers.  This 
-app is separately downloaded from <a href="http://apps.splunk.com">apps.splunk.com</a>.  
-There is a different app for SharePoint 2010 and SharePoint 2013.  Only one version 
-of the app is needed (and the data is common to both versions of SharePoint, so 
-either one will work).  You will need to restart the splunkd process to register 
-this app on each indexer.  You can disable the inputs within this app as they are 
-not necessary. </p> 
-
-<p>The TA-Sharepoint20XX handles augmented line breaking and data fixing of the 
+<p>The TA-Sharepoint20XX add-on handles augmented line breaking and data fixing of the 
 ULS logs so that each transaction is available as a single event instead of 
-multiple events.  This is required for exception reporting within the dashboards.</p>
+multiple events.  This is required for exception reporting within the dashboards.
+In addition, the TA-Sharepoint20XX add-on installs the required indices.</p>
 
-<h2>Step 3: Designate an Inventory and Audit Reader</h2>
+<h2>Step 3: Prepare your Sharepoint servers</h2>
 
-<p>One of your SharePoint servers must be designated as an inventory and audit 
-reader.  This server will be used to gather the inventory information and to read 
-the audit log within SharePoint.  The Universal Forwarder that is installed on this 
-SharePoint server will need special handling.</p>
+<p>The documentation provided with the TA-Sharepoint20XX add-on specifies the required
+configuration changes on your Sharepoint servers.</p>
 
-<p>If you have multiple farms, then you must designate an Inventory and Audit Reader 
-in each farm.</p>
+<h2>Step 4: Install the Splunk Universal Forwarder on the SharePoint servers</h2>
 
-<h2>Step 4: Install Splunk on the other SharePoint servers</h2>
-
-<p>Each SharePoint server that is not the Inventory and Audit Reader host can get 
-a standard "Local System" type install of the latest Splunk Universal Forwarder 
-(version v6.0 or later).  It should be linked to a Splunk Deployment Server so 
-that you can easily push updated apps to the Universal Forwarder.  It should be 
-sending data to the central Splunk instance.</p>
-
-<h2>Step 5: Install Splunk on the Inventory and Audit Reader</h2>
-
-<p>The Splunk Universal Forwarder that is running on the Inventory and Audit 
-Reader must be running as a domain account.  The domain accounts must have the 
-following characteristics:</p>
-
-<ul>
-<li>Local Administrator</li>
-<li>Add-SPShellAdmin (PowerShell Farm Administrator)</li>
-</ul>
-
-<p>To add the database permissions properly, ensure you run the following command 
-using machine administrator from a farm administrator account that has shell admin 
-privileges to SharePoint_Config:</p>
-
-<pre>Get-SPDatabase | Add-SPShellAdmin -UserName 'DOMAIN\user'</pre>
-
-<p>Where DOMAIN\user is the username of the user running the Splunk Universal 
-Forwarder.</p>
-
-<p>If you have multiple farms, then the user involved is probably different for 
-each farm.  Each farm will need their own Inventory and Audit Reader.</p>
+<p>Refer to the documentation within the TA-Sharepoint20XX regarding the permissions
+required, taking special note of the Audit and Inventory Reader system.</p>
 
 <h2>Step 6: Deploy Add-ons to the SharePoint servers</h2>
 
@@ -81,7 +40,7 @@ each farm.  Each farm will need their own Inventory and Audit Reader.</p>
 
 <ul>
 <li>Splunk_TA_windows v4.6.6 or later</li>
-<li>TA-Sharepoint20XX (provided with the app in appserver/addons)</li>
+<li>TA-Sharepoint20XX v0.2.0 or later</li>
 </ul>
 
 <p>Note that Technology Addons are distributed with data inputs disabled.  Ensure
