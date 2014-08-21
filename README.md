@@ -37,7 +37,8 @@ Contributing to the project
 ===========================
 Fork this project, do your changes, then send us a pull request - we will merge or request more information.
 
-Ask questions and provide support: Join the splunk-app-sharepoint mailing list here:  XXX
+Ask questions, contribute and provide support by joining the splunk-app-sharepoint mailing list here:  
+	https://groups.google.com/forum/#!forum/splunk-app-sharepoint
 
 File issues and requests under the GitHub Issues Tracker.	
 	
