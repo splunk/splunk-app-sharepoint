@@ -40,6 +40,7 @@ required, taking special note of the Audit and Inventory Reader system.</p>
 
 <ul>
 <li>Splunk_TA_windows v4.6.6 or later</li>
+<li>SA-ModularInput-PowerShell</li>
 <li>TA-Sharepoint20XX v0.2.0 or later</li>
 </ul>
 
