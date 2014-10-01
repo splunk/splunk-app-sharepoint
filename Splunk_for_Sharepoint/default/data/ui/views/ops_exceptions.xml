@@ -1,17 +1,29 @@
-<dashboard>
+<form>
  <label>ULS Exceptions</label>
+
+ <fieldset>
+    <input type="time">
+        <default>Last 60 minutes</default>
+    </input>
+ </fieldset>
+
+ <searchTemplate>
+eventtype=mssharepoint-uls Exception 
+| eval ExceptionMessage=replace(Message,"[:\.].*","")
+| stats count by Area,Category,Level,Process_Name,host,ExceptionMessage
+ </searchTemplate>
 
  <row>
   <table>
    <title>Exceptions by Area</title>
-   <searchName>SharePoint Exception - By Area</searchName>
+   <searchPostProcess>stats sum(count) as count by Area | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Area="$row.Area$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
    <title>Exceptions by Category</title>
-   <searchName>SharePoint Exception - By Category</searchName>
+   <searchPostProcess>stats sum(count) as count by Category | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Category="$row.Category$"&earliest=-24h&latest=now]]></link>
    </drilldown>
@@ -22,14 +34,14 @@
  <row>
   <table>
    <title>Exceptions by Level</title>
-   <searchName>SharePoint Exception - By Level</searchName>
+   <searchPostProcess>stats sum(count) by Level | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Level="$row.Level$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
    <title>Exceptions by Process</title>
-   <searchName>SharePoint Exception - By Process</searchName>
+   <searchPostProcess>stats sum(count) as count by Process | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Process="$row.Process$"&earliest=-24h&latest=now]]></link>
    </drilldown>
@@ -39,19 +51,18 @@
  <row>
   <table>
    <title>Exceptions by Host</title>
-   <searchName>SharePoint Exception - By host</searchName>
+   <searchPostProcess>stats sum(count) by host | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception host="$row.host$"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
   <table>
    <title>Exceptions by Message</title>
-   <searchName>SharePoint Exception - By Message</searchName>
+   <searchPostProcess>stats sum(count) by ExceptionMessage | sort - count</searchPostProcess>
    <drilldown>
     <link><![CDATA[/app/Splunk_for_Sharepoint/flashtimeline?q=search eventtype=mssharepoint-uls Exception Message="$row.ExceptionMessage$*"&earliest=-24h&latest=now]]></link>
    </drilldown>
   </table>
  </row>
 
-
-</dashboard>
+</form>

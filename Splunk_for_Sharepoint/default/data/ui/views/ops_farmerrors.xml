@@ -10,7 +10,12 @@ access specific content.  The error message provides the detail necessary to cor
  </row>
  <row>
   <table>
-   <searchName>SharePoint Inventory Errors</searchName>
+   <searchString>
+eventtype=mssharepoint-inventory Type="Error"
+| stats latest(_time) as _time by FarmId, Location, Id, Url, Exception, Code, Message
+   </searchString>
+   <earliestTime>-24h@h</earliestTime>
+   <latestTime>now</latestTime>
    <drilldown>
     <link>/app/Splunk_for_Sharepoint/ops_farmdetail?form.Id=$row.FarmId$</link>
    </drilldown>

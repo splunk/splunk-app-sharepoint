@@ -3,7 +3,18 @@
  
  <row>
   <table>
-   <searchName>Ops Farm - Farm List</searchName>
+   <searchString>
+| inputlookup SPFarm
+| stats latest(BuildVersion) as BuildNumber,latest(Status) as Status by Id
+| lookup FarmNames FarmId AS Id OUTPUT FarmName
+| eval DisplayName=if(isnull(FarmName),DisplayName,FarmName) 
+| join type=outer Id [inputlookup SPServer | search Role="Invalid" | stats values(Name) as "Other Servers" by FarmId | rename FarmId as Id ]
+| join type=outer Id [search eventtype=mssharepoint-inventory | stats values(host) as "Inventory Reporter" by FarmId | rename FarmId as Id ]
+| table Id,DisplayName,BuildNumber,BuildDescription,Status,"Inventory Reporter","Other Servers"
+| rename Id as GUID,BuildNumber as "Build #",BuildDescription as Version
+   </searchString>
+   <earliestTime>-24h@h</earliestTime>
+   <latestTime>now</latestTime>
    <drilldown>
     <link>/app/Splunk_for_Sharepoint/ops_farmdetail?form.FarmId=$row.GUID$</link>
    </drilldown>

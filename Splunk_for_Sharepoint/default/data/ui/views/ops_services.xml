@@ -3,7 +3,17 @@
  <row>
   <table>
    <title>Service Instances</title>
-   <searchName>Ops - Service Instances</searchName>
+   <searchString><![CDATA[| inputlookup SPServiceInstance 
+| stats latest(Status) as SPStatus by Name,Service,Server 
+| where SPStatus!="Disabled" 
+| rex field=Service "Name=(?<SService>.*)" 
+| eval SPService=if(isnull(SPService),Service,SPService) 
+| join type=outer Server,SPService [search eventtype=mssharepoint-service|stats latest(State) as WinStatus by Name,host|rename host as Server,Name as SPService] 
+| eval WinStatus=if(isnull(WinStatus),"No Service",WinStatus) 
+| stats values(Server) as Servers,values(SPStatus) as SPStatus,values(WinStatus) as WinStatus by Name,SPService 
+| rename SPStatus as "SharePoint Status", WinStatus as "Windows Status", SPService as "Service Name"]]></searchString>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">30</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">true</option>

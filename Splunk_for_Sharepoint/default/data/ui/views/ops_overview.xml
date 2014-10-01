@@ -3,20 +3,26 @@
  <row>
   <single>
    <title>Farms</title>
-   <searchName>Ops Overview - Farm Count</searchName>
+   <searchString>| inputlookup SPFarm | stats dc(Id) as count</searchString>
+   <earliestTime>-10m</earliestTime>
+   <latestTime>now</latestTime>
    <option name="additionalClass">MSSP_Ops_Farm</option>
    <option name="afterLabel">Farm(s)</option>
   </single>
   <chart>
    <title>Page Impressions (Last 10 Minutes)</title>
-   <searchName>Ops Overview - Page Impressions</searchName>
+   <searchString>eventtype=mssharepoint-iis-page | stats count</searchString>
+   <earliestTime>rt-10m</earliestTime>
+   <latestTime>rt</latestTime>
    <option name="charting.chart">radialGauge</option>
    <option name="charting.legend.placement">none</option>
    <option name="height">150px</option>
   </chart>
   <chart>
    <title>Unique Users (Last 10 Minutes)</title>
-   <searchName>Ops Overview - Unique Users</searchName>
+   <searchString>eventtype=mssharepoint-iis-page | stats dc(cs_username) as count</searchString>
+   <earliestTime>rt-10m</earliestTime>
+   <latestTIme>rt</latestTime>
    <option name="charting.chart">radialGauge</option>
    <option name="charting.legend.placement">none</option>
    <option name="height">150px</option>
@@ -25,7 +31,17 @@
  <row>
   <table>
    <title>Failed Services</title>
-   <searchName>Ops Overview - Service Status</searchName>
+   <searchString><![CDATA[| inputlookup SPServiceInstance
+| stats latest(Status) as SPStatus by Name,Service,Server
+| where SPStatus!="Disabled"
+| rex field=Service "Name=(?<SService>.*)"
+| eval SPService=if(isnull(SPService),SService,SPService)
+| join type=outer Server,SPService [ search eventtype=mssharepoint-service | stats latest(State) as WinStatus by Name,host | rename host as Server,Name as SPService]
+| eval WinStatus=if(isnull(WinStatus),"No Service",WinStatus) 
+| stats values(Server) as Servers,values(SPStatus) as "SharePoint Status",values(WinStatus) as "Windows Statusd" by Name,SPService
+| rename SPService as "Service Name"]]></searchString>
+   <earliestTime>-30m@m</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
@@ -35,7 +51,15 @@
   </table>
   <table>
    <title>Servers with No Connections (Last 15 Minutes)</title>
-   <searchName>Ops Overview - No Volume</searchName>
+   <searchString>
+| inputlookup SPServer
+| table Name,Role
+| join type=outer Name [ search eventtype=mssharepoint-iis | stats count by host | rename host as Name ]
+| eval count=if(isnull(count),0,count)
+| search Role!="Invalid" count=0
+   </searchString>
+   <earliestTime>-15m</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
@@ -45,7 +69,17 @@
   </table>
   <table>
    <title>Servers with High Load (Last 15 Minutes)</title>
-   <searchName>Ops Overview - High Load</searchName>
+   <searchString>
+object=Processor counter="% Processor Time" instance="_Total"
+| stats max(Value) as MaxValue by host
+| where MaxValue > 80.0
+| lookup SPHostInfo host OUTPUTNEW OSBuildNumber
+| where isnotnull(OSBuildNumber)
+| eval MaxValue=round(MaxValue,2)
+| rename host as Name
+   </searchString>
+   <earliestTime>-15m</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="showPager">true</option>
    <option name="displayRowNumbers">false</option>
