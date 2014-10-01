@@ -1,14 +1,30 @@
 <dashboard>
-	<label>Anomalous Activity</label>
-	
-	<row>
-		<table>
-			<title>Logons via VPN and non-VPN</title>
-			<searchName>Security - Concurrent VPN Access</searchName>
-		</table>
-		<table>
-			<title>Logons from multiple locations</title>
-			<searchName>Security - Concurrent Locations</searchName>
-		</table>
-	</row>
+    <label>Anomalous Activity</label>
+    
+    <row>
+        <table>
+            <title>Logons via VPN and non-VPN</title>
+            <searchString>eventtype=mssharepoint-iis sc_status=200
+| lookup offices c_ip OUTPUT office
+| transaction maxspan=5m c_ip cs_username
+| eval x=mvcount(office)
+| where office=="VPN" x>1
+| table c_ip,office,cs_username
+| rename c_ip as "IP Address",office as "Location",cs_username as "Username"</searchString>
+            <earliestTime>-24h</earliestTime>
+            <latestTime>now</latestTime>
+        </table>
+        <table>
+            <title>Logons from multiple locations</title>
+            <searchString>eventtype=mssharepoint-iis sc_status=200
+| lookup offices c_ip OUTPUT office
+| transaction maxspan=5m c_ip cs_username
+| eval x=mvcount(office)
+| where x>1
+| table c_ip,office,cs_username
+| rename c_ip as "IP Address",office as "Location",cs_username as "Username"</searchString>
+            <earliestTime>-24h</earliestTime>
+            <latestTime>now</latestTime>
+        </table>
+    </row>
 </dashboard>

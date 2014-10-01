@@ -1,15 +1,33 @@
 <dashboard>
-	<label>Successful Logons</label>
-	
-	<row>
-		<table>
-			<title>Logons via VPN</title>
-			<searchName>Security - VPN Access</searchName>
-		</table>
-		<map>
-			<title>Logons by Location</title>
-			<searchName>Security - GeoIP Logons</searchName>
-			<option name="height">400px</option>
-		</map>
-	</row>
+    <label>Successful Logons</label>
+    
+    <row>
+        <table>
+            <title>Logons via VPN</title>
+            <searchString>
+eventtype=mssharepoint-iis sc_status=200
+| lookup offices c_ip OUTPUT office
+| where office=="VPN"
+| stats latest(_time) as _time by src_user
+| table _time,src_user
+| rename src_user as "Username"
+            </searchString>
+            <earliestTime>-24h</earliestTime>
+            <latestTime>now</latestTime>
+        </table>
+        <map>
+            <title>Logons by Location</title>
+            <searchString>
+eventtype=mssharepoint-iis sc_status=200
+| iplocation c_ip
+| lookup offices c_ip OUTPUT office,office_lat,office_lon
+| eval lat=if(isnotnull(office_lat),office_lat,lat)
+| eval lon=if(isnotnull(office_lon),office_lon,lon)
+| geostats latfield=lat longfield=lon count
+            </searchString>
+            <earliestTime>-24h</earliestTime>
+            <latestTime>now</latestTime>
+            <option name="height">400px</option>
+        </map>
+    </row>
 </dashboard>
