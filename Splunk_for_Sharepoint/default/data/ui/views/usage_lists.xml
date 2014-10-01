@@ -4,31 +4,90 @@
   <row>
    <table>
     <title>Largest Lists - # Items</title>
-	<searchName>Lists - Top by Item Count</searchName>
-  </table>
-  <table>
-   <title>Largest Lists - Total Size</title>
-   <searchName>Lists - Top by Item Size</searchName>
-  </table>
+    <searchString>
+eventtype=mssharepoint-inventory Type="List" Hidden="False"
+| stats latest(ItemCount) as ItemCount by Id,WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as "Web Title"
+| sort - ItemCount
+| table "Web Title",Title,ItemCount
+| rename Title as "List Title",ItemCount as "# Items"
+    </searchString>
+    <earliestTime>-24h</earliestTime>
+    <latestTime>now</latestTime>
+   </table>
+   <table>
+    <title>Largest Lists - Total Size</title>
+    <searchString>
+eventtype=mssharepoint-inventory Type="List" Hidden="False"
+| stats latest(ItemSize) as ItemSize by Id,WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as WebTitle
+| eval ItemSize = ItemSize / 1024 
+| eval ItemSize = round(ItemSize, 2)
+| sort - ItemSize
+| table WebTitle,Title,ItemSize
+| rename WebTitle as "Web Title",Title as "List Title",ItemSize as "Size (kb)"
+    </searchString>
+    <earliestTime>-24h</earliestTime>
+    <latestTime>now</latestTime>
+   </table>
  </row>
  <row>
   <table>
    <title>Empty Lists</title>
-   <searchName>Lists - Empty</searchName>
+   <searchString>
+eventtype=mssharepoint-inventory Type="List" Hidden="False"
+| stats latest(ItemCount) as ItemCount,latest(Created) as Created by Id,WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as WebTitle
+| where ItemCount == 0
+| table WebTitle,Title,Created
+| rename WebTitle as "Web Title",Title as "List Title"
+   </searchString>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
   </table>
   <table>
    <title>Most Updated Lists (Last 7 days)</title>
-   <searchName>Lists - Most Updated</searchName>
+   <searchString>
+eventtype=mssharepoint-inventory Type="List" Hidden="False"
+| stats max(Version) as maxVersion,min(Version) as minVersion by Id,WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as WebTitle
+| evals Updates = maxVersion - minVersion
+| sort - Update
+| table WebTitle,Title,Updates
+| rename WebTitle as "Web Title",Title as "List Title",Updates as "# Updates"
+   </searchString>
+   <earliestTime>-7d</earliestTime>
+   <latestTime>now</latestTime>
   </table>
  </row>
  <row>
   <table>
    <title>Most Popular Lists (Access Count)</title>
-   <searchName>Lists - Popular by Access Count</searchName>
+   <searchString>
+eventtype=mssharepoint-audit ItemType=4 Event=3
+| stats count by ItemId,FarmId
+| lookup SPList Id as ItemId OUTPUT WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as WebTitle
+| table WebTitle,Title,count
+| sort - count
+| rename WebTitle as "Web Title",Title as "List Title",count as "# Accesses"
+   </searchString>
+   <earliestTime>-7d</earliestTime>
+   <latestTime>now</latestTime>
   </table>
   <table>
    <title>Most Popular Lists (User Count)</title>
-   <searchName>Lists - Popular by Unique Users</searchName>
+   <searchString>
+eventtype=mssharepoint-audit ItemType=4 Event=3
+| stats dc(UserName) as count by ItemId,FarmId
+| lookup SPList Id as ItemId OUTPUT WebId,Title
+| lookup SPWeb Id as WebId OUTPUT Title as WebTitle
+| table WebTitle,Title,count
+| sort - count
+| rename WebTitle as "Web Title",Title as "List Title",count as "# Users"
+    </searchString>
+    <earliestTime>-24h</earliestTime>
+    <latestTime>now</latestTime>
   </table>
  </row>
 </dashboard>

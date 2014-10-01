@@ -4,7 +4,16 @@
   <row>
    <table>
     <title>Most Read Documents (by Downloads)</title>
-	<searchName>Documents - Most Read by Downloads</searchName>
+	<searchString>
+eventtype=mssharepoint-audit ItemType=1 Event=3
+| `IgnoreExtensions`
+| stats count as "# Reads" by SiteId,DocLocation
+| lookup SPSite Id as SiteId OUTPUT Url
+| sort - "# Reads"
+| table SiteId,Url,DocLocation,"# Reads"
+        </searchString>
+        <earliestTime>-24h</earliestTime>
+        <latestTime>now</latestTime>
 	<fields>Url, DocLocation, "# Reads"</fields>
 	<drilldown>
 		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
@@ -12,7 +21,16 @@
    </table>
    <table>
     <title>Most Read Documents (by Unique Users)</title>
-	<searchName>Documents - Most Read by Distinct Users</searchName>
+	<searchString>
+eventtype=mssharepoint-audit ItemType=1 Event=3
+| `IgnoreExtensions`
+| stats dc(UserName) as "# Users" by SiteId,DocLocation
+| lookup SPSite Id as SiteId OUTPUT Url
+| sort - "# Users"
+| table SiteId,Url,DocLocation,"# Users"
+        </searchString>
+        <earliestTime>-24h</earliestTime>
+        <latestTime>now</latestTime>
 	<fields>Url, DocLocation, "# Users"</fields>
 	<drilldown>
 		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
@@ -23,7 +41,16 @@
   <row>
    <table>
     <title>Most Updated Documents</title>
-	<searchName>Documents - Most Updated</searchName>
+	<searchString>
+eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14)
+| `IgnoreExtensions`
+| stats count as "# Updates" by SiteId,DocLocation
+| lookup SPSite Id as SiteId OUTPUT Url
+| sort - "# Updates"
+| table SiteId,Url,DocLocation,"# Updates"
+        </searchString>
+        <earliestTime>-24h</earliestTime>
+        <latestTime>now</latestTime>
 	<fields>Url, DocLocation, "# Updates"</fields>
 	<drilldown>
 		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>
@@ -31,7 +58,14 @@
    </table>
    <table>
     <title>Recently Deleted Documents</title>
-	<searchName>Documents - Recently Deleted</searchName>
+	<searchString>
+eventtype=mssharepoint-audit ItemType=1 Event=4
+| `IgnoreExtensions`
+| lookup SPSite Id as SiteId OUTPUT Url
+| table _time,SiteId,Url,DocLocation
+        </searchString>
+        <earliestTime>-24h</earliestTime>
+        <latestTime>now</latestTime>
 	<fields>_time, Url, DocLocation</fields>
 	<drilldown>
 		<link><![CDATA[/app/Splunk_for_Sharepoint/usage_bydocument?form.Url=$row.SiteId$&form.Document=$row.DocLocation$]]></link>

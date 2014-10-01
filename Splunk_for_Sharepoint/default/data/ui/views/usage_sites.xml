@@ -3,14 +3,28 @@
  <row>
   <table>
    <title>Most Active Sites by Uploads</title>
-   <searchName>Usage - Most Active Sites by Uploads</searchName>
+   <searchString>
+eventtype=mssharepoint-audit ItemType=1 Event=5
+| lookup SPSite Id as SiteId OUTPUTNEW Url
+| top FarmId,Url
+| eval percent=round(percent,2)
+   </searchString>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">false</option>
   </table>
   <table>
    <title>Most Active Sites by Downloads</title>
-   <searchName>Usage - Most Active Sites by Downloads</searchName>
+   <searchString>
+eventtype=mssharepoint-audit ItemType=1 Event=3
+| lookup SPSite Id as SiteId OUTPUTNEW Url
+| top FarmId,Url
+| eval percent=round(percent,2)
+   </searchString>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">false</option>  </table>
@@ -18,14 +32,32 @@
  <row>
   <table>
    <title>Dormant Sites (No Activity in Last 7 days)</title>
-   <searchName>Usage - Dormant Sites</searchName>
+   <searchString>
+| inputlookup SPSite
+| table Id,Url
+| rename Id as SiteId
+| join type=outer [ search eventtype=mssharepoint-audit Event<14 | stats count by SiteId ]
+| where isnull(count)
+| table SiteId,Url
+   </searchString>
+   <earliestTime>-7d</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">true</option>
   </table>
   <table>
    <title>Read-Only Sites (No Uploads in Last 7 days)</title>
-   <searchName>Usage - Read-Only Sites</searchName>
+   <searchString>
+eventtype=mssharepoint-audit Event<14
+| eval T=if(Event==1 OR Event==3,"read","write")
+| chart count by SiteId,T
+| where write==0 AND read>0
+| lookup SPSite Id as SiteId OUTPUT Url
+| table SiteId,Url
+   </searchString>
+   <earliestTime>-7d</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">true</option>
@@ -34,14 +66,32 @@
  <row>
   <table>
    <title>Largest Sites by Database Size</title>
-   <searchName>Usage - Largest Sites by DB Size</searchName>
+   <searchString>
+| inputlookup SPSite
+| stats max(Storage) as Storage by Id,Url
+| sort - Storage
+| eval StorageMB=round(Storage/(1024*1024),2)
+| table Id,Url,StorageMB
+| rename StorageMB as "Size (MB)"
+   </searchString>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">true</option>
   </table>
   <table>
    <title>Largest Sites by List Count</title>
-   <searchName>Usage - Largest Sites by List Count</searchName>
+   <searchString>
+eventtype=mssharepoint-inventory Type="List"
+| lookup SPWeb Id as WebId OUTPUT SiteId
+| stats dc(Id) as Lists by SiteId
+| lookup SPSite Id as SiteId OUTPUT Url
+| table SiteId,Url,Lists
+| sort - Lists
+   </searchString>
+   <earliestTime>-24h</earliestTime>
+   <latestTime>now</latestTime>
    <option name="count">10</option>
    <option name="displayRowNumbers">true</option>
    <option name="showPager">true</option>
@@ -50,11 +100,29 @@
  <row>
   <table>
    <title>Largest Sites as Percentage of Quota</title>
-   <searchName>Usage - Largest Sites as Percentage of Quota</searchName>
+   <searchString>
+| inputlookup SPSite
+| search StorageMaximumLevel!=0
+| eval QuotaUsed = round((Storage / StorageMaximumLevel) * 100),2)
+| table Url,QuotaUsed
+| sort - QuotaUsed
+| rename QuotaUsed as "Quota Used (%age)"
+   </searchString>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
   </table>
   <table>
    <title>Sites with Quota Issues</title>
-   <searchName>Usage - Sites with Quota Issues</searchName>
+   <searchString>
+| inputlookup SPSite
+| where StorageMaximumLevel==0 OR Storage>StorageWarningLevel
+| eval msg=case(StorageMaximumLevel==0,"No Quota Set",Storage>StorageWarningLevel,"Storage Approaching Quota")
+| table Url,Storage,msg
+| sort - Storage
+| rename Storage as "Disk Usage",msg as "Quota Issue"
+   </searchString>
+   <earliestTime>-5m</earliestTime>
+   <latestTime>now</latestTime>
   </table>
  </row>
 </dashboard>
