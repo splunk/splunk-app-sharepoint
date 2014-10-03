@@ -22,7 +22,7 @@
    <title>Unique Users (Last 10 Minutes)</title>
    <searchString>eventtype=mssharepoint-iis-page | stats dc(cs_username) as count</searchString>
    <earliestTime>rt-10m</earliestTime>
-   <latestTIme>rt</latestTime>
+   <latestTime>rt</latestTime>
    <option name="charting.chart">radialGauge</option>
    <option name="charting.legend.placement">none</option>
    <option name="height">150px</option>
