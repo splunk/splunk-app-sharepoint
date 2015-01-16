@@ -51,7 +51,7 @@ eventtype=mssharepoint-inventory Type="List" Hidden="False"
 eventtype=mssharepoint-inventory Type="List" Hidden="False"
 | stats max(Version) as maxVersion,min(Version) as minVersion by Id,WebId,Title
 | lookup SPWeb Id as WebId OUTPUT Title as WebTitle
-| evals Updates = maxVersion - minVersion
+| eval Updates = maxVersion - minVersion
 | sort - Update
 | table WebTitle,Title,Updates
 | rename WebTitle as "Web Title",Title as "List Title",Updates as "# Updates"
