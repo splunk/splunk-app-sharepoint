@@ -3,12 +3,12 @@
  <row>
   <table>
    <title>Most Active Sites by Uploads</title>
-   <searchString>
+   <searchString><![CDATA[
 eventtype=mssharepoint-audit ItemType=1 Event=5
 | lookup SPSite Id as SiteId OUTPUTNEW Url
 | top FarmId,Url
 | eval percent=round(percent,2)
-   </searchString>
+   ]]></searchString>
    <earliestTime>-24h</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -17,12 +17,12 @@ eventtype=mssharepoint-audit ItemType=1 Event=5
   </table>
   <table>
    <title>Most Active Sites by Downloads</title>
-   <searchString>
+   <searchString><![CDATA[
 eventtype=mssharepoint-audit ItemType=1 Event=3
 | lookup SPSite Id as SiteId OUTPUTNEW Url
 | top FarmId,Url
 | eval percent=round(percent,2)
-   </searchString>
+   ]]></searchString>
    <earliestTime>-24h</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -32,14 +32,14 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
  <row>
   <table>
    <title>Dormant Sites (No Activity in Last 7 days)</title>
-   <searchString>
+   <searchString><![CDATA[
 | inputlookup SPSite
 | table Id,Url
 | rename Id as SiteId
 | join type=outer [ search eventtype=mssharepoint-audit Event<14 | stats count by SiteId ]
 | where isnull(count)
 | table SiteId,Url
-   </searchString>
+   ]]></searchString>
    <earliestTime>-7d</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -48,14 +48,14 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
   </table>
   <table>
    <title>Read-Only Sites (No Uploads in Last 7 days)</title>
-   <searchString>
+   <searchString><![CDATA[
 eventtype=mssharepoint-audit Event<14
 | eval T=if(Event==1 OR Event==3,"read","write")
 | chart count by SiteId,T
 | where write==0 AND read>0
 | lookup SPSite Id as SiteId OUTPUT Url
 | table SiteId,Url
-   </searchString>
+   ]]></searchString>
    <earliestTime>-7d</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -66,14 +66,14 @@ eventtype=mssharepoint-audit Event<14
  <row>
   <table>
    <title>Largest Sites by Database Size</title>
-   <searchString>
+   <searchString><![CDATA[
 | inputlookup SPSite
 | stats max(Storage) as Storage by Id,Url
 | sort - Storage
 | eval StorageMB=round(Storage/(1024*1024),2)
 | table Id,Url,StorageMB
 | rename StorageMB as "Size (MB)"
-   </searchString>
+   ]]></searchString>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -82,14 +82,14 @@ eventtype=mssharepoint-audit Event<14
   </table>
   <table>
    <title>Largest Sites by List Count</title>
-   <searchString>
+   <searchString><![CDATA[
 eventtype=mssharepoint-inventory Type="List"
 | lookup SPWeb Id as WebId OUTPUT SiteId
 | stats dc(Id) as Lists by SiteId
 | lookup SPSite Id as SiteId OUTPUT Url
 | table SiteId,Url,Lists
 | sort - Lists
-   </searchString>
+   ]]></searchString>
    <earliestTime>-24h</earliestTime>
    <latestTime>now</latestTime>
    <option name="count">10</option>
@@ -100,27 +100,27 @@ eventtype=mssharepoint-inventory Type="List"
  <row>
   <table>
    <title>Largest Sites as Percentage of Quota</title>
-   <searchString>
+   <searchString><![CDATA[
 | inputlookup SPSite
 | search StorageMaximumLevel!=0
 | eval QuotaUsed = round((Storage / StorageMaximumLevel) * 100),2)
 | table Url,QuotaUsed
 | sort - QuotaUsed
 | rename QuotaUsed as "Quota Used (%age)"
-   </searchString>
+   ]]></searchString>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
   </table>
   <table>
    <title>Sites with Quota Issues</title>
-   <searchString>
+   <searchString><![CDATA[
 | inputlookup SPSite
 | where StorageMaximumLevel==0 OR Storage>StorageWarningLevel
 | eval msg=case(StorageMaximumLevel==0,"No Quota Set",Storage>StorageWarningLevel,"Storage Approaching Quota")
 | table Url,Storage,msg
 | sort - Storage
 | rename Storage as "Disk Usage",msg as "Quota Issue"
-   </searchString>
+   ]]></searchString>
    <earliestTime>-5m</earliestTime>
    <latestTime>now</latestTime>
   </table>
