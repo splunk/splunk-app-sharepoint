@@ -103,7 +103,7 @@ eventtype=mssharepoint-inventory Type="List"
    <searchString><![CDATA[
 | inputlookup SPSite
 | search StorageMaximumLevel!=0
-| eval QuotaUsed = round((Storage / StorageMaximumLevel) * 100),2)
+| eval QuotaUsed = round((Storage / StorageMaximumLevel) * 100,2)
 | table Url,QuotaUsed
 | sort - QuotaUsed
 | rename QuotaUsed as "Quota Used (%age)"
