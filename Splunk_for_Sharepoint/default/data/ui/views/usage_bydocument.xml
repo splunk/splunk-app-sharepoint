@@ -26,7 +26,7 @@
    <chart>
     <title>Document Views over Time</title>
     <searchString>
-eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
+eventtype=mssharepoint-audit ItemType=1 EventType=3 SiteId="$Url$" $Document$
 | timechart count
     </searchString>
     <option name="charting.chart">line</option>
@@ -36,7 +36,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
    <table>
     <title>Document Views by User</title>
     <searchString>
-eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
+eventtype=mssharepoint-audit ItemType=1 EventType=3 SiteId="$Url$" $Document$
 | stats latest(_time) as _time by src_user
 | table _time, src_user
 | eval modUsername=replace(src_user,"\\\\","\\\\")
@@ -53,7 +53,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
    <table>
     <title>Document Updates by User</title>
     <searchString>
-eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14) SiteId="$Url$" $Document$
+eventtype=mssharepoint-audit ItemType=1 (EventType=2 OR EventType=4 OR EventType=5 OR EventType=10 OR EventType=14) SiteId="$Url$" $Document$
 | table _time, src_user
 | eval modUsername=replace(src_user,"\\\\","\\\\")
 | rename src_user as Username

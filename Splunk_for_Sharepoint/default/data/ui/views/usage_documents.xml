@@ -5,7 +5,7 @@
    <table>
     <title>Most Read Documents (by Downloads)</title>
 	<searchString>
-eventtype=mssharepoint-audit ItemType=1 Event=3
+eventtype=mssharepoint-audit ItemType=1 EventType=3
 | `IgnoreExtensions`
 | stats count as "# Reads" by SiteId,DocLocation
 | lookup SPSite Id as SiteId OUTPUT Url
@@ -22,7 +22,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
    <table>
     <title>Most Read Documents (by Unique Users)</title>
 	<searchString>
-eventtype=mssharepoint-audit ItemType=1 Event=3
+eventtype=mssharepoint-audit ItemType=1 EventType=3
 | `IgnoreExtensions`
 | stats dc(UserName) as "# Users" by SiteId,DocLocation
 | lookup SPSite Id as SiteId OUTPUT Url
@@ -42,7 +42,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
    <table>
     <title>Most Updated Documents</title>
 	<searchString>
-eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14)
+eventtype=mssharepoint-audit ItemType=1 (EventType=2 OR EventType=4 OR EventType=5 OR EventType=10 OR EventType=14)
 | `IgnoreExtensions`
 | stats count as "# Updates" by SiteId,DocLocation
 | lookup SPSite Id as SiteId OUTPUT Url
@@ -59,7 +59,7 @@ eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=
    <table>
     <title>Recently Deleted Documents</title>
 	<searchString>
-eventtype=mssharepoint-audit ItemType=1 Event=4
+eventtype=mssharepoint-audit ItemType=1 EventType=4
 | `IgnoreExtensions`
 | lookup SPSite Id as SiteId OUTPUT Url
 | table _time,SiteId,Url,DocLocation

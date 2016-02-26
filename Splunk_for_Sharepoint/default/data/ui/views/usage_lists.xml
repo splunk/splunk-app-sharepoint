@@ -64,7 +64,7 @@ eventtype=mssharepoint-inventory Type="List" Hidden="False"
   <table>
    <title>Most Popular Lists (Access Count)</title>
    <searchString>
-eventtype=mssharepoint-audit ItemType=4 Event=3
+eventtype=mssharepoint-audit ItemType=4 EventType=3
 | stats count by ItemId,FarmId
 | lookup SPList Id as ItemId OUTPUT WebId,Title
 | lookup SPWeb Id as WebId OUTPUT Title as WebTitle
@@ -78,7 +78,7 @@ eventtype=mssharepoint-audit ItemType=4 Event=3
   <table>
    <title>Most Popular Lists (User Count)</title>
    <searchString>
-eventtype=mssharepoint-audit ItemType=4 Event=3
+eventtype=mssharepoint-audit ItemType=4 EventType=3
 | stats dc(UserName) as count by ItemId,FarmId
 | lookup SPList Id as ItemId OUTPUT WebId,Title
 | lookup SPWeb Id as WebId OUTPUT Title as WebTitle

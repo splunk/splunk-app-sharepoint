@@ -4,7 +4,7 @@
   <table>
    <title>Most Active Sites by Uploads</title>
    <searchString><![CDATA[
-eventtype=mssharepoint-audit ItemType=1 Event=5
+eventtype=mssharepoint-audit ItemType=1 EventType=5
 | lookup SPSite Id as SiteId OUTPUTNEW Url
 | top FarmId,Url
 | eval percent=round(percent,2)
@@ -18,7 +18,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=5
   <table>
    <title>Most Active Sites by Downloads</title>
    <searchString><![CDATA[
-eventtype=mssharepoint-audit ItemType=1 Event=3
+eventtype=mssharepoint-audit ItemType=1 EventType=3
 | lookup SPSite Id as SiteId OUTPUTNEW Url
 | top FarmId,Url
 | eval percent=round(percent,2)
@@ -36,7 +36,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
 | inputlookup SPSite
 | table Id,Url
 | rename Id as SiteId
-| join type=outer [ search eventtype=mssharepoint-audit Event<14 | stats count by SiteId ]
+| join type=outer [ search eventtype=mssharepoint-audit EventType<14 | stats count by SiteId ]
 | where isnull(count)
 | table SiteId,Url
    ]]></searchString>
@@ -49,8 +49,8 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
   <table>
    <title>Read-Only Sites (No Uploads in Last 7 days)</title>
    <searchString><![CDATA[
-eventtype=mssharepoint-audit Event<14
-| eval T=if(Event==1 OR Event==3,"read","write")
+eventtype=mssharepoint-audit EventType<14
+| eval T=if(EventType==1 OR EventType==3,"read","write")
 | chart count by SiteId,T
 | where write==0 AND read>0
 | lookup SPSite Id as SiteId OUTPUT Url
