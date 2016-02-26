@@ -43,7 +43,7 @@ Stay connected with other developers building on Splunk
 </tr>
 <tr>
 <td><em>Issues</em></td>
-</td><a href="https://github.com/splunk/splunk-app-sharepoint/issues/">https://github.com/splunk/splunk-app-sharepoint/issues/</a></td>
+<td><a href="https://github.com/splunk/splunk-app-sharepoint/issues/">https://github.com/splunk/splunk-app-sharepoint/issues/</a></td>
 </tr>
 </table>
 
