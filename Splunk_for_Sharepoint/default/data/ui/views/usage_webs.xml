@@ -62,7 +62,7 @@ eventtype=mssharepoint-iis-page cs_username!="-"
 eventtype=mssharepoint-iis-page cs_username!="-" 
 | top src_user 
 | eval percent=round(percent,2) 
-| eval modUsername=replace(src_user,"\\\\","\\\\") 
+| eval modUsername=replace(src_user,"\\\\","\\\\\\")
 | rename src_user as "Username",count as "Page Impressions"
    </searchString>
    <earliestTime>-24h</earliestTime>

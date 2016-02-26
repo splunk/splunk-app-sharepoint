@@ -8,7 +8,7 @@
 | inputlookup SPUser
 | search IsDomainGroup="False"
 | stats count by src_user
-| eval vLoginName=replace(src_user,"\\\\","\\\\")
+| eval vLoginName=replace(src_user,"\\\\","\\\\\\")
 | sort src_user
     </populatingSearch>
    </input>

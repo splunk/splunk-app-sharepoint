@@ -39,7 +39,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
 eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
 | stats latest(_time) as _time by src_user
 | table _time, src_user
-| eval modUsername=replace(src_user,"\\\\","\\\\")
+| eval modUsername=replace(src_user,"\\\\","\\\\\\")
 | rename src_user as Username
 | sort _time
     </searchString>
@@ -55,7 +55,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3 SiteId="$Url$" $Document$
     <searchString>
 eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=10 OR Event=14) SiteId="$Url$" $Document$
 | table _time, src_user
-| eval modUsername=replace(src_user,"\\\\","\\\\")
+| eval modUsername=replace(src_user,"\\\\","\\\\\\")
 | rename src_user as Username
 | sort _time
     </searchString>
@@ -75,7 +75,7 @@ eventtype=mssharepoint-audit ItemType=1 (Event=2 OR Event=4 OR Event=5 OR Event=
 | table src_user,DisplayName
 | lookup SPSystemAccounts src_user OUTPUT isSystemAccount
 | where isnull(isSystemAccount)
-| eval modUsername=replace(src_user,"\\\\","\\\\")
+| eval modUsername=replace(src_user,"\\\\","\\\\\\")
 | sort src_user
 | rename src_user as Username
     </searchString>
