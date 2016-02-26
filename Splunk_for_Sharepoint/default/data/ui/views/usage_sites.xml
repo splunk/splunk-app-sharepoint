@@ -36,7 +36,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
 | inputlookup SPSite
 | table Id,Url
 | rename Id as SiteId
-| join type=outer [ search eventtype=mssharepoint-audit Event<14 | stats count by SiteId ]
+| join type=outer [ search eventtype=mssharepoint-audit Event&lt;14 | stats count by SiteId ]
 | where isnull(count)
 | table SiteId,Url
    ]]></searchString>
@@ -49,7 +49,7 @@ eventtype=mssharepoint-audit ItemType=1 Event=3
   <table>
    <title>Read-Only Sites (No Uploads in Last 7 days)</title>
    <searchString><![CDATA[
-eventtype=mssharepoint-audit Event<14
+eventtype=mssharepoint-audit Event&lt;14
 | eval T=if(Event==1 OR Event==3,"read","write")
 | chart count by SiteId,T
 | where write==0 AND read>0
